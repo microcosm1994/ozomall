@@ -1,0 +1,95 @@
+<config>
+{
+    navigationBarTitleText: 'OZO',
+    usingComponents: {
+      panel: '~@/components/panel',
+      counter: '~counter',
+      list: '../../components/list',
+      group: '../../components/group',
+      "slide-view": "module:miniprogram-slide-view",
+      "van-button": "../../components/vant/button",
+      "van-row": "../../components/vant/row",
+      "van-col": "../../components/vant/col",
+      "van-search": "../../components/vant/search"
+    }
+}
+</config>
+<template>
+  <div class="home">
+    <div class="home-search">
+      <van-row>
+        <van-col span="20">
+          <van-search value="{{ value }}" placeholder="请输入搜索关键词" />
+        </van-col>
+        <van-col span="4">分类</van-col>
+      </van-row>
+    </div>
+    <div class="home-classify">
+      <scroll-view class="scroll-view_H" scroll-x="true" bindscroll="scroll">
+        <view class="home-classify-item">推荐</view>
+        <view class="home-classify-item">鞋类</view>
+        <view class="home-classify-item">服装</view>
+        <view class="home-classify-item">美妆</view>
+        <view class="home-classify-item">箱包</view>
+        <view class="home-classify-item">手表</view>
+        <view class="home-classify-item">配饰</view>
+        <view class="home-classify-item">数码</view>
+        <view class="home-classify-item">潮玩</view>
+        <view class="home-classify-item">家居</view>
+      </scroll-view>
+    </div>
+    <div class="home-banner">
+      <swiper
+        indicator-dots="true"
+        autoplay="{{true}}"
+        interval="{{2000}}"
+        duration="{{500}}"
+      >
+        <swiper-item>
+          <image
+            style="width: 100%;"
+            src="/static/img/banner1.jpg"
+          />
+        </swiper-item>
+      </swiper>
+    </div>
+    <div class="home-ensure"></div>
+    <div class="home-hotClassify"></div>
+    <div class="home-service"></div>
+    <div class="home-recommend"></div>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+
+wepy.page({});
+</script>
+<style lang="less">
+.home {
+  width: 100%;
+  .home-search {
+    width: 100%;
+    height: 100rpx;
+    .van-col--4 {
+      text-align: center;
+      line-height: 100rpx;
+    }
+  }
+  .home-classify {
+    width: 100%;
+    display: flex;
+    flex: 1;
+    flex-direction: row; //让子元素在一行显示
+    white-space: nowrap;
+    .home-classify-item {
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
+      padding: 8rpx 28rpx;
+      font-size: 28rpx;
+      text-align: center;
+    }
+  }
+}
+</style>

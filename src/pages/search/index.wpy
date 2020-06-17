@@ -1,0 +1,135 @@
+<config>
+{
+    navigationBarTitleText: 'OZO',
+    usingComponents: {
+      panel: '~@/components/panel',
+      counter: '~counter',
+      list: '../../components/list',
+      group: '../../components/group',
+      "slide-view": "module:miniprogram-slide-view",
+      "van-icon": "../../components/vant/icon",
+      "van-search": "../../components/vant/search"
+    }
+}
+</config>
+<template>
+  <div class="home">
+    <div class="home-search">
+      <div class="home-search-input">
+        <div class="search-input-icon">
+          <van-icon name="search" size="28rpx" />
+        </div>
+        <div class="search-input-input">
+          <input
+            class="weui-input"
+            auto-focus
+            placeholder="请输入商品名称"
+            v-model="searchText"
+            @confirm="search"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="home-hotSearch">
+      <div class="home-hotSearch-title">热门搜索</div>
+      <div class="home-hotSearch-container">
+        <div class="hotSearch-li" @tap="tapSearch('asdasdasdasd')">asdasdasdasd</div>
+        <div class="hotSearch-li">asdasd阿三打撒撒旦asdasd</div>
+        <div class="hotSearch-li">啊实打实打算</div>
+        <div class="hotSearch-li">阿萨</div>
+      </div>
+      <div class="home-hotSearch-title">
+        历史搜索
+        <div class="title-icon">
+          <van-icon name="delete" size="28rpx" />
+        </div>
+      </div>
+      <div class="home-hotSearch-container">
+        <div class="hotSearch-li">asdasdasdasd</div>
+        <div class="hotSearch-li">asdasd阿三打撒撒旦asdasd</div>
+        <div class="hotSearch-li">啊实打实打算</div>
+        <div class="hotSearch-li">阿萨</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+
+wepy.page({
+  data: {
+    searchText: '',
+  },
+  methods: {
+    search() {
+      console.log(this);
+      console.log(this.searchText);
+    },
+    tapSearch(val) {
+      this.searchText = val;
+      this.search();
+    },
+  },
+});
+</script>
+<style lang="less">
+.home {
+  width: 100%;
+  background: #fff;
+  .home-search {
+    width: 100%;
+    height: 100rpx;
+    padding: 8rpx 16rpx;
+    .home-search-input {
+      width: 100%;
+      border: 2rpx solid #eeeef0;
+      background: #eeeef0;
+      padding-left: 40rpx;
+      position: relative;
+      .search-input-icon {
+        position: absolute;
+        left: 4rpx;
+        top: 4rpx;
+      }
+      .search-input-input {
+        width: 100%;
+        input {
+          background: #eeeef0;
+          font-size: 24rpx;
+        }
+      }
+    }
+  }
+  .home-hotSearch {
+    width: 100%;
+    .home-hotSearch-title {
+      width: 100%;
+      height: 100rpx;
+      line-height: 100rpx;
+      font-size: 28rpx;
+      padding-left: 20rpx;
+      overflow: hidden;
+      .title-icon {
+        float: right;
+        height: 100rpx;
+        line-height: 100rpx;
+        margin-right: 20rpx;
+      }
+    }
+    .home-hotSearch-container {
+      width: 100%;
+      padding-bottom: 20rpx;
+      .hotSearch-li {
+        display: inline-block;
+        vertical-align: top;
+        margin-left: 20rpx;
+        margin-top: 20rpx;
+        padding: 8rpx 16rpx;
+        background: #f5f5f5;
+        font-size: 24rpx;
+      }
+    }
+  }
+}
+</style>
