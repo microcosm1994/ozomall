@@ -25,6 +25,7 @@ wepy.component({
   width: 100%;
   overflow: hidden;
   margin-top: 2rpx;
+  background: #eeeef0;
   .home-commoditys-item {
     background: #fff;
     display: inline-block;

@@ -3,6 +3,7 @@
     navigationBarTitleText: 'OZO',
     usingComponents: {
       "van-icon": "~@/components/vant/icon",
+      "prod-list": '~@/components/prod-list',
     }
 }
 </config>
@@ -17,35 +18,52 @@
           <input
             class="weui-input"
             auto-focus
+            type="text"
+            confirm-type="search"
             placeholder="请输入商品名称"
             v-model="searchText"
             @confirm="search"
+            @input="searchChange"
           />
         </div>
       </div>
     </div>
-    <div class="home-hotSearch">
-      <div class="home-hotSearch-title">热门搜索</div>
-      <div class="home-hotSearch-container">
-        <div class="hotSearch-li" @tap="tapSearch('asdasdasdasd')">
-          asdasdasdasd
+    <div class="home-container" v-if="disvible">
+      <div class="home-hotSearch" v-if="searchText === ''">
+        <div class="home-hotSearch-title">热门搜索</div>
+        <div class="home-hotSearch-container">
+          <div class="hotSearch-li" @tap="tapSearch('asdasdasdasd')">
+            asdasdasdasd
+          </div>
+          <div class="hotSearch-li">asdasd阿三打撒撒旦asdasd</div>
+          <div class="hotSearch-li">啊实打实打算</div>
+          <div class="hotSearch-li">阿萨</div>
         </div>
-        <div class="hotSearch-li">asdasd阿三打撒撒旦asdasd</div>
-        <div class="hotSearch-li">啊实打实打算</div>
-        <div class="hotSearch-li">阿萨</div>
-      </div>
-      <div class="home-hotSearch-title">
-        历史搜索
-        <div class="title-icon">
-          <van-icon name="delete" size="28rpx" />
+        <div class="home-hotSearch-title">
+          历史搜索
+          <div class="title-icon">
+            <van-icon name="delete" size="28rpx" />
+          </div>
+        </div>
+        <div class="home-hotSearch-container">
+          <div class="hotSearch-li">asdasdasdasd</div>
+          <div class="hotSearch-li">asdasd阿三打撒撒旦asdasd</div>
+          <div class="hotSearch-li">啊实打实打算</div>
+          <div class="hotSearch-li">阿萨</div>
         </div>
       </div>
-      <div class="home-hotSearch-container">
-        <div class="hotSearch-li">asdasdasdasd</div>
-        <div class="hotSearch-li">asdasd阿三打撒撒旦asdasd</div>
-        <div class="hotSearch-li">啊实打实打算</div>
-        <div class="hotSearch-li">阿萨</div>
+      <div class="home-searchList" v-else>
+        <div class="searchList-item">kjhasd喀军队和</div>
       </div>
+    </div>
+    <div class="home-result" v-else>
+      <div class="result-menu">
+        <div class="menu-item">销量</div>
+        <div class="menu-item">价格</div>
+        <div class="menu-item">新品</div>
+        <div class="menu-item">尺码</div>
+      </div>
+      <prod-list :data="prodList"></prod-list>
     </div>
   </div>
 </template>
@@ -55,15 +73,51 @@ import wepy from '@wepy/core';
 
 wepy.page({
   data: {
+    disvible: true,
     searchText: '',
+    prodList: [
+      {
+        id: 0,
+        url: '/static/img/timg.jpg',
+        name: 'AJ airasd',
+        price: 199,
+        count: 6,
+      },
+      {
+        id: 1,
+        url: '/static/img/timg.jpg',
+        name: 'Yeyzy airasd',
+        price: 199,
+        count: 18,
+      },
+      {
+        id: 2,
+        url: '/static/img/timg.jpg',
+        name: 'Yasd airasd',
+        price: 399,
+        count: 336,
+      },
+      {
+        id: 3,
+        url: '/static/img/timg.jpg',
+        name: 'Nake airasd',
+        price: 200,
+        count: 14,
+      },
+    ],
   },
   methods: {
     search() {
       console.log(this);
       console.log(this.searchText);
     },
+    searchChange(val) {
+      console.log(this.searchText);
+      this.disvible = true;
+    },
     tapSearch(val) {
       this.searchText = val;
+      this.disvible = false;
       this.search();
     },
   },
@@ -72,11 +126,13 @@ wepy.page({
 <style lang="less">
 .home {
   width: 100%;
-  background: #fff;
+  height: 100%;
+  background: #eeeef0;
   .home-search {
     width: 100%;
     height: 100rpx;
     padding: 8rpx 16rpx;
+    background: #fff;
     .home-search-input {
       width: 100%;
       border: 2rpx solid #eeeef0;
@@ -97,33 +153,65 @@ wepy.page({
       }
     }
   }
-  .home-hotSearch {
+  .home-container {
     width: 100%;
-    .home-hotSearch-title {
+    background: #fff;
+    .home-hotSearch {
       width: 100%;
-      height: 100rpx;
-      line-height: 100rpx;
-      font-size: 28rpx;
-      padding-left: 20rpx;
-      overflow: hidden;
-      .title-icon {
-        float: right;
+      .home-hotSearch-title {
+        width: 100%;
         height: 100rpx;
         line-height: 100rpx;
-        margin-right: 20rpx;
+        font-size: 28rpx;
+        padding-left: 20rpx;
+        overflow: hidden;
+        .title-icon {
+          float: right;
+          height: 100rpx;
+          line-height: 100rpx;
+          margin-right: 20rpx;
+        }
+      }
+      .home-hotSearch-container {
+        width: 100%;
+        padding-bottom: 20rpx;
+        .hotSearch-li {
+          display: inline-block;
+          vertical-align: top;
+          margin-left: 20rpx;
+          margin-top: 20rpx;
+          padding: 8rpx 16rpx;
+          background: #f5f5f5;
+          font-size: 24rpx;
+        }
       }
     }
-    .home-hotSearch-container {
+    .home-searchList {
       width: 100%;
-      padding-bottom: 20rpx;
-      .hotSearch-li {
+      padding: 8rpx 20rpx;
+      .searchList-item {
+        width: 100%;
+        height: 60rpx;
+        line-height: 60rpx;
+        border-bottom: 2rpx solid #eeeef0;
+        font-size: 24rpx;
+      }
+    }
+  }
+  .home-result {
+    width: 100%;
+    background: #fff;
+    .result-menu {
+      width: 100%;
+      height: 70rpx;
+      .menu-item {
+        height: 70rpx;
+        line-height: 70rpx;
+        width: 25%;
+        text-align: center;
+        font-size: 28rpx;
         display: inline-block;
         vertical-align: top;
-        margin-left: 20rpx;
-        margin-top: 20rpx;
-        padding: 8rpx 16rpx;
-        background: #f5f5f5;
-        font-size: 24rpx;
       }
     }
   }
