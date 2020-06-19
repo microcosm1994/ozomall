@@ -19,8 +19,8 @@
     <div class="home-banner">
       <swiper
         indicator-dots="true"
-        indicator-color="#ccc"
-        indicator-active-color="#fff"
+        indicator-color="#f5f5f5"
+        indicator-active-color="#333"
         autoplay="true"
         interval="{{3000}}"
         duration="{{500}}"
