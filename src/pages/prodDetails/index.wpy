@@ -1,0 +1,660 @@
+<config>
+{
+    navigationBarTitleText: 'OZO',
+    usingComponents: {
+      "prod-list": '~@/components/prod-list',
+      "van-button": "~@/components/vant/button",
+      "van-row": "~@/components/vant/row",
+      "van-col": "~@/components/vant/col",
+      "van-search": "~@/components/vant/search",
+      "van-sticky": "~@/components/vant/sticky",
+      "van-popup": "~@/components/vant/popup",
+      "van-cell": "~@/components/vant/cell",
+      "van-icon": "~@/components/vant/icon"
+    }
+}
+</config>
+<template>
+  <div class="home">
+    <div class="home-banner">
+      <swiper
+        indicator-dots="true"
+        indicator-color="#ccc"
+        indicator-active-color="#fff"
+        autoplay="true"
+        interval="{{3000}}"
+        duration="{{500}}"
+      >
+        <swiper-item>
+          <image mode="scaleToFill" src="/static/img/banner1.jpg" />
+        </swiper-item>
+        <swiper-item>
+          <image mode="scaleToFill" src="/static/img/banner2.jpg" />
+        </swiper-item>
+        <swiper-item>
+          <image mode="scaleToFill" src="/static/img/banner3.jpg" />
+        </swiper-item>
+        <swiper-item>
+          <image mode="scaleToFill" src="/static/img/banner4.jpg" />
+        </swiper-item>
+      </swiper>
+    </div>
+    <div class="home-title">
+      安德森卡拉卡拉弗兰克激烈对抗asdsda
+    </div>
+    <div class="home-price">
+      ￥109
+    </div>
+    <div class="home-size">
+      <van-cell
+        title="选择尺码"
+        is-link
+        value="请选择尺码"
+        @tap="
+          {
+            {
+              show = true;
+            }
+          }
+        "
+      />
+    </div>
+    <div class="home-ensure">
+      <van-row>
+        <van-col span="6">
+          <div class="home-ensure-icon">
+            <van-icon size="60rpx" name="/static/icon/goods.png" />
+          </div>
+          <div class="home-ensure-text">
+            正品保障
+          </div>
+        </van-col>
+        <van-col span="6">
+          <div class="home-ensure-icon">
+            <van-icon size="60rpx" name="/static/icon/identify.png" />
+          </div>
+          <div class="home-ensure-text">
+            多重鉴别
+          </div>
+        </van-col>
+        <van-col span="6">
+          <div class="home-ensure-icon">
+            <van-icon size="60rpx" name="/static/icon/Inspection.png" />
+          </div>
+          <div class="home-ensure-text">
+            逐件查验
+          </div>
+        </van-col>
+        <van-col span="6">
+          <div class="home-ensure-icon">
+            <van-icon size="60rpx" name="/static/icon/Inspection.png" />
+          </div>
+          <div class="home-ensure-text">
+            售后无忧
+          </div>
+        </van-col>
+      </van-row>
+    </div>
+    <div class="home-relevant">
+      <van-cell title="相关推荐" is-link value="全部" />
+      <swiper
+        indicator-dots="true"
+        indicator-color="#f5f5f5"
+        indicator-active-color="#333"
+        interval="{{3000}}"
+        duration="{{500}}"
+      >
+        <swiper-item>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+        </swiper-item>
+        <swiper-item>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+        </swiper-item>
+        <swiper-item>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+        </swiper-item>
+        <swiper-item>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+          <div class="relevant-item">
+            <div class="item-img">
+              <image mode="aspectFit" src="/static/img/timg.jpg" />
+            </div>
+            <div class="item-title">
+              ask的骄傲了解到垃圾死了的卡了就
+            </div>
+            <div class="item-price">￥139</div>
+          </div>
+        </swiper-item>
+      </swiper>
+    </div>
+    <div class="home-buy">
+      <van-cell is-link value="全部">
+        <view slot="title">
+          <div class="home-buy-title">最近购买</div>
+          <div class="home-buy-count">(55874)</div>
+        </view>
+      </van-cell>
+      <div class="buy-list">
+        <div class="list-item">
+          <van-row>
+            <van-col span="6">
+              <div class="item-avator">
+                <image mode="aspectFit" src="/static/img/timg.jpg" />
+              </div>
+              <div class="item-text">
+                是*伦
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                XL
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                ￥109
+              </div>
+            </van-col>
+            <van-col span="6">
+              <span
+                class="item-text"
+                style="color: #666; width: 80%; text-align: right;"
+                >刚刚</span
+              >
+            </van-col>
+          </van-row>
+        </div>
+        <div class="list-item">
+          <van-row>
+            <van-col span="6">
+              <div class="item-avator">
+                <image mode="aspectFit" src="/static/img/timg.jpg" />
+              </div>
+              <div class="item-text">
+                是*伦
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                XL
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                ￥109
+              </div>
+            </van-col>
+            <van-col span="6">
+              <span
+                class="item-text"
+                style="color: #666; width: 80%; text-align: right;"
+                >刚刚</span
+              >
+            </van-col>
+          </van-row>
+        </div>
+        <div class="list-item">
+          <van-row>
+            <van-col span="6">
+              <div class="item-avator">
+                <image mode="aspectFit" src="/static/img/timg.jpg" />
+              </div>
+              <div class="item-text">
+                是*伦
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                XL
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                ￥109
+              </div>
+            </van-col>
+            <van-col span="6">
+              <span
+                class="item-text"
+                style="color: #666; width: 80%; text-align: right;"
+                >刚刚</span
+              >
+            </van-col>
+          </van-row>
+        </div>
+        <div class="list-item">
+          <van-row>
+            <van-col span="6">
+              <div class="item-avator">
+                <image mode="aspectFit" src="/static/img/timg.jpg" />
+              </div>
+              <div class="item-text">
+                是*伦
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                XL
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                ￥109
+              </div>
+            </van-col>
+            <van-col span="6">
+              <span
+                class="item-text"
+                style="color: #666; width: 80%; text-align: right;"
+                >刚刚</span
+              >
+            </van-col>
+          </van-row>
+        </div>
+        <div class="list-item">
+          <van-row>
+            <van-col span="6">
+              <div class="item-avator">
+                <image mode="aspectFit" src="/static/img/timg.jpg" />
+              </div>
+              <div class="item-text">
+                是*伦
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                XL
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                ￥109
+              </div>
+            </van-col>
+            <van-col span="6">
+              <span
+                class="item-text"
+                style="color: #666; width: 80%; text-align: right;"
+                >刚刚</span
+              >
+            </van-col>
+          </van-row>
+        </div>
+        <div class="list-item">
+          <van-row>
+            <van-col span="6">
+              <div class="item-avator">
+                <image mode="aspectFit" src="/static/img/timg.jpg" />
+              </div>
+              <div class="item-text">
+                是*伦
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                XL
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                ￥109
+              </div>
+            </van-col>
+            <van-col span="6">
+              <span
+                class="item-text"
+                style="color: #666; width: 80%; text-align: right;"
+                >刚刚</span
+              >
+            </van-col>
+          </van-row>
+        </div>
+        <div class="list-item">
+          <van-row>
+            <van-col span="6">
+              <div class="item-avator">
+                <image mode="aspectFit" src="/static/img/timg.jpg" />
+              </div>
+              <div class="item-text">
+                是*伦
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                XL
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="item-text">
+                ￥109
+              </div>
+            </van-col>
+            <van-col span="6">
+              <span
+                class="item-text"
+                style="color: #666; width: 80%; text-align: right;"
+                >刚刚</span
+              >
+            </van-col>
+          </van-row>
+        </div>
+      </div>
+    </div>
+    <div class="home-comment"></div>
+    <div class="home-wearCollection"></div>
+    <div class="home-detail">
+      <div class="detail-header"></div>
+      <div class="detail-param"></div>
+      <div class="detail-brandStory"></div>
+      <div class="detail-prodDes"></div>
+      <div class="detail-prodShow"></div>
+      <div class="detail-prodEffect"></div>
+      <div class="detail-tryReport"></div>
+      <div class="detail-size"></div>
+    </div>
+    <div class="home-shoppingTips"></div>
+    <div class="home-shoppingTips"></div>
+    <div class="home-guarantee"></div>
+    <div class="home-recommend">
+      <prod-list :data="prodList"></prod-list>
+    </div>
+    <!-- 尺码弹出框 -->
+    <van-popup
+      style="height: 70%;"
+      show="{{ show }}"
+      position="bottom"
+      custom-style="height: 20%;"
+      bind:close="onClose"
+      closeable
+    >
+      <div class="" style="height: 100%;"></div>
+    </van-popup>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+
+wepy.page({
+  data: {
+    show: true,
+    actions: [
+      { name: '获取用户信息', color: '#07c160', openType: 'getUserInfo' },
+    ],
+    prodList: [
+      {
+        id: 0,
+        url: '/static/img/timg.jpg',
+        name: 'AJ airasd',
+        price: 199,
+        count: 6,
+      },
+      {
+        id: 1,
+        url: '/static/img/timg.jpg',
+        name: 'Yeyzy airasd',
+        price: 199,
+        count: 18,
+      },
+      {
+        id: 2,
+        url: '/static/img/timg.jpg',
+        name: 'Yasd airasd',
+        price: 399,
+        count: 336,
+      },
+      {
+        id: 3,
+        url: '/static/img/timg.jpg',
+        name: 'Nake airasd',
+        price: 200,
+        count: 14,
+      },
+    ],
+  },
+  methods: {
+    onClose() {
+      this.show = false;
+    },
+  },
+});
+</script>
+<style lang="less">
+.home {
+  width: 100%;
+  background: #eeeef0;
+  .home-banner {
+    width: 100%;
+    height: 700rpx;
+    background: #fff;
+    swiper {
+      height: 100%;
+      image {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .home-title {
+    width: 100%;
+    text-align: center;
+    font-size: 32rpx;
+    color: #333;
+    word-break: break-all;
+    line-height: 60rpx;
+    background: #fff;
+  }
+  .home-price {
+    width: 100%;
+    height: 80rpx;
+    line-height: 80rpx;
+    text-align: center;
+    font-size: 40rpx;
+    font-weight: 600;
+    background: #fff;
+  }
+  .home-size {
+    margin-top: 4rpx;
+  }
+  .home-ensure {
+    width: 100%;
+    margin-top: 4rpx;
+    padding-top: 20rpx;
+    padding-bottom: 20rpx;
+    background: #fff;
+    .van-col--6 {
+      text-align: center;
+      .home-ensure-icon {
+        text-align: center;
+      }
+      .home-ensure-text {
+        font-size: 24rpx;
+      }
+    }
+  }
+  .home-relevant {
+    width: 100%;
+    height: 420rpx;
+    background: #fff;
+    margin-top: 4rpx;
+    padding-bottom: 10rpx;
+    swiper {
+      height: 340rpx;
+      .relevant-item {
+        width: 33%;
+        height: 300rpx;
+        display: inline-block;
+        vertical-align: top;
+        .item-img {
+          width: 100%;
+          height: 200rpx;
+          image {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .item-title {
+          width: 100%;
+          height: 60rpx;
+          text-align: center;
+          font-size: 24rpx;
+          color: #333;
+          line-height: 30rpx;
+          overflow: hidden;
+        }
+        .item-price {
+          width: 100%;
+          text-align: center;
+          font-size: 24rpx;
+          color: #000;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+  .home-buy {
+    width: 100%;
+    margin-top: 4rpx;
+    background: #fff;
+    .home-buy-title {
+      color: #333;
+      font-size: 28rpx;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .home-buy-count {
+      color: #666;
+      font-size: 24rpx;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .buy-list {
+      width: 100%;
+      padding: 8rpx 16rpx;
+      .list-item {
+        width: 100%;
+        line-height: 60rpx;
+        .item-avator {
+          width: 40rpx;
+          height: 40rpx;
+          overflow: hidden;
+          border-radius: 50%;
+          display: inline-block;
+          vertical-align: middle;
+          image {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .item-text {
+          display: inline-block;
+          vertical-align: middle;
+          width: 100rpx;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          font-size: 24rpx;
+          color: #333;
+          margin-left: 12rpx;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+</style>

@@ -1,13 +1,13 @@
 <template>
   <div class="home-commoditys">
-    <div class="home-commoditys-item" v-for="item in data" :key="item.id">
+    <div class="home-commoditys-item" v-for="item in data" :key="item.id" @tap="toProdDetails">
       <div class="item-img">
         <image :src="item.url" mode="aspectFit" />
       </div>
-      <div class="item-text">{{item.name}}</div>
+      <div class="item-text">{{ item.name }}</div>
       <div class="item-info">
-        <div class="item-info-left">￥{{item.price}}</div>
-        <div class="item-info-right">{{item.count}}人付款</div>
+        <div class="item-info-left">￥{{ item.price }}</div>
+        <div class="item-info-right">{{ item.count }}人付款</div>
       </div>
     </div>
   </div>
@@ -15,8 +15,10 @@
 
 <script>
 import wepy from '@wepy/core';
+import jumpMixin from '../mixins/jump.js';
 
 wepy.component({
+  mixins: [jumpMixin],
   props: ['data'],
 });
 </script>

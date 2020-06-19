@@ -18,7 +18,7 @@
       <div class="home-search">
         <van-row>
           <van-col span="20">
-            <van-search disabled placeholder="请输入搜索关键词" @tap="search" />
+            <van-search disabled placeholder="请输入搜索关键词" @tap="toSearch" />
           </van-col>
           <van-col span="4" @tap="toClassify">分类</van-col>
         </van-row>
@@ -142,8 +142,10 @@
 
 <script>
 import wepy from '@wepy/core';
+import jumpMixin from '../../mixins/jump.js';
 
 wepy.page({
+  mixins: [jumpMixin],
   data: {
     classifyType: 1,
     prodList: [
@@ -222,19 +224,7 @@ wepy.page({
   methods: {
     // 点击搜索框下边分类
     classifyTap(type) {
-      this.classifyType = type
-    },
-    // 跳转到搜索页
-    search() {
-      wx.navigateTo({
-        url: '/pages/search/index',
-      });
-    },
-    // 跳转到分类页面
-    toClassify() {
-      wx.navigateTo({
-        url: '/pages/classify/index',
-      });
+      this.classifyType = type;
     },
   },
 });

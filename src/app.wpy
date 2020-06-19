@@ -69,6 +69,7 @@ wepy.app({
       'pages/my/index', // 我的
       'components/prod-list', // 商品列表
       'pages/classify/index', // 分类
+      'pages/prodDetails/index', // 商品详情
     ],
     window: {
       backgroundTextStyle: 'light',
