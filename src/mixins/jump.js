@@ -21,6 +21,12 @@ export default {
                 url: '/pages/prodDetails/index',
             });
         },
+        // 跳转到最近购买页
+        toBuyList() {
+            wx.navigateTo({
+                url: '/pages/buyList/index',
+            });
+        },
     },
     created() {
         console.log('created in mixin');
