@@ -604,7 +604,7 @@
       </div>
     </div>
     <div class="home-recommend">
-      <div class="home-subTitle">购物须知</div>
+      <div class="home-subTitle">为您推荐</div>
       <prod-list :data="prodList"></prod-list>
     </div>
     <div class="home-btn">
@@ -630,6 +630,7 @@
       bind:close="onRelevantClose"
       closeable
     >
+      <div class="home-relevant-title">相关推荐</div>
       <prod-list :data="prodList"></prod-list>
     </van-popup>
     <!-- 尺码弹出框 -->
@@ -1011,7 +1012,7 @@ wepy.page({
   }
   .home-btn {
     width: 100%;
-    height: 120rpx;
+    height: 150rpx;
     background: #fff;
     position: fixed;
     bottom: 0;
@@ -1035,6 +1036,14 @@ wepy.page({
     line-height: 80rpx;
     font-size: 36rpx;
     font-weight: 600;
+  }
+  .home-relevant-title {
+    width: 100%;
+    height: 120rpx;
+    line-height: 120rpx;
+    font-size: 36rpx;
+    font-weight: 600;
+    padding-left: 40rpx;
   }
   .home-size {
     width: 100%;
@@ -1106,7 +1115,7 @@ wepy.page({
     }
     .home-size-btn {
       width: 100%;
-      height: 120rpx;
+      height: 150rpx;
       position: fixed;
       bottom: 0;
       left: 0;
