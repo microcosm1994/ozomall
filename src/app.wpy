@@ -67,11 +67,11 @@ wepy.app({
 <config>
 {
     pages: [
+      'pages/my/index', // 我的
       'pages/index/index', // 首页
       'pages/buyList/index', // 最近购买
       'pages/prodDetails/index', // 商品详情
       'pages/search/index', // 搜索页
-      'pages/my/index', // 我的
       'components/prod-list', // 商品列表
       'components/prod-card', // 商品卡片
       'pages/classify/index', // 分类

@@ -2,61 +2,96 @@
 {
     navigationBarTitleText: 'OZO',
     usingComponents: {
-      panel: '~@/components/panel',
-      counter: '~counter',
-      list: '../../components/list',
-      group: '../../components/group',
-      "slide-view": "module:miniprogram-slide-view",
-      "van-button": "../../components/vant/button",
-      "van-row": "../../components/vant/row",
-      "van-col": "../../components/vant/col",
-      "van-search": "../../components/vant/search"
+      "van-icon": "../../components/vant/icon",
+      "van-cell": "../../components/vant/cell",
     }
 }
 </config>
 <template>
-  <div class="home">
-    <div class="home-search">
-      <van-row>
-        <van-col span="20">
-          <van-search value="{{ value }}" placeholder="请输入搜索关键词" />
-        </van-col>
-        <van-col span="4">分类</van-col>
-      </van-row>
+  <div class="my">
+    <div class="my-header">
+      <div class="my-header-avator">
+        <image mode="aspectFit" src="/static/img/avator.jpg" />
+      </div>
+      <div class="my-header-title">
+        强悍黑钻H08
+      </div>
     </div>
-    <div class="home-classify">
-      <scroll-view class="scroll-view_H" scroll-x="true" bindscroll="scroll">
-        <view class="home-classify-item">推荐</view>
-        <view class="home-classify-item">鞋类</view>
-        <view class="home-classify-item">服装</view>
-        <view class="home-classify-item">美妆</view>
-        <view class="home-classify-item">箱包</view>
-        <view class="home-classify-item">手表</view>
-        <view class="home-classify-item">配饰</view>
-        <view class="home-classify-item">数码</view>
-        <view class="home-classify-item">潮玩</view>
-        <view class="home-classify-item">家居</view>
-      </scroll-view>
+    <div class="my-content">
+      <van-cell is-link value="全部订单" use-label-slot>
+        <div slot="title" class="van-cell-title">
+          <div class="icon">
+            <van-icon name="orders-o" size="20" />
+          </div>
+          <div class="title">购买</div>
+        </div>
+      </van-cell>
+      <div class="van-cell-container">
+        <div class="van-cell-content">
+          <div class="content-item">
+            <div class="content-item-icon">
+              <van-icon name="credit-pay" size="20" />
+            </div>
+            <div class="content-item-text">待付款</div>
+          </div>
+          <div class="content-item">
+            <div class="content-item-icon">
+              <van-icon name="tosend" size="20" />
+            </div>
+            <div class="content-item-text">待发货</div>
+          </div>
+          <div class="content-item">
+            <div class="content-item-icon">
+              <van-icon name="logistics" size="20" />
+            </div>
+            <div class="content-item-text">待收货</div>
+          </div>
+        </div>
+      </div>
+      <van-cell is-link>
+        <view slot="title" class="van-cell-title">
+          <div class="icon">
+            <van-icon name="gold-coin-o" size="20" />
+          </div>
+          <div class="title">账户</div>
+        </view>
+      </van-cell>
+      <van-cell is-link>
+        <view slot="title" class="van-cell-title">
+          <div class="icon">
+            <van-icon name="coupon-o" size="20" />
+          </div>
+          <div class="title">卡券</div>
+        </view>
+      </van-cell>
+      <van-cell is-link>
+        <view slot="title" class="van-cell-title">
+          <div class="icon">
+            <van-icon name="location-o" size="20" />
+          </div>
+          <div class="title">地址管理</div>
+        </view>
+      </van-cell>
+      <van-cell is-link>
+        <view slot="title" class="van-cell-title">
+          <div class="icon">
+            <van-icon name="comment-o" size="20" />
+          </div>
+          <div class="title">消息通知</div>
+        </view>
+      </van-cell>
+      <van-cell is-link>
+        <view slot="title" class="van-cell-title">
+          <div class="icon">
+            <van-icon name="service-o" size="20" />
+          </div>
+          <div class="title">客服中心</div>
+        </view>
+      </van-cell>
     </div>
-    <div class="home-banner">
-      <swiper
-        indicator-dots="true"
-        autoplay="{{true}}"
-        interval="{{2000}}"
-        duration="{{500}}"
-      >
-        <swiper-item>
-          <image
-            style="width: 100%;"
-            src="/static/img/banner1.jpg"
-          />
-        </swiper-item>
-      </swiper>
+    <div class="my-btn">
+      退出登陆
     </div>
-    <div class="home-ensure"></div>
-    <div class="home-hotClassify"></div>
-    <div class="home-service"></div>
-    <div class="home-recommend"></div>
   </div>
 </template>
 
@@ -66,30 +101,98 @@ import wepy from '@wepy/core';
 wepy.page({});
 </script>
 <style lang="less">
-.home {
+.my {
   width: 100%;
-  .home-search {
+  height: 100%;
+  background: #eeeef0;
+  .my-header {
     width: 100%;
-    height: 100rpx;
-    .van-col--4 {
-      text-align: center;
-      line-height: 100rpx;
-    }
-  }
-  .home-classify {
-    width: 100%;
-    display: flex;
-    flex: 1;
-    flex-direction: row; //让子元素在一行显示
-    white-space: nowrap;
-    .home-classify-item {
+    background: #fff;
+    padding: 60rpx 40rpx;
+    .my-header-avator {
+      width: 100rpx;
+      height: 100rpx;
+      border-radius: 50%;
+      overflow: hidden;
       display: inline-block;
       vertical-align: middle;
-      flex-shrink: 0;
-      padding: 8rpx 28rpx;
-      font-size: 28rpx;
-      text-align: center;
+      image {
+        width: 100%;
+        height: 100%;
+      }
     }
+    .my-header-title {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 20rpx;
+      height: 100rpx;
+      line-height: 100rpx;
+      color: #333;
+      font-size: 40rpx;
+      font-weight: 600;
+    }
+  }
+  .my-content {
+    width: 100%;
+    margin-top: 10rpx;
+    background: #fff;
+    .van-cell {
+      padding: 30rpx 20rpx;
+    }
+    .van-cell-title {
+      padding-left: 20rpx;
+      .icon {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .title {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 32rpx;
+        margin-left: 20rpx;
+        color: #333;
+      }
+    }
+    .van-cell-container {
+      width: 100%;
+      padding: 30rpx 20rpx;
+      .van-cell-content {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-top: -6rpx;
+        background: #fff;
+        border-bottom: 2rpx solid #f5f5f5;
+        .content-item {
+          background: #fff;
+          justify-content: space-around;
+          width: 30%;
+          height: 100rpx;
+          .content-item-icon {
+            width: 100%;
+            text-align: center;
+          }
+          .content-item-text {
+            width: 100%;
+            text-align: center;
+            font-size: 28rpx;
+            color: #333;
+          }
+        }
+      }
+    }
+  }
+  .my-btn {
+    width: 100%;
+    height: 100rpx;
+    line-height: 100rpx;
+    text-align: center;
+    font-size: 28rpx;
+    color: #333;
+    background: #fff;
+    margin-top: 10rpx;
   }
 }
 </style>
