@@ -67,8 +67,10 @@ wepy.app({
 <config>
 {
     pages: [
+      'pages/index/index', //   首页
+      'pages/order/index', //   订单
+      'pages/identify/index', // 鉴别查询
       'pages/my/index', // 我的
-      'pages/index/index', // 首页
       'pages/buyList/index', // 最近购买
       'pages/prodDetails/index', // 商品详情
       'pages/search/index', // 搜索页
@@ -94,7 +96,7 @@ wepy.app({
         "iconPath": "static/icon/goods_new_light.png",
         "selectedIconPath": "static/icon/goods_new_fill_light.png"
       }, {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/identify/index",
         "text": "鉴别查询",
         "iconPath": "static/icon/light.png",
         "selectedIconPath": "static/icon/light_fill.png"

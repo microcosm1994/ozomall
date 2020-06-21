@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="my-content">
-      <van-cell is-link value="全部订单" use-label-slot>
+      <van-cell is-link value="全部订单" use-label-slot @tap="toOrder(4)">
         <div slot="title" class="van-cell-title">
           <div class="icon">
             <van-icon name="orders-o" size="20" />
@@ -28,19 +28,19 @@
       </van-cell>
       <div class="van-cell-container">
         <div class="van-cell-content">
-          <div class="content-item">
+          <div class="content-item" @tap="toOrder(1)">
             <div class="content-item-icon">
               <van-icon name="credit-pay" size="20" />
             </div>
             <div class="content-item-text">待付款</div>
           </div>
-          <div class="content-item">
+          <div class="content-item" @tap="toOrder(2)">
             <div class="content-item-icon">
               <van-icon name="tosend" size="20" />
             </div>
             <div class="content-item-text">待发货</div>
           </div>
-          <div class="content-item">
+          <div class="content-item" @tap="toOrder(3)">
             <div class="content-item-icon">
               <van-icon name="logistics" size="20" />
             </div>
@@ -97,8 +97,11 @@
 
 <script>
 import wepy from '@wepy/core';
+import jumpMixin from '../../mixins/jump.js';
 
-wepy.page({});
+wepy.page({
+  mixins: [jumpMixin]
+});
 </script>
 <style lang="less">
 .my {

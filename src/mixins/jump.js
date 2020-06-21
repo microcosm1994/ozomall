@@ -27,6 +27,16 @@ export default {
                 url: '/pages/buyList/index',
             });
         },
+        // 跳转到订单列表页
+        toOrder(active) {
+            wx.navigateTo({
+                url: '/pages/order/index',
+                success: function (res) {
+                    // 通过eventChannel向被打开页面传送数据
+                    res.eventChannel.emit('active', { active })
+                }
+            });
+        },
     },
     created() {
         console.log('created in mixin');
