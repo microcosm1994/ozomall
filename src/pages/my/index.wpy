@@ -48,7 +48,7 @@
           </div>
         </div>
       </div>
-      <van-cell is-link>
+      <van-cell is-link @tap="toAccount">
         <view slot="title" class="van-cell-title">
           <div class="icon">
             <van-icon name="gold-coin-o" size="20" />

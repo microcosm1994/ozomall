@@ -27,6 +27,18 @@ export default {
                 url: '/pages/buyList/index',
             });
         },
+        // 跳转到我的账户页
+        toAccount() {
+            wx.navigateTo({
+                url: '/pages/account/index',
+            });
+        },
+        // 跳转到我的账户-账户明细页
+        toAccountList() {
+            wx.navigateTo({
+                url: '/pages/account/list',
+            });
+        },
         // 跳转到订单列表页
         toOrder(active) {
             wx.navigateTo({
