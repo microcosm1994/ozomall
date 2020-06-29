@@ -1,0 +1,87 @@
+<config>
+{
+    navigationBarTitleText: '我的账户',
+    usingComponents: {
+      "van-icon": "../../components/vant/icon",
+      "van-cell": "../../components/vant/cell",
+    }
+}
+</config>
+<template>
+  <div class="account">
+    <div class="account-header">
+      <div class="account-header-balance">
+        <span style="font-size: 32rpx;">￥</span>0
+      </div>
+      <div class="account-header-tip">
+          账户余额仅用于提现，如需提现请下载得物App
+      </div>
+    </div>
+    <div class="account-content">
+      <van-cell is-link use-label-slot @tap="toAccountList">
+        <div slot="title" class="van-cell-title">
+          <div class="icon">
+            <van-icon name="orders-o" size="20" />
+          </div>
+          <div class="title">明细</div>
+        </div>
+      </van-cell>
+    </div>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import jumpMixin from '../../mixins/jump.js';
+
+wepy.page({
+  mixins: [jumpMixin],
+});
+</script>
+<style lang="less">
+.account {
+  width: 100%;
+  height: 100%;
+  background: #eeeef0;
+  .account-header {
+    width: 100%;
+    background: #fff;
+    padding: 60rpx 40rpx;
+    .account-header-balance {
+      width: 100%;
+      text-align: center;
+      font-size: 60rpx;
+      color: #11cccc;
+      font-weight: 600;
+    }
+    .account-header-tip {
+      width: 100%;
+      text-align: center;
+      font-size: 24rpx;
+      line-height: 80rpx;
+    }
+  }
+  .account-content {
+    width: 100%;
+    margin-top: 10rpx;
+    background: #fff;
+    .van-cell {
+      padding: 30rpx 20rpx;
+    }
+    .van-cell-title {
+      padding-left: 20rpx;
+      .icon {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .title {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 32rpx;
+        margin-left: 20rpx;
+        color: #333;
+      }
+    }
+  }
+}
+</style>

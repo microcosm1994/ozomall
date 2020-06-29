@@ -1,0 +1,90 @@
+<config>
+{
+    navigationBarTitleText: 'OZO',
+    usingComponents: {
+      "van-toast": "~@/components/vant/toast"
+    }
+}
+</config>
+<template>
+  <div class="identify">
+    <div class="identify-header">
+      <image src="/static/img/identify.jpg" mode="scaleToFill" />
+      <input type="text" placeholder="输入鉴别ID" v-model="identifyId" />
+    </div>
+    <div class="identify-btn">
+      <div class="identify-btn-query" @tap="query">查询</div>
+      <div class="identify-btn-des">鉴别ID在鉴别报告下方</div>
+    </div>
+    <!-- 文字提示 -->
+    <van-toast id="van-toast" />
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import Toast from '@/components/vant/toast/toast';
+
+wepy.page({
+  data: {
+    identifyId: '',
+  },
+  methods: {
+    query() {
+      Toast('系统升级中，暂时无法查询，敬请期待！');
+    },
+  },
+});
+</script>
+<style lang="less">
+.identify {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  .identify-header {
+    width: 100%;
+    height: 60%;
+    position: relative;
+    image {
+      width: 100%;
+      height: 100%;
+    }
+    input {
+      width: 80%;
+      height: 80rpx;
+      line-height: 80rpx;
+      text-align: center;
+      position: absolute;
+      bottom: 40rpx;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+    }
+  }
+  .identify-btn {
+    width: 100%;
+    padding-top: 40rpx;
+    text-align: center;
+    .identify-btn-query {
+      width: 300rpx;
+      height: 100rpx;
+      line-height: 100rpx;
+      text-align: center;
+      font-size: 36rpx;
+      color: #fff;
+      background: #11cccc;
+      border-radius: 4rpx;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    .identify-btn-des {
+      width: 100%;
+      height: 50rpx;
+      line-height: 50rpx;
+      font-size: 28rpx;
+      color: #666;
+      text-align: center;
+    }
+  }
+}
+</style>
