@@ -80,7 +80,8 @@
 
 <script>
 import { login, logout, getInfo } from "@/api/user";
-
+import cryptoMd5 from "crypto-js/md5";
+console.log(cryptoMd5(encodeURI(113655)).toString())
 export default {
   name: "Login",
   data() {
@@ -123,20 +124,25 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
-          login(this.loginForm)
+          login({
+            userName: this.loginForm.userName,
+            passWord: cryptoMd5(encodeURI(this.loginForm.passWord)).toString(),
+            code: this.loginForm.code
+          })
             .then(response => {
-              // const { data } = response;
-              console.log(response)
-              console.log(data)
+              const { data } = response;
+              if (data.code === 1) {
+                this.$store.commit("SET_TOKEN", data.token);
+                this.$router.push("/");
+              } else {
+                this.$message.error(data.msg);
+                this.RefreCode();
+              }
               this.loading = false;
-              this.$store.commit("SET_TOKEN", data.token);
-              this.$router.push("/");
             })
             .catch(error => {
               this.loading = false;
             });
-        } else {
-          return false;
         }
       });
     }

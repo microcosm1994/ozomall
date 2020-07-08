@@ -2,12 +2,12 @@ package com.ozomall.controller.admin;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequestMapping("/verify")
 public class VerifyCode {
 
-    @Autowired
+    @Resource
     private Producer captchaProducer;
 
     @GetMapping(value = "/code")
@@ -37,6 +37,7 @@ public class VerifyCode {
         String capText = captchaProducer.createText();
         // 存储验证码到session
         request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
+        request.getSession().setAttribute("code", capText);
         // 生成验证码图片
         BufferedImage bi = captchaProducer.createImage(capText);
         ServletOutputStream out = response.getOutputStream();

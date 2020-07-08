@@ -11,26 +11,30 @@ public class ResultGenerate {
      */
     public static Result genSuccessResult() {
         Result result = new Result();
-        result.setResultCode(SUCCESS_CODE);
-        result.setResultMsg("成功");
+        result.setCode(SUCCESS_CODE);
+        result.setMsg("成功");
         return result;
     }
 
     public static Result genSuccessResult(String msg) {
         Result result = new Result();
-        result.setResultCode(SUCCESS_CODE);
-        result.setResultMsg(msg);
+        result.setCode(SUCCESS_CODE);
+        result.setMsg(msg);
         return result;
     }
 
-    public static <T> Result<T> genSuccessResult(T data, int page, int size, int total) {
+    public static <T> Result<T> genSuccessResult(T data) {
         Result result = new Result();
-        result.setResultCode(SUCCESS_CODE);
-        result.setResultMsg("成功");
-        result.setResultData(data);
-        result.setResultPage(page);
-        result.setResultSize(size);
-        result.setResultTotal(total);
+        result.setCode(SUCCESS_CODE);
+        result.setMsg("成功");
+        result.setData(data);
+        return result;
+    }
+
+    public static Result genErroResult(String msg) {
+        Result result = new Result();
+        result.setCode(ERROR_CODE);
+        result.setMsg(msg);
         return result;
     }
 

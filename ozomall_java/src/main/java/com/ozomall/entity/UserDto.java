@@ -15,4 +15,16 @@ public class UserDto {
      * 密码
      * */
     private String passWord;
+    /**
+     * 用户昵称
+     * */
+    private String nickName;
+    /**
+     * 用户权限
+     * */
+    private Integer role;
+    /**
+     * 用户手机号
+     * */
+    private String phone;
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozomall.dao.AdminUserMapper">
+    <insert id="add" parameterType="com.ozomall.entity.UserDto">
+        insert into admin_user(userName, passWord, nickName, role) values (#{userName}, #{passWord}, #{nickName}, #{role})
+    </insert>
+    <select id="login" resultType="com.ozomall.entity.UserDto">
+        SELECT * FROM admin_user WHERE user_name=#{userName}
+    </select>
+    <select id="find" resultType="com.ozomall.entity.UserDto">
+        select * from admin_user where user_name=#{userName} or nick_name=#{nickName} or role=#{role} or phone=#{phone}
+    </select>
+</mapper>
