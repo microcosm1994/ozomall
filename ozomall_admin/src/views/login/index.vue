@@ -63,7 +63,7 @@
           placement="right"
         >
           <div class="verifyCode" @click="RefreCode">
-            <img ref="verifyCode" src="/api/verify/code" alt="" srcset="" />
+            <img ref="verifyCode" src="/api/admin/verify/code" alt="" srcset="" />
           </div>
         </el-tooltip>
       </el-form-item>
@@ -79,9 +79,8 @@
 </template>
 
 <script>
-import { login, logout, getInfo } from "@/api/user";
+import { login } from "@/api/user";
 import cryptoMd5 from "crypto-js/md5";
-console.log(cryptoMd5(encodeURI(113655)).toString())
 export default {
   name: "Login",
   data() {
@@ -106,7 +105,7 @@ export default {
     // 刷新验证码
     RefreCode() {
       this.$refs.verifyCode.src =
-        "/api/verify/code?c=" + this.verifyCodeCount++;
+        "/api/admin/verify/code?c=" + this.verifyCodeCount++;
     },
     // 明文显示密码
     showPwd() {
@@ -131,8 +130,10 @@ export default {
           })
             .then(response => {
               const { data } = response;
+              console.log(response);
               if (data.code === 1) {
-                this.$store.commit("SET_TOKEN", data.token);
+                console.log(data);
+                this.$store.commit("user/SET_TOKEN", data.data.token);
                 this.$router.push("/");
               } else {
                 this.$message.error(data.msg);

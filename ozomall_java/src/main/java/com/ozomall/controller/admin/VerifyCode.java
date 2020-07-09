@@ -16,7 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/verify")
+@RequestMapping("/admin/verify")
 public class VerifyCode {
 
     @Resource
