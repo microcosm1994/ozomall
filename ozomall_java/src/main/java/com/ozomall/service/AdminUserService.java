@@ -13,4 +13,12 @@ public interface AdminUserService {
      * @return
      */
     Result login(String userName, String passWord);
+
+    /**
+     * 获取用户信息
+     *
+     * @param token 用户token
+     * @return
+     */
+    Result getUserInfo(String token);
 }

@@ -27,11 +27,12 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
-        if (!data) {
+        if (data.code === 1) {
+          commit('SET_UserInfo', data.data)
+          resolve(data.data)
+        } else {
           reject('Verification failed, please Login again.')
         }
-        commit('SET_UserInfo', data)
-        resolve(data)
       }).catch(error => {
         reject(error)
       })
@@ -43,7 +44,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
-        removeToken()
         resetRouter()
         dispatch('tagsView/delAllViews', null, { root: true })
 
@@ -58,7 +58,6 @@ const actions = {
   resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
-      removeToken()
       resolve()
     })
   },

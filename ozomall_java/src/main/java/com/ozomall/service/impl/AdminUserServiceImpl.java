@@ -1,5 +1,6 @@
 package com.ozomall.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ozomall.dao.AdminUserMapper;
 import com.ozomall.entity.Result;
 import com.ozomall.entity.UserDto;
@@ -32,7 +33,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     public Result login(String userName, String passWord) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         Map resultData = new HashMap();
-        UserDto userInfo = adminUserMapper.find(userName, null, null, null);
+        UserDto userInfo = adminUserMapper.login(userName);
         if (userInfo == null) {
             return ResultGenerate.genErroResult("用户名或密码错误");
         }
@@ -47,5 +48,19 @@ public class AdminUserServiceImpl implements AdminUserService {
         } else {
             return ResultGenerate.genErroResult("密码错误");
         }
+    }
+
+    /**
+     * 登陆
+     *
+     * @param token 用户token
+     * @return 成功返回true, 失败返回false
+     */
+    @Override
+    public Result getUserInfo(String token) {
+        String tokenValue = redisTemplate.opsForValue().get(token);
+        String userName = JSONObject.parseObject(tokenValue).getString("userName");
+        UserDto userInof = adminUserMapper.find(userName, null, null, null);
+        return ResultGenerate.genSuccessResult(userInof);
     }
 }

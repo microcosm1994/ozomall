@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface AdminUserMapper {
+
     public UserDto login(@Param("userName") String userName);
 
     public UserDto find(@Param("userName") String userName, @Param("nickName") String nickName, @Param("role") Integer role, @Param("phone") String phone);

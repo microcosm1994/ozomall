@@ -29,8 +29,6 @@ public class AuthUtils {
         tokenVal.put("userName", userInfo.getUserName());
         tokenVal.put("role", userInfo.getRole());
         String jsonTokenValue = JSON.toJSONString(tokenVal);
-        System.out.println(token);
-        System.out.println(jsonTokenValue);
         return jsonTokenValue;
     }
 }
