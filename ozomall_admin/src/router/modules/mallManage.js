@@ -1,20 +1,20 @@
 import Layout from '@/layout'
 
 const settingRouter = {
-    path: '/setting',
+    path: '/mallManage',
     component: Layout,
-    redirect: '/setting/index',
-    name: 'setting',
+    redirect: '/mallManage/index',
+    name: 'mallManage',
     meta: {
-        title: '系统设置',
-        icon: 'el-icon-setting'
+        title: '商城管理',
+        icon: 'el-icon-s-shop'
     },
     children: [
         {
             path: 'index',
             component: () => import('@/views/menuSetting/index'),
-            name: 'menuSetting',
-            meta: { title: '配置菜单' }
+            name: 'mallManage_info',
+            meta: { title: 'banner管理' }
         },
         {
             path: 'theme',

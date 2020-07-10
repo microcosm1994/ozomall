@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/user")
 @ResponseBody
 public class UserController {
     @Resource
@@ -21,7 +21,7 @@ public class UserController {
     @Resource
     private AdminUserService adminUserService;
 
-    @PostMapping(value = "/user/login")
+    @PostMapping(value = "/login")
     public Result login(@RequestBody Map<String, String> loginInfo) {
         // 获取session中的验证码
         Object kaptchaSessionCode = session.getAttribute(Constants.KAPTCHA_SESSION_KEY);

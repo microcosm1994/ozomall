@@ -1,9 +1,8 @@
 package com.ozomall.service;
 
 import com.ozomall.entity.Result;
-import org.springframework.stereotype.Service;
 
-@Service
+
 public interface AdminUserService {
     /**
      * 登陆

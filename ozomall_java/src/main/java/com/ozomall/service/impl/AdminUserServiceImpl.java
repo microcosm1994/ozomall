@@ -1,9 +1,10 @@
 package com.ozomall.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ozomall.dao.AdminUserMapper;
 import com.ozomall.entity.Result;
-import com.ozomall.entity.UserDto;
+import com.ozomall.entity.AdminUserDto;
 import com.ozomall.service.AdminUserService;
 import com.ozomall.utils.AuthUtils;
 import com.ozomall.utils.ResultGenerate;
@@ -33,16 +34,18 @@ public class AdminUserServiceImpl implements AdminUserService {
     public Result login(String userName, String passWord) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         Map resultData = new HashMap();
-        UserDto userInfo = adminUserMapper.login(userName);
-        if (userInfo == null) {
+        LambdaQueryWrapper<AdminUserDto> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AdminUserDto::getUserName,userName);
+        AdminUserDto userResult = adminUserMapper.selectOne(wrapper);
+        if (userResult == null) {
             return ResultGenerate.genErroResult("用户名或密码错误");
         }
         // 验证密码
-        boolean flag = encoder.matches(passWord, userInfo.getPassWord());
+        boolean flag = encoder.matches(passWord, userResult.getPassWord());
         if (flag) {
             String token = AuthUtils.genToken(userName);
             resultData.put("token", token);
-            String jsonTokenValue = AuthUtils.setToken(token, userInfo);
+            String jsonTokenValue = AuthUtils.setToken(token, userResult);
             redisTemplate.opsForValue().set(token, jsonTokenValue);
             return ResultGenerate.genSuccessResult(resultData);
         } else {
@@ -60,7 +63,9 @@ public class AdminUserServiceImpl implements AdminUserService {
     public Result getUserInfo(String token) {
         String tokenValue = redisTemplate.opsForValue().get(token);
         String userName = JSONObject.parseObject(tokenValue).getString("userName");
-        UserDto userInof = adminUserMapper.find(userName, null, null, null);
-        return ResultGenerate.genSuccessResult(userInof);
+        LambdaQueryWrapper<AdminUserDto> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AdminUserDto::getUserName,userName);
+        AdminUserDto userResult = adminUserMapper.selectOne(wrapper);
+        return ResultGenerate.genSuccessResult(userResult);
     }
 }

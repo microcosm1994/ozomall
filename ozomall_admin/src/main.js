@@ -11,9 +11,10 @@ import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
 import * as filters from './filters' // global filters
+import '@/assets/css/public.css' // 公共样式
 
 Vue.use(Element, {
-  size: Cookies.get('size') || 'medium'
+  size: "mini"
 })
 
 // 注册全局过滤器

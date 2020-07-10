@@ -1,0 +1,15 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.el-table th {
+  background-color: #f4f4f6;
+  color: #333;
+}
+.el-dialog__header {
+  padding: 0 20px;
+}
+.el-dialog__body {
+  padding: 0 30px;
+}

@@ -1,0 +1,25 @@
+.page {
+  width: 100%;
+  box-shadow: 0 0 5px #ccc;
+  margin-top: 20px;
+  border-radius: 4px;
+}
+.page .page-header {
+  background: #fff;
+  padding: 30px;
+}
+.page .page-container {
+  background: #fff;
+  padding: 0 20px 40px 20px;
+}
+.page .page-container .page-container-header {
+  width: 100%;
+}
+.page .page-container .page-container-table {
+  width: 100%;
+}
+.page .page-container .page-container-page {
+  width: 100%;
+  text-align: center;
+  padding-top: 20px;
+}

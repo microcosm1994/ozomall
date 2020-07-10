@@ -11,7 +11,9 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested' 
-import settingRouter from './modules/setting' 
+import settingRouter from './modules/setting' // 后台系统设置
+import mallManage from './modules/mallManage' // 商城管理模块
+import classifyManage from './modules/classifyManage' // 分类管理模块
 export default new Router({
   routes: [
     {
@@ -39,7 +41,7 @@ export default new Router({
           path: 'dashboard',
           component: () => import('@/views/dashboard/index'),
           name: 'Dashboard',
-          meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+          meta: { title: '工作台', icon: 'el-icon-s-platform', affix: true }
         }
       ]
     },
@@ -86,6 +88,8 @@ export default new Router({
     chartsRouter,
     tableRouter,
     nestedRouter,
-    settingRouter
+    classifyManage,
+    mallManage,
+    settingRouter,
   ]
 })
