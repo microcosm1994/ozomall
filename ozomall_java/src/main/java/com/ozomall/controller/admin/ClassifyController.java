@@ -36,4 +36,5 @@ public class ClassifyController {
     public Result queryClassify(AdminClassifyDto form) {
         return adminClassifyService.queryClassify(form);
     }
+
 }

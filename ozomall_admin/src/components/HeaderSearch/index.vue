@@ -22,7 +22,6 @@
 // make search results more in line with expectations
 import Fuse from 'fuse.js'
 import path from 'path'
-
 export default {
   name: 'HeaderSearch',
   data() {
@@ -34,15 +33,7 @@ export default {
       fuse: undefined
     }
   },
-  computed: {
-    routes() {
-      return this.$store.getters.permission_routes
-    }
-  },
   watch: {
-    routes() {
-      this.searchPool = this.generateRoutes(this.routes)
-    },
     searchPool(list) {
       this.initFuse(list)
     },
@@ -53,9 +44,6 @@ export default {
         document.body.removeEventListener('click', this.close)
       }
     }
-  },
-  mounted() {
-    this.searchPool = this.generateRoutes(this.routes)
   },
   methods: {
     click() {
@@ -93,40 +81,6 @@ export default {
           weight: 0.3
         }]
       })
-    },
-    // Filter out the routes that can be displayed in the sidebar
-    // And generate the internationalized title
-    generateRoutes(routes, basePath = '/', prefixTitle = []) {
-      let res = []
-
-      for (const router of routes) {
-        // skip hidden router
-        if (router.hidden) { continue }
-
-        const data = {
-          path: path.resolve(basePath, router.path),
-          title: [...prefixTitle]
-        }
-
-        if (router.meta && router.meta.title) {
-          data.title = [...data.title, router.meta.title]
-
-          if (router.redirect !== 'noRedirect') {
-            // only push the routes with title
-            // special case: need to exclude parent router without redirect
-            res.push(data)
-          }
-        }
-
-        // recursive child routes
-        if (router.children) {
-          const tempRoutes = this.generateRoutes(router.children, data.path, data.title)
-          if (tempRoutes.length >= 1) {
-            res = [...res, ...tempRoutes]
-          }
-        }
-      }
-      return res
     },
     querySearch(query) {
       if (query !== '') {

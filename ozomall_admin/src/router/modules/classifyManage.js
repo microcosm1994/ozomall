@@ -12,14 +12,8 @@ const settingRouter = {
     children: [
         {
             path: 'index',
-            component: () => import('@/views/classifyManage/group/index'),
-            name: 'classifyManage',
-            meta: { title: '类别分组' }
-        },
-        {
-            path: 'theme',
             component: () => import('@/views/classifyManage/classify/index'),
-            name: 'theme',
+            name: 'index',
             meta: { title: '商品分类' }
         },
         {

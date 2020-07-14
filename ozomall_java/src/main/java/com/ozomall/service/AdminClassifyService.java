@@ -14,4 +14,5 @@ public interface AdminClassifyService {
      * 查询分类
      */
     Result queryClassify(AdminClassifyDto form);
+
 }

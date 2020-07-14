@@ -1,105 +1,92 @@
 <template>
-  <div class="page">
-    <div class="page-header">
-      <el-form :inline="true" ref="form" :model="form" label-width="80px">
-        <el-form-item label="分类名称">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-        </el-form-item>
-      </el-form>
+  <div class="classify">
+    <div class="classify-header">
+      <el-button type="primary" @click="dialogVisible = true">新建</el-button>
     </div>
-    <div class="page-container">
-      <div class="page-container-header">
-        <el-form :inline="true" ref="form" :model="form" label-width="80px">
-          <el-form-item>
-            <el-button
-              icon="el-icon-refresh"
-              type="primary"
-              @click="onSubmit"
-            ></el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="dialogVisible = true"
-              >新建</el-button
+    <el-row :gutter="4">
+      <el-col :span="8">
+        <div class="classifyBox">
+          <div class="classifyBox-header">
+            <div class="classifyBox-header-title">
+              一级分类
+            </div>
+          </div>
+          <ul>
+            <li class="classifyBox-item" v-if="classifyList.level1.length === 0">
+              暂无数据
+            </li>
+            <li
+              v-else
+              class="classifyBox-item"
+              v-for="item in classifyList.level1"
+              :key="item.id"
+              @click="getClassify(2, item.id)"
             >
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="page-container-table">
-        <el-table :data="tableData" style="width: 100%" border>
-          <el-table-column
-            align="center"
-            prop="id"
-            label="id"
-            width="80"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="name"
-            label="所属类别"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="name"
-            label="所属分组"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="name"
-            label="分类名称"
-          ></el-table-column>
-          <el-table-column align="center" prop="createTime" label="创建时间">
-          </el-table-column>
-          <el-table-column
-            width="200"
-            align="center"
-            prop="createTime"
-            label="操作"
-          >
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)"
-                >编辑</el-button
-              >
-              <el-button
-                size="mini"
-                type="danger"
-                icon="el-icon-delete"
-                @click="handleDelete(scope.$index, scope.row)"
-              ></el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="page-container-page">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[100, 200, 300, 400]"
-            :page-size="100"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="400"
-          >
-          </el-pagination>
+              {{ item.name }}
+            </li>
+          </ul>
         </div>
-      </div>
-    </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="classifyBox">
+          <div class="classifyBox-header">
+            <div class="classifyBox-header-title">
+              二级分类
+            </div>
+          </div>
+          <ul>
+            <li class="classifyBox-item" v-if="classifyList.level2.length === 0">
+              暂无数据
+            </li>
+            <li
+              v-else
+              class="classifyBox-item"
+              v-for="item in classifyList.level2"
+              :key="item.id"
+              @click="getClassify(3, item.id)"
+            >
+              {{ item.name }}
+            </li>
+          </ul>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="classifyBox">
+          <div class="classifyBox-header">
+            <div class="classifyBox-header-title">
+              三级分类
+            </div>
+          </div>
+          <ul>
+            <li class="classifyBox-item" v-if="classifyList.level3.length === 0">
+              暂无数据
+            </li>
+            <li
+              v-else
+              class="classifyBox-item"
+              v-for="item in classifyList.level3"
+              :key="item.id"
+            >
+              {{ item.name }}
+            </li>
+          </ul>
+        </div>
+      </el-col>
+    </el-row>
     <!-- 新建弹框 -->
     <el-dialog
       :visible.sync="dialogVisible"
-      :v-if="dialogVisible"
-      width="500px"
+      v-if="dialogVisible"
+      width="400px"
     >
-      <Create :closeModal="closeModal"/>
+      <Create :closeModal="closeModal" />
     </el-dialog>
   </div>
 </template>
 
 <script>
 import Create from "./modal/create";
+import { getClassifyList } from "@/api/classifyManage";
 export default {
   components: {
     Create
@@ -109,38 +96,17 @@ export default {
       dialogVisible: false,
       form: {
         name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
+        type: ""
       },
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ],
-      currentPage: 1
+      classifyList: {
+        level1: [],
+        level2: [],
+        level3: []
+      }
     };
+  },
+  mounted() {
+    this.getClassify(1, 0);
   },
   methods: {
     onSubmit() {
@@ -149,13 +115,78 @@ export default {
     // 关闭弹框
     closeModal() {
       this.dialogVisible = false;
+       this.getClassify(1, 0);
     },
-    handleSizeChange() {},
-    handleCurrentChange() {}
+    // 获取分类
+    getClassify(level, parentId) {
+      console.log(level);
+      console.log(parentId);
+      let data = {
+        classifyLevel: level,
+        parentId: parentId
+      };
+      this.classifyList["level" + level] = [];
+      this.classifyList["level" + (level + 1)] = [];
+      getClassifyList(data)
+        .then(res => {
+          if (res.data.code === 1) {
+            this.classifyList["level" + level] = res.data.data;
+            console.log(this.classifyList);
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    handleSizeChange() {
+      this.getData();
+    },
+    handleCurrentChange() {
+      this.getData();
+    }
   }
 };
 </script>
 
 <style scoped lang="less">
 @import "../../../assets/css/page.css";
+.classify {
+  padding-top: 20px;
+  .classify-header {
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+  }
+  .classifyBox {
+    width: 100%;
+    background: #fff;
+    padding: 0 20px 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+    .classifyBox-header {
+      width: 100%;
+      .classifyBox-header-title {
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 600;
+        border-bottom: 1px solid #e2e2e2;
+      }
+    }
+    .classifyBox-item {
+      width: 100%;
+      height: 40px;
+      line-height: 40px;
+      border-bottom: 1px solid #e2e2e2;
+      padding-left: 20px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  }
+}
 </style>
