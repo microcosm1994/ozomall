@@ -33,7 +33,17 @@
             align="center"
             prop="id"
             label="id"
-            width="180"
+            width="80"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="name"
+            label="所属类别"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="name"
+            label="所属分组"
           ></el-table-column>
           <el-table-column
             align="center"
@@ -147,5 +157,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import "../../assets/css/page.css";
+@import "../../../assets/css/page.css";
 </style>

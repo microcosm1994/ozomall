@@ -3,6 +3,7 @@ package com.ozomall.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @TableName("admin_user")
@@ -20,6 +21,7 @@ public class AdminUserDto {
     /**
      * 密码
      * */
+    @JsonIgnore
     private String passWord;
     /**
      * 用户昵称

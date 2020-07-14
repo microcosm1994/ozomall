@@ -12,21 +12,21 @@ const settingRouter = {
     children: [
         {
             path: 'index',
-            component: () => import('@/views/classifyManage/index'),
+            component: () => import('@/views/classifyManage/group/index'),
             name: 'classifyManage',
-            meta: { title: '商品分类' }
+            meta: { title: '类别分组' }
         },
         {
             path: 'theme',
-            component: () => import('@/views/classifyManage/index'),
+            component: () => import('@/views/classifyManage/classify/index'),
             name: 'theme',
-            meta: { title: '首页分类' }
+            meta: { title: '商品分类' }
         },
         {
             path: 'markdown',
-            component: () => import('@/views/classifyManage/index'),
+            component: () => import('@/views/classifyManage/hotGroup/index'),
             name: 'Markdown',
-            meta: { title: '子分类' }
+            meta: { title: '热门分组' }
         },
     ]
 }

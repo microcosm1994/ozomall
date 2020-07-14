@@ -23,7 +23,6 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      store.dispatch("user/getInfo")
       next()
     }
   } else {

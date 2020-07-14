@@ -8,3 +8,12 @@ export function addClassify(data) {
         data
     })
 }
+
+// 获取分类列表
+export function getClassifyList(params) {
+    return request({
+        url: '/admin/classify/list',
+        method: 'get',
+        params
+    })
+}

@@ -3,6 +3,9 @@
   padding: 0;
   box-sizing: border-box;
 }
+li {
+  list-style: none;
+}
 .el-table th {
   background-color: #f4f4f6;
   color: #333;

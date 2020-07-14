@@ -13,6 +13,13 @@ service.interceptors.request.use(
     if (store.getters.token) {
       config.headers['token'] = store.state.user.token
     }
+    if (config.method === "get") {
+      for (let key in config.params) {
+        if (!config.params[key]){
+          delete config.params[key]
+        }
+      }
+    }
     return config
   },
   error => {

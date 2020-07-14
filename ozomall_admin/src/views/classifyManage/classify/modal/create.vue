@@ -58,5 +58,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import "../../../assets/css/modal.css";
+@import "../../../../assets/css/modal.css";
 </style>

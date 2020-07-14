@@ -4,6 +4,7 @@ import com.ozomall.entity.AdminClassifyDto;
 import com.ozomall.entity.Result;
 
 public interface AdminClassifyService {
+
     /**
      * 新建分类
      */

@@ -18,26 +18,22 @@ public class ClassifyController {
     private AdminClassifyService adminClassifyService;
 
     /**
-     * 新建分类
+     * 添加分类
      */
     @PostMapping("/add")
     public Result addClassify(@RequestBody AdminClassifyDto form) {
-        if (!StringUtils.isEmpty(form.getName())) {
+        if (!StringUtils.isEmpty(form.getName()) && !StringUtils.isEmpty(form.getClassifyLevel())) {
             return adminClassifyService.addClassify(form);
         } else {
-            return ResultGenerate.genErroResult("分类名称不能为空");
+            return ResultGenerate.genErroResult("分类等级与分类名称不能为空");
         }
     }
 
     /**
-     * 查询分类
+     * 查询类别分组
      */
-    @GetMapping("/query")
-    public Result queryClassify(@RequestParam("name") String name, @RequestParam("page") int page, @RequestParam("size") int size) {
-        AdminClassifyDto form = new AdminClassifyDto();
-        form.setName(name);
-        form.setPage(page);
-        form.setSize(size);
+    @GetMapping("/list")
+    public Result queryClassify(AdminClassifyDto form) {
         return adminClassifyService.queryClassify(form);
     }
 }

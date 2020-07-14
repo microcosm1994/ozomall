@@ -12,7 +12,9 @@ import java.sql.Timestamp;
 public class AdminClassifyDto extends PageReqDto {
     @TableId(type = IdType.AUTO)
     private int id;
+    private int parentId;
     private String name;
+    private int classifyLevel;
     private Timestamp createTime;
     private int del;
 }

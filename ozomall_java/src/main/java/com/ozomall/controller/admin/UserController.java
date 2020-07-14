@@ -35,7 +35,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/user/info")
+    @GetMapping(value = "/info")
     public Result info(@RequestParam("token") String token) {
         if (!StringUtils.isEmpty(token)) {
             return adminUserService.getUserInfo(token);

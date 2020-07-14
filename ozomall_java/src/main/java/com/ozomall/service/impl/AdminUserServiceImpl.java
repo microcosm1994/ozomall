@@ -54,10 +54,10 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     /**
-     * 登陆
+     * 获取用户信息
      *
      * @param token 用户token
-     * @return 成功返回true, 失败返回false
+     * @return 返回用户信息
      */
     @Override
     public Result getUserInfo(String token) {

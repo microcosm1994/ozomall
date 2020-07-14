@@ -17,7 +17,7 @@ public class AdminClassifyServiceImpl implements AdminClassifyService {
     private AdminClassifyMapper adminClassifyMapper;
 
     /**
-     * 新建分类
+     * 添加分类
      */
     @Override
     public Result addClassify(AdminClassifyDto form) {
@@ -30,12 +30,13 @@ public class AdminClassifyServiceImpl implements AdminClassifyService {
     }
 
     /**
-     * 查询分类
+     * 查询类别分组
      */
     @Override
     public Result queryClassify(AdminClassifyDto form) {
+        System.out.println(form.toString());
         LambdaQueryWrapper<AdminClassifyDto> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(AdminClassifyDto::getName, form.getName());
+        wrapper.eq(AdminClassifyDto::getClassifyLevel, form.getClassifyLevel());
         List<AdminClassifyDto> rows = adminClassifyMapper.selectList(wrapper);
         if (rows != null) {
             return ResultGenerate.genSuccessResult(rows);
