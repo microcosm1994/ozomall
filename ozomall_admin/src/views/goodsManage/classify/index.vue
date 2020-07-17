@@ -12,7 +12,10 @@
             </div>
           </div>
           <ul>
-            <li class="classifyBox-item" v-if="classifyList.level1.length === 0">
+            <li
+              class="classifyBox-item"
+              v-if="classifyList.level1.length === 0"
+            >
               暂无数据
             </li>
             <li
@@ -22,7 +25,12 @@
               :key="item.id"
               @click="getClassify(2, item.id)"
             >
-              {{ item.name }}
+              <div class="item-name">
+                {{ item.name }}
+              </div>
+              <div class="item-icon">
+                <i class="el-icon-arrow-right" />
+              </div>
             </li>
           </ul>
         </div>
@@ -35,7 +43,10 @@
             </div>
           </div>
           <ul>
-            <li class="classifyBox-item" v-if="classifyList.level2.length === 0">
+            <li
+              class="classifyBox-item"
+              v-if="classifyList.level2.length === 0"
+            >
               暂无数据
             </li>
             <li
@@ -45,7 +56,12 @@
               :key="item.id"
               @click="getClassify(3, item.id)"
             >
-              {{ item.name }}
+              <div class="item-name">
+                {{ item.name }}
+              </div>
+              <div class="item-icon">
+                <i class="el-icon-arrow-right" />
+              </div>
             </li>
           </ul>
         </div>
@@ -58,7 +74,10 @@
             </div>
           </div>
           <ul>
-            <li class="classifyBox-item" v-if="classifyList.level3.length === 0">
+            <li
+              class="classifyBox-item"
+              v-if="classifyList.level3.length === 0"
+            >
               暂无数据
             </li>
             <li
@@ -67,18 +86,16 @@
               v-for="item in classifyList.level3"
               :key="item.id"
             >
-              {{ item.name }}
+              <div class="item-name">
+                {{ item.name }}
+              </div>
             </li>
           </ul>
         </div>
       </el-col>
     </el-row>
     <!-- 新建弹框 -->
-    <el-dialog
-      :visible.sync="dialogVisible"
-      v-if="dialogVisible"
-      width="400px"
-    >
+    <el-dialog :visible.sync="dialogVisible" v-if="dialogVisible" width="400px">
       <Create :closeModal="closeModal" />
     </el-dialog>
   </div>
@@ -86,7 +103,7 @@
 
 <script>
 import Create from "./modal/create";
-import { getClassifyList } from "@/api/classifyManage";
+import { getClassifyList } from "@/api/goodsManage";
 export default {
   components: {
     Create
@@ -115,12 +132,10 @@ export default {
     // 关闭弹框
     closeModal() {
       this.dialogVisible = false;
-       this.getClassify(1, 0);
+      this.getClassify(1, 0);
     },
     // 获取分类
     getClassify(level, parentId) {
-      console.log(level);
-      console.log(parentId);
       let data = {
         classifyLevel: level,
         parentId: parentId
@@ -159,6 +174,8 @@ export default {
     padding: 20px;
     background: #fff;
     border-radius: 5px;
+    border: 1px solid #e9e9e9;
+    box-shadow: 0 0 5px #e2e2e2;
   }
   .classifyBox {
     width: 100%;
@@ -166,8 +183,11 @@ export default {
     padding: 0 20px 20px;
     border-radius: 5px;
     margin-top: 10px;
+    border: 1px solid #e9e9e9;
+    box-shadow: 0 0 5px #e2e2e2;
     .classifyBox-header {
       width: 100%;
+      margin-bottom: 10px;
       .classifyBox-header-title {
         width: 100%;
         height: 60px;
@@ -175,17 +195,30 @@ export default {
         text-align: center;
         font-size: 18px;
         font-weight: 600;
-        border-bottom: 1px solid #e2e2e2;
+        border-bottom: 1px solid #e9e9e9;
       }
     }
     .classifyBox-item {
       width: 100%;
       height: 40px;
       line-height: 40px;
-      border-bottom: 1px solid #e2e2e2;
       padding-left: 20px;
       cursor: pointer;
       font-size: 14px;
+      .item-name {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .item-icon {
+        display: inline-block;
+        vertical-align: middle;
+        float: right;
+        right: 20px;
+      }
+    }
+    .item-active {
+      color: #1890ff;
+      background: #f5f5f5;
     }
   }
 }

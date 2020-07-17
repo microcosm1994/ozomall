@@ -13,7 +13,7 @@ import tableRouter from './modules/table'
 import nestedRouter from './modules/nested' 
 import settingRouter from './modules/setting' // 后台系统设置
 import mallManage from './modules/mallManage' // 商城管理模块
-import classifyManage from './modules/classifyManage' // 分类管理模块
+import goodsManage from './modules/goodsManage' // 商品管理模块
 export default new Router({
   routes: [
     {
@@ -88,7 +88,7 @@ export default new Router({
     chartsRouter,
     tableRouter,
     nestedRouter,
-    classifyManage,
+    goodsManage,
     mallManage,
     settingRouter,
   ]

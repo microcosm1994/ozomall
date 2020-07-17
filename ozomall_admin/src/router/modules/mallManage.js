@@ -6,7 +6,7 @@ const settingRouter = {
     redirect: '/mallManage/index',
     name: 'mallManage',
     meta: {
-        title: '商城管理',
+        title: '商城配置',
         icon: 'el-icon-s-shop'
     },
     children: [

@@ -2,6 +2,8 @@ package com.ozomall.controller.admin;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+@Api(tags = "验证码接口")
 @Controller
 @RequestMapping("/admin/verify")
 public class VerifyCode {
@@ -22,6 +25,7 @@ public class VerifyCode {
     @Resource
     private Producer captchaProducer;
 
+    @ApiOperation("图片验证码")
     @GetMapping(value = "/code")
     public ModelAndView verification(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setDateHeader("Expires", 0);

@@ -1,7 +1,9 @@
 package com.ozomall.entity;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
+@ApiModel
 @Data
 public class Result<T> {
     /**

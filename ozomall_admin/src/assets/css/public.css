@@ -16,3 +16,6 @@ li {
 .el-dialog__body {
   padding: 0 30px;
 }
+.el-cascader-menu__wrap {
+  height: 100% !important;
+}

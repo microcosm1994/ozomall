@@ -13,43 +13,13 @@
           :rules="rules"
           label-width="80px"
         >
-          <el-form-item label="分类等级" prop="classifyLevel">
-            <el-select
-              v-model="ruleForm.classifyLevel"
-              placeholder="请选择分类等级"
-            >
-              <el-option label="一级分类" :value="1"></el-option>
-              <el-option label="二级分类" :value="2"></el-option>
-              <el-option label="三级分类" :value="3"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            v-if="ruleForm.classifyLevel !== 4"
-            label="所属类别"
-            prop="parentId"
-          >
-            <el-select v-model="ruleForm.parentId" placeholder="请选择所属类别">
-              <el-option
-                v-if="classifyList.length === 0"
-                label="无"
-                :value="0"
-              ></el-option>
-              <el-option
-                v-for="item in classifyList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            v-if="ruleForm.classifyLevel !== 4"
-            label="所属类别"
-            prop="parentId"
-          >
+          <el-form-item label="所属类别" prop="parentId">
             <el-cascader
               v-model="ruleForm.parentId"
               :props="props"
+              :filterable="true"
+              @change="cascaderHandle"
+              ref="cascader"
             ></el-cascader>
           </el-form-item>
           <el-form-item label="分类名称" prop="name">
@@ -66,11 +36,11 @@
 </template>
 
 <script>
-import { addClassify } from "@/api/classifyManage";
-import { getClassifyList } from "@/api/classifyManage";
+import { addClassify, getClassifyList } from "@/api/goodsManage";
 export default {
   props: ["closeModal"],
   data() {
+    const self = this;
     return {
       ruleForm: {
         name: "",
@@ -81,18 +51,20 @@ export default {
         name: [{ required: true, message: "请输入分类名称", trigger: "blur" }],
         parentId: [
           { required: true, message: "请选择所属类别", trigger: "change" }
-        ],
-        classifyLevel: [
-          { required: true, message: "请选择分类级别", trigger: "change" }
         ]
       },
       classifyList: [],
       options: [],
       props: {
         lazy: true,
+        checkStrictly: true,
+        emitPath: false,
         lazyLoad(node, resolve) {
           const { level, value } = node;
-          console.log(node);
+          if (level > 1) {
+            resolve();
+            return false;
+          }
           getClassifyList({ classifyLevel: level + 1, parentId: value })
             .then(res => {
               if (res.data.code === 1) {
@@ -100,7 +72,7 @@ export default {
                   return {
                     value: item.id,
                     label: item.name,
-                    leaf: level >= 2
+                    leaf: level >= 1
                   };
                 });
                 // 通过调用resolve将子节点数据返回，通知组件数据加载完成
@@ -120,6 +92,11 @@ export default {
     this.getClassify();
   },
   methods: {
+    // 选中触发
+    cascaderHandle(val) {
+      const node = this.$refs.cascader.getCheckedNodes()[0]
+      this.ruleForm.classifyLevel = node.level + 1
+    },
     // 获取分类
     getClassify() {
       getClassifyList()

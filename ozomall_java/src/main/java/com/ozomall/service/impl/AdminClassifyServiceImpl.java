@@ -37,7 +37,6 @@ public class AdminClassifyServiceImpl implements AdminClassifyService {
      */
     @Override
     public Result queryClassify(AdminClassifyDto form) {
-        System.out.println(form.toString());
         Map<SFunction<AdminClassifyDto, ?>, Object> params = new HashMap<>();
         LambdaQueryWrapper<AdminClassifyDto> wrapper = new LambdaQueryWrapper<>();
         params.put(AdminClassifyDto::getName, form.getName());
@@ -51,5 +50,5 @@ public class AdminClassifyServiceImpl implements AdminClassifyService {
             return ResultGenerate.genErroResult("数据获取失败");
         }
     }
-    
+
 }
