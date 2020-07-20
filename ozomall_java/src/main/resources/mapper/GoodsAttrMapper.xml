@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozomall.dao.GoodsAttrMapper">
+    <resultMap id="goodsAttrMap" type="com.ozomall.entity.GoodsAttrDto">
+        <id property="id" column="id"></id>
+        <result property="goodsId" column="goods_id"></result>
+        <result property="name" column="name"></result>
+        <collection property="children" ofType="com.ozomall.entity.GoodsAttrValDto" columnPrefix="children_">
+            <id property="id" column="id"></id>
+            <result property="goodsAttrId" column="goods_attr_id"></result>
+            <result property="value" column="value"></result>
+        </collection>
+    </resultMap>
+    <select id="goodsAttr" parameterType="com.ozomall.entity.GoodsAttrDto" resultMap="goodsAttrMap">
+        select
+        goods_attr.*,
+        goods_attr_val.id as children_id,
+        goods_attr_val.goods_attr_id as children_goods_attr_id,
+        goods_attr_val.value as children_value
+         from goods_attr left join goods_attr_val on goods_attr.id=goods_attr_val.goods_attr_id
+        where goods_attr.goods_id=#{form.goodsId}
+    </select>
+</mapper>

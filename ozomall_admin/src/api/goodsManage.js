@@ -62,3 +62,30 @@ export function getGoodsAttr(params) {
         params
     })
 }
+
+// 删除商品属性
+export function delGoodsAttr(data) {
+    return request({
+        url: '/admin/goods/delGoodsAttr',
+        method: 'post',
+        data
+    })
+}
+
+// 添加商品属性值
+export function addGoodsAttrVal(data) {
+    return request({
+        url: '/admin/goods/addGoodsAttrVal',
+        method: 'post',
+        data
+    })
+}
+
+// 删除商品属性值
+export function delGoodsAttrVal(data) {
+    return request({
+        url: '/admin/goods/delGoodsAttrVal',
+        method: 'post',
+        data
+    })
+}

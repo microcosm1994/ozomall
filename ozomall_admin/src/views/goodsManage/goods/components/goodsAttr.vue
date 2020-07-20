@@ -10,7 +10,7 @@
       >
         <el-form-item label="商品属性" prop="goodsName">
           <el-tag
-            :key="tag"
+            :key="tag.id"
             :hit="false"
             effect="dark"
             type="info"
@@ -20,7 +20,7 @@
             @close="attrRemoveTag(tag)"
             size="small"
           >
-            {{ tag }}
+            {{ tag.name }}
           </el-tag>
           <el-input
             class="input-new-tag"
@@ -42,28 +42,34 @@
           >
         </el-form-item>
         <el-form-item label="商品规格" prop="classifyId">
-          <div class="goodsForm-form-item">
-            <div class="item-title">颜色</div>
+          <div
+            class="goodsForm-form-item"
+            v-for="(item, index) in attrDynamicTags"
+            :key="item.id"
+          >
+            <div class="item-title">{{ item.name }}</div>
             <div class="item-container">
               <el-tag
-                :key="tag"
+                :key="tag.id"
                 effect="dark"
                 type="success"
-                v-for="tag in speDynamicTags"
+                v-for="tag in item.children"
                 closable
                 :disable-transitions="false"
                 @close="speRemoveTag(tag)"
                 size="small"
               >
-                {{ tag }}
+                {{ tag.value }}
               </el-tag>
               <el-input
                 class="input-new-tag"
-                v-if="speInputVisible"
-                v-model="speInputValue"
+                v-if="goodsAttrValOpt[index].inputVisible"
+                v-model="goodsAttrValOpt[index].inputValue"
                 ref="saveTagInput"
-                @keyup.enter.native="handleInputConfirm(speInputValue)"
-                @blur="handleInputConfirm(speInputValue)"
+                @keyup.enter.native="
+                  handleAttrVal(item.id, goodsAttrValOpt[index])
+                "
+                @blur="handleAttrVal(item.id, goodsAttrValOpt[index])"
                 size="mini"
               >
               </el-input>
@@ -71,9 +77,9 @@
                 v-else
                 type="primary"
                 class="button-new-tag"
-                @click="speInputVisible = true"
+                @click="goodsAttrValOpt[index].inputVisible = true"
                 size="mini"
-                >添加规格</el-button
+                >添加{{ item.name }}</el-button
               >
             </div>
           </div>
@@ -81,18 +87,18 @@
         <el-form-item label="商品价格" prop="goodsName">
           <div class="goodsForm-form-item">
             <el-table :data="skuData" border style="width: 100%">
-              <el-table-column prop="date" label="日期" width="150">
+              <el-table-column
+                v-for="item in attrDynamicTags"
+                :key="item.id"
+                :label="item.name"
+                width="150"
+              >
               </el-table-column>
-              <el-table-column prop="name" label="姓名" width="120">
-              </el-table-column>
-              <el-table-column prop="province" label="省份" width="120">
-              </el-table-column>
-              <el-table-column prop="city" label="市区" width="120">
-              </el-table-column>
-              <el-table-column prop="address" label="地址" width="300">
-              </el-table-column>
-              <el-table-column prop="zip" label="邮编" width="120">
-              </el-table-column>
+              <el-table-column label="价格" width="120"> </el-table-column>
+              <el-table-column label="库存" width="120"> </el-table-column>
+              <el-table-column label="市区" width="120"> </el-table-column>
+              <el-table-column label="地址" width="300"> </el-table-column>
+              <el-table-column label="邮编" widtlh="120"> </el-table-column>
               <el-table-column
                 align="center"
                 fixed="right"
@@ -158,7 +164,13 @@
 </template>
 
 <script>
-import { addGoodsAttr, getGoodsAttr } from "@/api/goodsManage";
+import {
+  addGoodsAttr,
+  getGoodsAttr,
+  delGoodsAttr,
+  addGoodsAttrVal,
+  delGoodsAttrVal
+} from "@/api/goodsManage";
 export default {
   props: ["pageType", "goodsData", "prevStep", "nextStep"],
   data() {
@@ -183,8 +195,7 @@ export default {
       speDynamicTags: ["标签一", "标签二", "标签三"],
       attrInputVisible: false,
       attrInputValue: "",
-      speInputVisible: false,
-      speInputValue: "",
+      goodsAttrValOpt: [],
       skuData: []
     };
   },
@@ -196,10 +207,28 @@ export default {
   methods: {
     // 删除属性标签
     attrRemoveTag(tag) {
-      this.attrDynamicTags.splice(this.attrDynamicTags.indexOf(tag), 1);
+      console.log(tag);
+      delGoodsAttr({ goodsId: tag.goodsId, name: tag.name })
+        .then(res => {
+          if (res.data.code === 1) {
+            this.getGoodsAttr();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
-    // 删除规格标签
+    // 删除属性值标签
     speRemoveTag(tag) {
+      delGoodsAttrVal({ goodsAttrId: tag.goodsAttrId, value: tag.value })
+        .then(res => {
+          if (res.data.code === 1) {
+            this.getGoodsAttr();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
       this.speDynamicTags.splice(this.speDynamicTags.indexOf(tag), 1);
     },
     // 添加属性
@@ -221,20 +250,42 @@ export default {
       }
       this.attrInputVisible = false;
       this.attrInputValue = "";
-      this.speInputVisible = false;
-      this.speInputValue = "";
     },
     // 获取商品属性
     getGoodsAttr() {
       getGoodsAttr({ goodsId: this.goodsData.id })
         .then(res => {
           if (res.data.code === 1) {
-            this.attrDynamicTags = res.data.data.map(item => {
-              return item.name;
+            this.attrDynamicTags = res.data.data;
+            this.goodsAttrValOpt = res.data.data.map(item => {
+              return {
+                inputVisible: false,
+                inputValue: ""
+              };
             });
           }
         })
         .catch(error => {});
+    },
+    // 添加属性值
+    handleAttrVal(id, opt) {
+      if (opt.inputValue) {
+        let data = {
+          goodsAttrId: id,
+          value: opt.inputValue
+        };
+        addGoodsAttrVal(data)
+          .then(res => {
+            if (res.data.code === 1) {
+              this.getGoodsAttr();
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          })
+          .catch(err => {});
+      }
+      opt.inputVisible = false;
+      opt.inputValue = "";
     },
     // 提交表单
     submitForm(formName) {

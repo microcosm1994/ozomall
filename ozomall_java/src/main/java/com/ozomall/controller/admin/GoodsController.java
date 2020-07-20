@@ -1,6 +1,7 @@
 package com.ozomall.controller.admin;
 
 import com.ozomall.entity.GoodsAttrDto;
+import com.ozomall.entity.GoodsAttrValDto;
 import com.ozomall.entity.GoodsDto;
 import com.ozomall.entity.Result;
 import com.ozomall.service.GoodsAttrService;
@@ -51,5 +52,23 @@ public class GoodsController {
     @GetMapping("/getGoodsAttr")
     public Result getGoodsAttr(GoodsAttrDto form) {
         return goodsAttrService.getGoodsAttr(form);
+    }
+
+    @ApiOperation("删除商品属性")
+    @PostMapping("/delGoodsAttr")
+    public Result delGoodsAttr(@RequestBody GoodsAttrDto form) {
+        return goodsAttrService.delGoodsAttr(form);
+    }
+
+    @ApiOperation("添加商品属性值")
+    @PostMapping("/addGoodsAttrVal")
+    public Result addGoodsAttrVal(@RequestBody GoodsAttrValDto form) {
+        return goodsAttrService.addGoodsAttrVal(form);
+    }
+
+    @ApiOperation("删除商品属性值")
+    @PostMapping("/delGoodsAttrVal")
+    public Result delGoodsAttrVal(@RequestBody GoodsAttrValDto form) {
+        return goodsAttrService.delGoodsAttrVal(form);
     }
 }
