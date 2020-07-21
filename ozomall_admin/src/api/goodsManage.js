@@ -89,3 +89,21 @@ export function delGoodsAttrVal(data) {
         data
     })
 }
+
+// 添加商品价格
+export function addGoodsSku(data) {
+    return request({
+        url: '/admin/goods/addGoodsSku',
+        method: 'post',
+        data
+    })
+}
+
+// 获取商品价格
+export function getGoodsSkuList(params) {
+    return request({
+        url: '/admin/goods/getGoodsSkuList',
+        method: 'get',
+        params
+    })
+}

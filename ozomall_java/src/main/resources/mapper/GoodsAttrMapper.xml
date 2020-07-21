@@ -21,5 +21,6 @@
         goods_attr_val.value as children_value
          from goods_attr left join goods_attr_val on goods_attr.id=goods_attr_val.goods_attr_id
         where goods_attr.goods_id=#{form.goodsId}
+        order by goods_attr.id, goods_attr_val.id asc
     </select>
 </mapper>

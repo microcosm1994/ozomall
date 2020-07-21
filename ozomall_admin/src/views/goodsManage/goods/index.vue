@@ -60,6 +60,9 @@
             label="所属类别"
             width="180"
           >
+          <template slot-scope="scope">
+              {{scope.row.classify.name}}
+            </template>
           </el-table-column>
           <el-table-column
             align="center"

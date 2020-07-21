@@ -1,9 +1,6 @@
 package com.ozomall.controller.admin;
 
-import com.ozomall.entity.GoodsAttrDto;
-import com.ozomall.entity.GoodsAttrValDto;
-import com.ozomall.entity.GoodsDto;
-import com.ozomall.entity.Result;
+import com.ozomall.entity.*;
 import com.ozomall.service.GoodsAttrService;
 import com.ozomall.service.GoodsService;
 import io.swagger.annotations.Api;
@@ -23,7 +20,9 @@ public class GoodsController {
 
     @Resource
     GoodsAttrService goodsAttrService;
-
+    /**
+     * 商品
+     * */
     @ApiOperation("添加商品信息")
     @PostMapping("/add")
     public Result addGoods(@RequestBody GoodsDto form) {
@@ -42,6 +41,10 @@ public class GoodsController {
         return goodsService.getGoods(id);
     }
 
+
+    /**
+     * 属性
+     * */
     @ApiOperation("添加商品属性")
     @PostMapping("/addGoodsAttr")
     public Result addGoodsAttr(@RequestBody GoodsAttrDto form) {
@@ -71,4 +74,20 @@ public class GoodsController {
     public Result delGoodsAttrVal(@RequestBody GoodsAttrValDto form) {
         return goodsAttrService.delGoodsAttrVal(form);
     }
+
+    /**
+     * 价格
+     * */
+    @ApiOperation("添加商品价格")
+    @PostMapping("/addGoodsSku")
+    public Result addGoodsSku(@RequestBody GoodsSkuDto form) {
+        return goodsAttrService.addGoodsSku(form);
+    }
+
+    @ApiOperation("获取商品价格")
+    @GetMapping("/getGoodsSkuList")
+    public Result getGoodsSkuList(GoodsSkuDto form) {
+        return goodsAttrService.getGoodsSkuList(form);
+    }
+
 }

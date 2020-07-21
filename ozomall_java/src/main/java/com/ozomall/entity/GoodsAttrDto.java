@@ -18,10 +18,6 @@ public class GoodsAttrDto {
     @TableId(type = IdType.AUTO)
     private int id;
 
-    public int getGoodsId() {
-        return goodsId;
-    }
-
     @ApiModelProperty(value = "关联的商品id")
     private int goodsId;
 

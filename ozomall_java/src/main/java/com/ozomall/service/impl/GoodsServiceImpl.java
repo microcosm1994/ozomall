@@ -33,7 +33,7 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     /**
-     * 添加商品信息
+     * 获取商品列表
      *
      * @param form
      */

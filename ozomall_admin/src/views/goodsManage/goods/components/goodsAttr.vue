@@ -1,14 +1,8 @@
 <template>
   <div class="goodsForm">
     <div class="goodsForm-form">
-      <el-form
-        :model="ruleForm"
-        :rules="rules"
-        ref="ruleForm"
-        label-width="100px"
-        class="demo-ruleForm"
-      >
-        <el-form-item label="商品属性" prop="goodsName">
+      <el-form ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="商品属性">
           <el-tag
             :key="tag.id"
             :hit="false"
@@ -36,12 +30,12 @@
             v-else
             type="primary"
             class="button-new-tag"
-            @click="attrInputVisible = true"
+            @click="openAttrinput"
             size="mini"
             >添加属性</el-button
           >
         </el-form-item>
-        <el-form-item label="商品规格" prop="classifyId">
+        <el-form-item label="商品规格">
           <div
             class="goodsForm-form-item"
             v-for="(item, index) in attrDynamicTags"
@@ -84,43 +78,89 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="商品价格" prop="goodsName">
+        <el-form-item label="商品价格">
           <div class="goodsForm-form-item">
+            <div class="item-header">
+              <el-button type="text" size="small" @click="addSkuItem"
+                >添加价格
+              </el-button>
+            </div>
             <el-table :data="skuData" border style="width: 100%">
               <el-table-column
-                v-for="item in attrDynamicTags"
+                v-for="(item, index) in attrDynamicTags"
                 :key="item.id"
                 :label="item.name"
                 width="150"
-              >
-              </el-table-column>
-              <el-table-column label="价格" width="120"> </el-table-column>
-              <el-table-column label="库存" width="120"> </el-table-column>
-              <el-table-column label="市区" width="120"> </el-table-column>
-              <el-table-column label="地址" width="300"> </el-table-column>
-              <el-table-column label="邮编" widtlh="120"> </el-table-column>
-              <el-table-column
                 align="center"
-                fixed="right"
-                label="操作"
-                width="200"
               >
                 <template slot-scope="scope">
+                  <el-select
+                    :disabled="scope.row.isDisabled"
+                    v-model="
+                      skuData[scope.$index]['spe' + (index - 0 + 1) + 'Id']
+                    "
+                    :placeholder="item.name"
+                  >
+                    <el-option
+                      v-for="opt in item.children"
+                      :key="opt.id"
+                      :label="opt.value"
+                      :value="opt.id"
+                    >
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="价格" width="120">
+                <template slot-scope="scope">
+                  <el-input
+                    :disabled="scope.row.isDisabled"
+                    v-model="skuData[scope.$index].price"
+                    placeholder="请输入价格"
+                  ></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="库存" width="120">
+                <template slot-scope="scope">
+                  <el-input
+                    :disabled="scope.row.isDisabled"
+                    v-model="skuData[scope.$index].stock"
+                    placeholder="请输入库存"
+                  ></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" fixed="right" label="操作">
+                <template slot-scope="scope">
                   <el-button
-                    @click="handleClick(scope.row)"
+                    v-if="!scope.row.isDisabled"
                     type="text"
                     size="small"
-                    >查看</el-button
+                    @click="saveSku(scope)"
+                    >保存</el-button
                   >
-                  <el-button type="text" size="small">编辑</el-button>
+                  <el-button
+                    v-if="!scope.row.isDisabled"
+                    type="text"
+                    size="small"
+                    @click="cancelSku(scope)"
+                    >取消</el-button
+                  >
+                  <el-button
+                    v-else
+                    type="text"
+                    size="small"
+                    @click="skuEdit(scope)"
+                    >编辑</el-button
+                  >
+                  <el-button type="text" size="small">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
           </div>
         </el-form-item>
-        <el-form-item label="商品参数" prop="goodsName">
+        <el-form-item label="商品参数">
           <div class="goodsForm-form-item">
-            <el-table :data="skuData" border style="width: 100%">
+            <el-table :data="paramsData" border style="width: 100%">
               <el-table-column
                 align="center"
                 prop="date"
@@ -169,39 +209,36 @@ import {
   getGoodsAttr,
   delGoodsAttr,
   addGoodsAttrVal,
-  delGoodsAttrVal
+  delGoodsAttrVal,
+  addGoodsSku,
+  getGoodsSkuList
 } from "@/api/goodsManage";
 export default {
   props: ["pageType", "goodsData", "prevStep", "nextStep"],
   data() {
     return {
-      ruleForm: {
-        goodsName: "",
-        classifyId: "",
-        goodsPrice: ""
-      },
-      rules: {
-        goodsName: [
-          { required: true, message: "请输入商品名称", trigger: "blur" }
-        ],
-        classifyId: [
-          { required: true, message: "请选择商品分类", trigger: "change" }
-        ],
-        goodsPrice: [
-          { required: true, message: "请输入商品价格", trigger: "blur" }
-        ]
-      },
       attrDynamicTags: [],
-      speDynamicTags: ["标签一", "标签二", "标签三"],
+      speDynamicTags: [],
       attrInputVisible: false,
       attrInputValue: "",
       goodsAttrValOpt: [],
-      skuData: []
+      paramsData: [],
+      skuData: [
+        {
+          spe1Id: null, // 属性1
+          spe2Id: null, // 属性2
+          spe3Id: null, // 属性3
+          price: "", // 价格
+          stock: "", // 库存
+          isDisabled: false
+        }
+      ]
     };
   },
   mounted() {
     if (this.pageType) {
       this.getGoodsAttr();
+      this.getGoodsSkuList();
     }
   },
   methods: {
@@ -230,6 +267,14 @@ export default {
           console.log(err);
         });
       this.speDynamicTags.splice(this.speDynamicTags.indexOf(tag), 1);
+    },
+    // 打开属性输入框
+    openAttrinput() {
+      if (this.attrDynamicTags.length < 3) {
+        this.attrInputVisible = true;
+      } else {
+        this.$message.info("最多只能添加3个属性");
+      }
     },
     // 添加属性
     handleInputConfirm(val) {
@@ -286,6 +331,92 @@ export default {
       }
       opt.inputVisible = false;
       opt.inputValue = "";
+    },
+    // 添加sku
+    addSkuItem() {
+      let prev = this.skuData[this.skuData.length - 1]
+      if (!prev['id']) {
+        this.$message.info('请保存之后再继续添加。')
+        return false
+      }
+      this.skuData.push({
+        spe1Id: "", // 属性1
+        spe2Id: "", // 属性2
+        spe3Id: "", // 属性3
+        price: "", // 价格
+        stock: "", // 库存
+        isDisabled: false // 编辑状态
+      });
+    },
+    // 获取sku列表
+    getGoodsSkuList() {
+      this.skuData = [];
+      getGoodsSkuList({ goodsId: this.goodsData.id })
+        .then(res => {
+          if (res.data.code === 1) {
+            console.log(res);
+            this.skuData = res.data.data.map(item => {
+              return {
+                ...item,
+                isDisabled: true // 编辑状态
+              };
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 保存sku
+    saveSku(scope) {
+      console.log(scope);
+      let len = this.attrDynamicTags.length;
+      for (let i = 0; i < this.attrDynamicTags.length; i++) {
+        if (!scope.row["spe" + (i + 1) + "Id"]) {
+          this.$message.error("请选择关联属性");
+          return false;
+        }
+      }
+      if (!scope.row.price || !(scope.row.price - 0)) {
+        this.$message.error("请输入价格,必须是数字。");
+        return false;
+      }
+      if (!scope.row.stock || !(scope.row.stock - 0)) {
+        this.$message.error("请输入库存，必须是数字。");
+        return false;
+      }
+      let data = {
+        goodsId: this.goodsData.id,
+        spe1Id: scope.row.spe1Id,
+        spe2Id: scope.row.spe2Id,
+        spe3Id: scope.row.spe3Id,
+        price: scope.row.price - 0,
+        stock: scope.row.stock - 0
+      };
+      if (scope.row.id) {
+        // 修改
+      } else {
+        // 新增
+        addGoodsSku(data)
+          .then(res => {
+            if (res.data.code === 1) {
+              this.getGoodsSkuList();
+            }
+          })
+          .catch(err => {});
+      }
+    },
+    // 取消编辑sku
+    cancelSku(scope){
+      if (scope.row.id) {
+        scope.row.isDisabled = true
+      } else {
+        this.skuData.splice(scope.$index, 1)
+      }
+    },
+    // 编辑sku
+    skuEdit(scope) {
+      scope.row.isDisabled = false
     },
     // 提交表单
     submitForm(formName) {

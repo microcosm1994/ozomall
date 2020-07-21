@@ -3,8 +3,10 @@ package com.ozomall.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ozomall.dao.GoodsAttrMapper;
 import com.ozomall.dao.GoodsAttrValMapper;
+import com.ozomall.dao.GoodsSkuMapper;
 import com.ozomall.entity.GoodsAttrDto;
 import com.ozomall.entity.GoodsAttrValDto;
+import com.ozomall.entity.GoodsSkuDto;
 import com.ozomall.entity.Result;
 import com.ozomall.service.GoodsAttrService;
 import com.ozomall.utils.ResultGenerate;
@@ -20,6 +22,9 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
 
     @Resource
     GoodsAttrValMapper goodsAttrValMapper;
+
+    @Resource
+    GoodsSkuMapper goodsSkuMapper;
 
     /**
      * 添加商品属性
@@ -86,7 +91,6 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
     }
 
 
-
     /**
      * 删除商品属性值
      *
@@ -104,4 +108,37 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
             return ResultGenerate.genErroResult("删除失败！");
         }
     }
+
+    /**
+     * 添加商品价格
+     *
+     * @param form
+     */
+    @Override
+    public Result addGoodsSku(GoodsSkuDto form) {
+        int rows = goodsSkuMapper.insert(form);
+        if (rows > 0) {
+            return ResultGenerate.genSuccessResult("保存成功");
+        } else {
+            return ResultGenerate.genErroResult("保存失败！");
+        }
+    }
+
+    /**
+     * 获取商品价格
+     *
+     * @param form
+     */
+    @Override
+    public Result getGoodsSkuList(GoodsSkuDto form) {
+        LambdaQueryWrapper<GoodsSkuDto> wrapper = new LambdaQueryWrapper();
+        wrapper.eq(GoodsSkuDto::getGoodsId, form.getGoodsId());
+        List<GoodsSkuDto> rows = goodsSkuMapper.selectList(wrapper);
+        if (rows != null) {
+            return ResultGenerate.genSuccessResult(rows);
+        } else {
+            return ResultGenerate.genErroResult("获取失败！");
+        }
+    }
+
 }

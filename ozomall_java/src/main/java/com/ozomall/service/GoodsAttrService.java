@@ -2,6 +2,7 @@ package com.ozomall.service;
 
 import com.ozomall.entity.GoodsAttrDto;
 import com.ozomall.entity.GoodsAttrValDto;
+import com.ozomall.entity.GoodsSkuDto;
 import com.ozomall.entity.Result;
 
 public interface GoodsAttrService {
@@ -33,4 +34,14 @@ public interface GoodsAttrService {
      * 删除商品属性值
      */
     Result delGoodsAttrVal(GoodsAttrValDto form);
+
+    /**
+     * 添加商品价格
+     */
+    Result addGoodsSku(GoodsSkuDto form);
+
+    /**
+     * 获取商品价格
+     */
+    Result getGoodsSkuList(GoodsSkuDto form);
 }
