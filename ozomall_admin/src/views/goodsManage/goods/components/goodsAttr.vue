@@ -1,8 +1,14 @@
 <template>
   <div class="goodsForm">
     <div class="goodsForm-form">
-      <el-form ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="商品属性">
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item label="商品属性" prop="attr">
           <el-tag
             :key="tag.id"
             :hit="false"
@@ -35,18 +41,18 @@
             >添加属性</el-button
           >
         </el-form-item>
-        <el-form-item label="商品规格">
+        <el-form-item label="商品规格" prop="attrVal">
           <div
             class="goodsForm-form-item"
             v-for="(item, index) in attrDynamicTags"
             :key="item.id"
           >
-            <div class="item-title">{{ item.name }}</div>
+            <div class="item-title">{{ item.name }}：</div>
             <div class="item-container">
               <el-tag
                 :key="tag.id"
                 effect="dark"
-                type="success"
+                type="info"
                 v-for="tag in item.children"
                 closable
                 :disable-transitions="false"
@@ -78,9 +84,9 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="商品价格">
+        <el-form-item label="商品价格" prop="sku">
           <div class="goodsForm-form-item">
-            <div class="item-header">
+            <div class="item-title">
               <el-button type="text" size="small" @click="addSkuItem"
                 >添加价格
               </el-button>
@@ -149,17 +155,28 @@
                     v-else
                     type="text"
                     size="small"
-                    @click="skuEdit(scope)"
+                    @click="scope.row.isDisabled = false"
                     >编辑</el-button
                   >
-                  <el-button type="text" size="small">删除</el-button>
+                  <el-button
+                    v-if="scope.row.id > 0"
+                    type="text"
+                    size="small"
+                    @click="delGoodsSku(scope)"
+                    >删除</el-button
+                  >
                 </template>
               </el-table-column>
             </el-table>
           </div>
         </el-form-item>
-        <el-form-item label="商品参数">
+        <el-form-item label="商品参数" prop="params">
           <div class="goodsForm-form-item">
+            <div class="item-title">
+              <el-button type="text" size="small" @click="addParamItem"
+                >添加参数
+              </el-button>
+            </div>
             <el-table :data="paramsData" border style="width: 100%">
               <el-table-column
                 align="center"
@@ -167,8 +184,22 @@
                 label="参数名称"
                 width="150"
               >
+                <template slot-scope="scope">
+                  <el-input
+                    :disabled="scope.row.isDisabled"
+                    v-model="paramsData[scope.$index].name"
+                    placeholder="请输入参数名称"
+                  ></el-input>
+                </template>
               </el-table-column>
               <el-table-column align="center" prop="name" label="参数值">
+                <template slot-scope="scope">
+                  <el-input
+                    :disabled="scope.row.isDisabled"
+                    v-model="paramsData[scope.$index].value"
+                    placeholder="请输入参数值"
+                  ></el-input>
+                </template>
               </el-table-column>
               <el-table-column
                 align="center"
@@ -178,12 +209,33 @@
               >
                 <template slot-scope="scope">
                   <el-button
-                    @click="handleClick(scope.row)"
+                    v-if="!scope.row.isDisabled"
+                    @click="saveParams(scope)"
                     type="text"
                     size="small"
-                    >查看</el-button
+                    >保存</el-button
                   >
-                  <el-button type="text" size="small">编辑</el-button>
+                  <el-button
+                    v-if="!scope.row.isDisabled"
+                    type="text"
+                    size="small"
+                    @click="cancelParams(scope)"
+                    >取消</el-button
+                  >
+                  <el-button
+                    v-else
+                    type="text"
+                    size="small"
+                    @click="scope.row.isDisabled = false"
+                    >编辑</el-button
+                  >
+                  <el-button
+                    v-if="scope.row.id"
+                    type="text"
+                    size="small"
+                    @click="delParams(scope)"
+                    >删除</el-button
+                  >
                 </template>
               </el-table-column>
             </el-table>
@@ -211,18 +263,42 @@ import {
   addGoodsAttrVal,
   delGoodsAttrVal,
   addGoodsSku,
-  getGoodsSkuList
+  getGoodsSkuList,
+  putGoodsSku,
+  delGoodsSku,
+  addGoodsParams,
+  getGoodsParams,
+  putGoodsParams,
+  delGoodsParams,
+  putGoods
 } from "@/api/goodsManage";
 export default {
   props: ["pageType", "goodsData", "prevStep", "nextStep"],
   data() {
     return {
+      ruleForm: {
+        attr: "",
+        attrVal: "",
+        sku: "",
+        params: ""
+      },
+      rules: {
+        attr: [{ required: true, message: "请添加商品属性" }],
+        attrVal: [{ required: true, message: "请添加商品属性值" }],
+        sku: [{ required: true, message: "请添加商品规格" }],
+        params: [{ required: true, message: "请添加商品参数" }]
+      },
       attrDynamicTags: [],
-      speDynamicTags: [],
       attrInputVisible: false,
       attrInputValue: "",
       goodsAttrValOpt: [],
-      paramsData: [],
+      paramsData: [
+        {
+          name: "",
+          value: "",
+          isDisabled: false
+        }
+      ],
       skuData: [
         {
           spe1Id: null, // 属性1
@@ -239,6 +315,7 @@ export default {
     if (this.pageType) {
       this.getGoodsAttr();
       this.getGoodsSkuList();
+      this.getGoodsParams();
     }
   },
   methods: {
@@ -266,7 +343,6 @@ export default {
         .catch(err => {
           console.log(err);
         });
-      this.speDynamicTags.splice(this.speDynamicTags.indexOf(tag), 1);
     },
     // 打开属性输入框
     openAttrinput() {
@@ -334,10 +410,10 @@ export default {
     },
     // 添加sku
     addSkuItem() {
-      let prev = this.skuData[this.skuData.length - 1]
-      if (!prev['id']) {
-        this.$message.info('请保存之后再继续添加。')
-        return false
+      let prev = this.skuData[this.skuData.length - 1] || {};
+      if (!prev["id"] && this.skuData.length) {
+        this.$message.info("请保存之后再继续添加。");
+        return false;
       }
       this.skuData.push({
         spe1Id: "", // 属性1
@@ -369,7 +445,6 @@ export default {
     },
     // 保存sku
     saveSku(scope) {
-      console.log(scope);
       let len = this.attrDynamicTags.length;
       for (let i = 0; i < this.attrDynamicTags.length; i++) {
         if (!scope.row["spe" + (i + 1) + "Id"]) {
@@ -385,52 +460,178 @@ export default {
         this.$message.error("请输入库存，必须是数字。");
         return false;
       }
-      let data = {
-        goodsId: this.goodsData.id,
-        spe1Id: scope.row.spe1Id,
-        spe2Id: scope.row.spe2Id,
-        spe3Id: scope.row.spe3Id,
-        price: scope.row.price - 0,
-        stock: scope.row.stock - 0
-      };
+      scope.row.price -= 0;
+      scope.row.stock -= 0;
       if (scope.row.id) {
         // 修改
-      } else {
-        // 新增
-        addGoodsSku(data)
+        putGoodsSku(scope.row)
           .then(res => {
             if (res.data.code === 1) {
               this.getGoodsSkuList();
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        // 新增
+        addGoodsSku({
+          ...scope.row,
+          goodsId: this.goodsData.id
+        })
+          .then(res => {
+            if (res.data.code === 1) {
+              this.getGoodsSkuList();
+            } else {
+              this.$message.error(res.data.msg);
             }
           })
           .catch(err => {});
       }
     },
     // 取消编辑sku
-    cancelSku(scope){
+    cancelSku(scope) {
       if (scope.row.id) {
-        scope.row.isDisabled = true
+        scope.row.isDisabled = true;
       } else {
-        this.skuData.splice(scope.$index, 1)
+        this.skuData.splice(scope.$index, 1);
       }
     },
-    // 编辑sku
-    skuEdit(scope) {
-      scope.row.isDisabled = false
-    },
-    // 提交表单
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          // ...
-        } else {
-          console.log("error submit!!");
-          return false;
+    // 删除sku
+    delGoodsSku(scope) {
+      if (!scope.row.id) {
+        return false;
+      }
+      delGoodsSku({ id: scope.row.id }).then(res => {
+        if (res.data.code === 1) {
+          this.getGoodsSkuList();
         }
       });
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    // 获取参数
+    getGoodsParams() {
+      this.paramsData = [];
+      getGoodsParams({
+        goodsId: this.goodsData.id
+      })
+        .then(res => {
+          if (res.data.code === 1) {
+            this.paramsData = res.data.data.map(item => {
+              return {
+                ...item,
+                isDisabled: true
+              };
+            });
+          }
+        })
+        .catch(err => {});
+    },
+    // 添加参数
+    addParamItem() {
+      let prev = this.paramsData[this.paramsData.length - 1] || {};
+      if (!prev["id"] && this.paramsData.length) {
+        this.$message.info("请保存之后再继续添加。");
+        return false;
+      }
+      this.paramsData.push({
+        name: "",
+        value: "",
+        isDisabled: false // 编辑状态
+      });
+    },
+    // 保存参数
+    saveParams(scope) {
+      if (!scope.row.name) {
+        this.$message.error("请输入参数名称");
+        return false;
+      }
+      if (!scope.row.value) {
+        this.$message.error("请输入参数值");
+        return false;
+      }
+      if (scope.row.id) {
+        // 修改
+        putGoodsParams(scope.row)
+          .then(res => {
+            if (res.data.code === 1) {
+              this.getGoodsParams();
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          })
+          .catch(err => {});
+      } else {
+        // 新增
+        addGoodsParams({
+          ...scope.row,
+          goodsId: this.goodsData.id
+        })
+          .then(res => {
+            if (res.data.code === 1) {
+              this.getGoodsParams();
+            }
+          })
+          .catch(err => {});
+      }
+    },
+    // 取消参数编辑
+    cancelParams(scope) {
+      if (scope.row.id) {
+        scope.row.isDisabled = true;
+      } else {
+        this.paramsData.splice(scope.$index, 1);
+      }
+    },
+    // 删除参数
+    delParams(scope) {
+      if (!scope.row.id) {
+        return false;
+      }
+      delGoodsParams({
+        id: scope.row.id
+      })
+        .then(res => {
+          if (res.data.code === 1) {
+            this.getGoodsParams();
+          }
+        })
+        .catch(err => {});
+    },
+    // 提交表单
+    submitForm(formName) {
+      if (this.attrDynamicTags.length > 0 && this.attrDynamicTags[0].id) {
+        this.ruleForm.attr = true;
+        if (
+          this.attrDynamicTags[0].children.length > 0 &&
+          this.attrDynamicTags[0].children[0].id
+        ) {
+          this.ruleForm.attrVal = true;
+        }
+      }
+      if (this.skuData.length > 0 && this.skuData[0].id) {
+        this.ruleForm.sku = true;
+      }
+      if (this.paramsData.length > 0 && this.paramsData[0].id) {
+        this.ruleForm.params = true;
+      }
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          putGoods({
+            id: this.goodsData.id,
+            step: 1
+          })
+            .then(res => {
+              if (res.data.code === 1) {
+                this.nextStep();
+              }
+            })
+            .catch(err => {});
+        } else {
+          return false;
+        }
+      });
     }
   }
 };
@@ -457,6 +658,18 @@ export default {
       width: 90px;
       margin-left: 10px;
       vertical-align: bottom;
+    }
+    .goodsForm-form-item {
+      width: 100%;
+      background: #f5f5f5;
+      margin-top: 5px;
+      .item-title {
+        width: 100%;
+        padding-left: 10px;
+      }
+      .item-container {
+        padding-bottom: 10px;
+      }
     }
   }
   .goodsForm-btn {

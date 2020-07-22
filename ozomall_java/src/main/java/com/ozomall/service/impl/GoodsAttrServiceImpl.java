@@ -3,11 +3,9 @@ package com.ozomall.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ozomall.dao.GoodsAttrMapper;
 import com.ozomall.dao.GoodsAttrValMapper;
+import com.ozomall.dao.GoodsParamsMapper;
 import com.ozomall.dao.GoodsSkuMapper;
-import com.ozomall.entity.GoodsAttrDto;
-import com.ozomall.entity.GoodsAttrValDto;
-import com.ozomall.entity.GoodsSkuDto;
-import com.ozomall.entity.Result;
+import com.ozomall.entity.*;
 import com.ozomall.service.GoodsAttrService;
 import com.ozomall.utils.ResultGenerate;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,9 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
 
     @Resource
     GoodsSkuMapper goodsSkuMapper;
+
+    @Resource
+    GoodsParamsMapper goodsParamsMapper;
 
     /**
      * 添加商品属性
@@ -133,11 +134,105 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
     public Result getGoodsSkuList(GoodsSkuDto form) {
         LambdaQueryWrapper<GoodsSkuDto> wrapper = new LambdaQueryWrapper();
         wrapper.eq(GoodsSkuDto::getGoodsId, form.getGoodsId());
+        wrapper.orderByAsc(GoodsSkuDto::getId);
         List<GoodsSkuDto> rows = goodsSkuMapper.selectList(wrapper);
         if (rows != null) {
             return ResultGenerate.genSuccessResult(rows);
         } else {
             return ResultGenerate.genErroResult("获取失败！");
+        }
+    }
+
+    /**
+     * 修改商品价格
+     *
+     * @param form
+     */
+    @Override
+    public Result putGoodsSku(GoodsSkuDto form) {
+        int rows = goodsSkuMapper.updateById(form);
+        if (rows > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("更新失败！");
+        }
+    }
+
+    /**
+     * 删除商品价格
+     *
+     * @param form
+     */
+    @Override
+    public Result delGoodsSku(GoodsSkuDto form) {
+        int rows = goodsSkuMapper.deleteById(form.getId());
+        if (rows > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("删除失败！");
+        }
+    }
+
+    /**
+     * 添加商品参数
+     *
+     * @param form
+     */
+    @Override
+    public Result addGoodsParams(GoodsParamsDto form) {
+        int rows = goodsParamsMapper.insert(form);
+        if (rows > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("删除失败！");
+        }
+    }
+
+    /**
+     * 获取商品参数
+     *
+     * @param form
+     */
+    @Override
+    public Result getGoodsParams(GoodsParamsDto form) {
+        LambdaQueryWrapper<GoodsParamsDto> wrapper = new LambdaQueryWrapper();
+        wrapper.eq(GoodsParamsDto::getGoodsId, form.getGoodsId());
+        wrapper.orderByAsc(GoodsParamsDto::getId);
+        List<GoodsParamsDto> rows = goodsParamsMapper.selectList(wrapper);
+        if (rows != null) {
+            return ResultGenerate.genSuccessResult(rows);
+        } else {
+            return ResultGenerate.genErroResult("获取失败！");
+        }
+    }
+
+    /**
+     * 修改商品参数
+     *
+     * @param form
+     */
+    @Override
+    public Result putGoodsParams(GoodsParamsDto form) {
+        int rows = goodsParamsMapper.updateById(form);
+        if (rows > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("更新失败！");
+        }
+    }
+
+    /**
+     * 删除商品参数
+     *
+     * @param form
+     */
+    @Override
+    public Result delGoodsParams(GoodsParamsDto form) {
+        int rows = goodsParamsMapper.deleteById(form.getId());
+        if (rows > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("删除失败！");
         }
     }
 

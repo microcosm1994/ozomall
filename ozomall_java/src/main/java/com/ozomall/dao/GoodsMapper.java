@@ -11,4 +11,6 @@ import java.util.Map;
 @Mapper
 public interface GoodsMapper extends BaseMapper<GoodsDto> {
     IPage<Map> goodsList(Page page,GoodsDto form);
+
+    GoodsDto getGoodsById(int id);
 }

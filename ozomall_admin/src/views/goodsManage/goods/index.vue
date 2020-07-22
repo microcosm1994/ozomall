@@ -60,8 +60,8 @@
             label="所属类别"
             width="180"
           >
-          <template slot-scope="scope">
-              {{scope.row.classify.name}}
+            <template slot-scope="scope">
+              {{ scope.row.classify.name }}
             </template>
           </el-table-column>
           <el-table-column
@@ -106,7 +106,7 @@
             width="180"
           >
             <template slot-scope="scope">
-              {{scope.row.step | step}}
+              {{ scope.row.step | step }}
             </template>
           </el-table-column>
           <el-table-column
@@ -130,7 +130,12 @@
                 size="small"
                 >查看</el-button
               >
-              <el-button type="text" size="small" @click="openEdit(scope.row)">编辑</el-button>
+              <el-button type="text" size="small" @click="openEdit(scope.row)"
+                >编辑</el-button
+              >
+              <el-button type="text" size="small" @click="delGoods(scope)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -152,7 +157,7 @@
 </template>
 
 <script>
-import { getClassifyList, getGoodsList } from "@/api/goodsManage";
+import { getClassifyList, getGoodsList, delGoods } from "@/api/goodsManage";
 import { defaults } from "codemirror";
 export default {
   data() {
@@ -237,9 +242,23 @@ export default {
       this.$router.push({
         name: "goodsManageEdit",
         params: {
-          id:row.id
+          id: row.id
         }
       });
+    },
+    // 删除商品信息
+    delGoods(scope) {
+      delGoods({
+        id: scope.row.id
+      })
+        .then(res => {
+          if (res.data.code === 1) {
+            this.getData();
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        })
+        .catch(err => {});
     },
     onSubmit() {
       console.log("submit!");

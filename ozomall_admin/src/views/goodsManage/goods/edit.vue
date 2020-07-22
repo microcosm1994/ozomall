@@ -85,6 +85,7 @@ export default {
     nextStep(){
       let step = this.componentsName.indexOf(this.activeComponent)
       this.activeComponent = this.componentsName[step + 1];
+      this.getGoods(this.goodsData.id)
     },
     // 更新商品数据
     updateGoods(data){

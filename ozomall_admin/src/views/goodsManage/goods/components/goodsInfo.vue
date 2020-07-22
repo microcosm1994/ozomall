@@ -22,6 +22,7 @@
             :props="props"
             :filterable="true"
             ref="cascader"
+            :placeholder="classifyPlaceholder"
           ></el-cascader>
         </el-form-item>
         <el-form-item label="商品价格" prop="goodsName">
@@ -44,11 +45,17 @@
 </template>
 
 <script>
-import { getClassifyList, addGoods, getGoods } from "@/api/goodsManage";
+import {
+  getClassifyList,
+  addGoods,
+  getGoods,
+  putGoods
+} from "@/api/goodsManage";
 export default {
   props: ["pageType", "goodsData", "prevStep", "nextStep", "updateGoods"],
   data() {
     return {
+      classifyPlaceholder:'请选择分类',
       ruleForm: {
         goodsName: "",
         classifyId: "",
@@ -95,6 +102,7 @@ export default {
   },
   mounted() {
     if (this.pageType) {
+      this.classifyPlaceholder = this.goodsData.classify.name
       for (let key in this.ruleForm) {
         this.ruleForm[key] = this.goodsData[key];
       }
@@ -123,7 +131,7 @@ export default {
       })
         .then(res => {
           if (res.data.code === 1) {
-            this.updateGoods(res.data.data)
+            this.updateGoods(res.data.data);
             this.nextStep();
             this.$message.success(res.data.msg);
           } else {
@@ -134,9 +142,13 @@ export default {
           console.log(err);
         });
     },
-    // 添加
+    // 修改
     putGoods() {
-      addGoods({
+      if (!this.goodsData.id) {
+        return false;
+      }
+      putGoods({
+        id: this.goodsData.id,
         ...this.ruleForm
       })
         .then(res => {

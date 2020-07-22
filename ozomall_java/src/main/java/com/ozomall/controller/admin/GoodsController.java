@@ -41,6 +41,18 @@ public class GoodsController {
         return goodsService.getGoods(id);
     }
 
+    @ApiOperation("修改商品信息")
+    @PostMapping("/put")
+    public Result putGoods(@RequestBody GoodsDto form) {
+        return goodsService.putGoods(form);
+    }
+
+    @ApiOperation("删除商品信息")
+    @PostMapping("/del")
+    public Result delGoods(@RequestBody GoodsDto form) {
+        return goodsService.delGoods(form);
+    }
+
 
     /**
      * 属性
@@ -88,6 +100,42 @@ public class GoodsController {
     @GetMapping("/getGoodsSkuList")
     public Result getGoodsSkuList(GoodsSkuDto form) {
         return goodsAttrService.getGoodsSkuList(form);
+    }
+
+    @ApiOperation("修改商品价格")
+    @PostMapping("/putGoodsSku")
+    public Result putGoodsSku(@RequestBody GoodsSkuDto form) {
+        return goodsAttrService.putGoodsSku(form);
+    }
+
+    @ApiOperation("删除商品价格")
+    @PostMapping("/delGoodsSku")
+    public Result delGoodsSku(@RequestBody GoodsSkuDto form) {
+        return goodsAttrService.delGoodsSku(form);
+    }
+
+    @ApiOperation("添加商品参数")
+    @PostMapping("/addGoodsParams")
+    public Result addGoodsParams(@RequestBody GoodsParamsDto form) {
+        return goodsAttrService.addGoodsParams(form);
+    }
+
+    @ApiOperation("获取商品参数")
+    @GetMapping("/getGoodsParams")
+    public Result getGoodsParams(GoodsParamsDto form) {
+        return goodsAttrService.getGoodsParams(form);
+    }
+
+    @ApiOperation("修改商品参数")
+    @PostMapping("/putGoodsParams")
+    public Result putGoodsParams(@RequestBody GoodsParamsDto form) {
+        return goodsAttrService.putGoodsParams(form);
+    }
+
+    @ApiOperation("删除商品参数")
+    @PostMapping("/delGoodsParams")
+    public Result delGoodsParams(@RequestBody GoodsParamsDto form) {
+        return goodsAttrService.delGoodsParams(form);
     }
 
 }

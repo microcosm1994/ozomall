@@ -1,9 +1,6 @@
 package com.ozomall.service;
 
-import com.ozomall.entity.GoodsAttrDto;
-import com.ozomall.entity.GoodsAttrValDto;
-import com.ozomall.entity.GoodsSkuDto;
-import com.ozomall.entity.Result;
+import com.ozomall.entity.*;
 
 public interface GoodsAttrService {
 
@@ -44,4 +41,36 @@ public interface GoodsAttrService {
      * 获取商品价格
      */
     Result getGoodsSkuList(GoodsSkuDto form);
+
+    /**
+     * 修改商品价格
+     */
+    Result putGoodsSku(GoodsSkuDto form);
+
+    /**
+     * 删除商品价格
+     */
+    Result delGoodsSku(GoodsSkuDto form);
+
+    /**
+     * 添加商品参数
+     */
+    Result addGoodsParams(GoodsParamsDto form);
+
+    /**
+     * 获取商品参数
+     */
+    Result getGoodsParams(GoodsParamsDto form);
+
+
+    /**
+     * 修改商品参数
+     */
+    Result putGoodsParams(GoodsParamsDto form);
+
+
+    /**
+     * 删除商品参数
+     */
+    Result delGoodsParams(GoodsParamsDto form);
 }

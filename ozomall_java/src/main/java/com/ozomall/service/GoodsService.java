@@ -18,4 +18,14 @@ public interface GoodsService {
      * 根据id查询商品信息
      */
     Result getGoods(int id);
+
+    /**
+     * 修改商品信息
+     */
+    Result putGoods(GoodsDto form);
+
+    /**
+     * 删除商品信息
+     */
+    Result delGoods(GoodsDto form);
 }

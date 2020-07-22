@@ -39,4 +39,16 @@
             and goods.classify_id=#{form.classifyId}
         </if>
     </select>
+
+    <select id="getGoodsById" parameterType="int" resultMap="goodsMap">
+        select goods.*,
+        admin_classify.id as classify_id,
+        admin_classify.parent_id as classify_parentId,
+        admin_classify.classify_level as classify_classifyLevel,
+        admin_classify.name as classify_name,
+        admin_classify.create_time as classify_createTime
+        from goods left join admin_classify on
+        goods.classify_id=admin_classify.id
+        where goods.id=#{id}
+    </select>
 </mapper>

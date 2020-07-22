@@ -45,6 +45,24 @@ export function getGoods(params) {
     })
 }
 
+// 修改商品信息
+export function putGoods(data) {
+    return request({
+        url: '/admin/goods/put',
+        method: 'post',
+        data
+    })
+}
+
+// 删除商品信息
+export function delGoods(data) {
+    return request({
+        url: '/admin/goods/del',
+        method: 'post',
+        data
+    })
+}
+
 // 添加商品属性
 export function addGoodsAttr(data) {
     return request({
@@ -105,5 +123,59 @@ export function getGoodsSkuList(params) {
         url: '/admin/goods/getGoodsSkuList',
         method: 'get',
         params
+    })
+}
+
+// 修改商品价格
+export function putGoodsSku(data) {
+    return request({
+        url: '/admin/goods/putGoodsSku',
+        method: 'post',
+        data
+    })
+}
+
+// 删除商品价格
+export function delGoodsSku(data) {
+    return request({
+        url: '/admin/goods/delGoodsSku',
+        method: 'post',
+        data
+    })
+}
+
+// 添加商品参数
+export function addGoodsParams(data) {
+    return request({
+        url: '/admin/goods/addGoodsParams',
+        method: 'post',
+        data
+    })
+}
+
+// 添加商品参数
+export function getGoodsParams(params) {
+    return request({
+        url: '/admin/goods/getGoodsParams',
+        method: 'get',
+        params
+    })
+}
+
+// 修改商品参数
+export function putGoodsParams(data) {
+    return request({
+        url: '/admin/goods/putGoodsParams',
+        method: 'post',
+        data
+    })
+}
+
+// 删除商品参数
+export function delGoodsParams(data) {
+    return request({
+        url: '/admin/goods/delGoodsParams',
+        method: 'post',
+        data
     })
 }
