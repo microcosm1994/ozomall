@@ -63,6 +63,15 @@ export function delGoods(data) {
     })
 }
 
+// 获取商品图片
+export function getGoodsPic(params) {
+    return request({
+        url: '/admin/goods/getGoodsPic',
+        method: 'get',
+        params
+    })
+}
+
 // 添加商品属性
 export function addGoodsAttr(data) {
     return request({

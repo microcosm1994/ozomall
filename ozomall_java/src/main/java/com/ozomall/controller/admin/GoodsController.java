@@ -3,12 +3,15 @@ package com.ozomall.controller.admin;
 import com.ozomall.entity.*;
 import com.ozomall.service.GoodsAttrService;
 import com.ozomall.service.GoodsService;
+import com.ozomall.utils.ResultGenerate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 @Controller
 @ResponseBody
@@ -20,9 +23,10 @@ public class GoodsController {
 
     @Resource
     GoodsAttrService goodsAttrService;
+
     /**
      * 商品
-     * */
+     */
     @ApiOperation("添加商品信息")
     @PostMapping("/add")
     public Result addGoods(@RequestBody GoodsDto form) {
@@ -53,10 +57,26 @@ public class GoodsController {
         return goodsService.delGoods(form);
     }
 
+    @ApiOperation("上传商品图片")
+    @PostMapping("/upload")
+    public Result upload(@RequestParam("file") MultipartFile file, @RequestParam("goodsId") int goodsId) throws IOException {
+        if (file == null || file.getSize() <= 0) {
+            return ResultGenerate.genErroResult("文件不能为空");
+        } else {
+            return goodsService.upload(file, goodsId);
+        }
+    }
+
+    @ApiOperation("获取商品图片")
+    @GetMapping("/getGoodsPic")
+    public Result getGoodsPic(GoodsPicDto form) {
+        return goodsService.getGoodsPic(form);
+    }
+
 
     /**
      * 属性
-     * */
+     */
     @ApiOperation("添加商品属性")
     @PostMapping("/addGoodsAttr")
     public Result addGoodsAttr(@RequestBody GoodsAttrDto form) {
@@ -89,7 +109,7 @@ public class GoodsController {
 
     /**
      * 价格
-     * */
+     */
     @ApiOperation("添加商品价格")
     @PostMapping("/addGoodsSku")
     public Result addGoodsSku(@RequestBody GoodsSkuDto form) {

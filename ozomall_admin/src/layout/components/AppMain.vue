@@ -19,7 +19,7 @@ export default {
       return this.$route.path;
     }
   },
-  mounted() {
+  created() {
     this.$store.dispatch("user/getInfo");
   }
 };

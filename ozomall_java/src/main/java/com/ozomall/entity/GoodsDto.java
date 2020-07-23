@@ -45,4 +45,7 @@ public class GoodsDto extends PageReqDto {
 
     @ApiModelProperty(value = "商品封面")
     private String cover;
+
+    @ApiModelProperty(value = "商品详情")
+    private String details;
 }

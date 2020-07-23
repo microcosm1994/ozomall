@@ -1,7 +1,11 @@
 package com.ozomall.service;
 
 import com.ozomall.entity.GoodsDto;
+import com.ozomall.entity.GoodsPicDto;
 import com.ozomall.entity.Result;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface GoodsService {
     /**
@@ -28,4 +32,14 @@ public interface GoodsService {
      * 删除商品信息
      */
     Result delGoods(GoodsDto form);
+
+    /**
+     * 上传商品图片
+     */
+    Result upload(MultipartFile file, int goodsId) throws IOException;
+
+    /**
+     * 获取商品图片
+     */
+    Result getGoodsPic(GoodsPicDto form);
 }

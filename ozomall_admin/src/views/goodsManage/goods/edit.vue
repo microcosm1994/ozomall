@@ -14,7 +14,7 @@
           align-center
         >
           <el-step title="填写商品信息"></el-step>
-          <el-step title="填写商品属性"></el-step>
+          <el-step title="添加商品规格"></el-step>
           <el-step title="编辑商品详情"></el-step>
         </el-steps>
       </div>
@@ -38,10 +38,12 @@
 import { getClassifyList, getGoods } from "@/api/goodsManage";
 import goodsInfo from "./components/goodsInfo";
 import goodsAttr from "./components/goodsAttr";
+import goodsDetails from "./components/goodsDetails";
 export default {
   components: {
     goodsInfo,
     goodsAttr,
+    goodsDetails,
   },
   data() {
     return {
@@ -49,7 +51,7 @@ export default {
       pageTitle: "添加商品",
       activeStep: 0,
       activeComponent: "",
-      componentsName: ["goodsInfo", "goodsAttr"],
+      componentsName: ["goodsInfo", "goodsAttr", 'goodsDetails'],
       goodsData: null
     };
   },

@@ -14,6 +14,7 @@
         <result property="status" column="status"></result>
         <result property="step" column="step"></result>
         <result property="cover" column="cover"></result>
+        <result property="details" column="details"></result>
         <association property="classify" javaType="com.ozomall.entity.AdminClassifyDto" columnPrefix="classify_">
             <id property="id" column="id"></id>
             <result property="parentId" column="parent_id"/>
