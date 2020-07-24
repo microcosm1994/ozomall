@@ -73,6 +73,22 @@ public class GoodsController {
         return goodsService.getGoodsPic(form);
     }
 
+    @ApiOperation("删除商品图片")
+    @PostMapping("/delGoodsPic")
+    public Result delGoodsPic(@RequestBody GoodsPicDto form) {
+        return goodsService.delGoodsPic(form);
+    }
+
+    @ApiOperation("上传商品详情图片")
+    @PostMapping("/detailsUpload")
+    public Result detailsUpload(@RequestParam("file") MultipartFile file) throws IOException {
+        if (file == null || file.getSize() <= 0) {
+            return ResultGenerate.genErroResult("文件不能为空");
+        } else {
+            return goodsService.detailsUpload(file);
+        }
+    }
+
 
     /**
      * 属性

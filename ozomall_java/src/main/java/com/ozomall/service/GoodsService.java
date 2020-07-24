@@ -42,4 +42,14 @@ public interface GoodsService {
      * 获取商品图片
      */
     Result getGoodsPic(GoodsPicDto form);
+
+    /**
+     * 删除商品图片
+     */
+    Result delGoodsPic(GoodsPicDto form);
+
+    /**
+     * 上传商品详情图片
+     */
+    Result detailsUpload(MultipartFile file) throws IOException;
 }

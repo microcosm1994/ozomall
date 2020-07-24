@@ -34,13 +34,22 @@ public class Oss {
     /**
      * 空间  名称
      */
-    private String bucketName = "ozomall-goods-pic";
+    private String bucketName;
+
     /**
      * 文件存储目录
      */
-    private String filedir = "goodsPic/";
+    private String filedir;
 
     private OSSClient ossClient;
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
+    }
+
+    public void setFiledir(String filedir) {
+        this.filedir = filedir;
+    }
 
     public void OSSClientUtil() {
         ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
@@ -49,7 +58,9 @@ public class Oss {
     /**
      * 初始化
      */
-    public void init() {
+    public void init(String bucketName, String filedir) {
+        this.setBucketName(bucketName);
+        this.setFiledir(filedir);
         ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
     }
 
@@ -199,5 +210,15 @@ public class Oss {
             return url.toString();
         }
         return "";
+    }
+
+    /**
+     * 删除图片
+     *
+     * @param name
+     * @return
+     */
+    public void delPic(String name) {
+        ossClient.deleteObject(bucketName, filedir + name);
     }
 }

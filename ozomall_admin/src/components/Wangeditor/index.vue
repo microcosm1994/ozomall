@@ -7,17 +7,22 @@
 <script>
 import wangEditor from "wangeditor";
 export default {
+  props: ["config"],
   data() {
     return {
       editor: null
     };
+  },
+  computed: {
+    token() {
+      return this.$store.state.user.token;
+    }
   },
   mounted() {
     this.init();
   },
   methods: {
     init() {
-      console.log(this.$refs);
       this.editor = new wangEditor(this.$refs.editor);
       this.editor.customConfig.menus = [
         "head", // 标题
@@ -42,10 +47,28 @@ export default {
         "redo"
       ];
       this.editor.customConfig.zIndex = 100;
-      this.editor.customConfig.linkImgCallback = function(url) {
-        console.log(url); // url 即插入图片的地址
+      this.editor.customConfig.pasteIgnoreImg = false;
+      this.editor.customConfig.uploadImgServer = "/api/admin/goods/detailsUpload";
+      this.editor.customConfig.uploadFileName = "file";
+      this.editor.customConfig.showLinkImg = false
+      this.editor.customConfig.uploadImgHeaders = {
+        token: this.token
+      };
+      this.editor.customConfig.uploadImgParams = this.config;
+      this.editor.customConfig.uploadImgHooks = {
+        customInsert: this.customInsert
+      };
+      this.editor.customConfig.customAlert = info => {
+        // info 是需要提示的内容
+        this.$message.error(info);
       };
       this.editor.create();
+    },
+    // 插入图片
+    customInsert(insertImg, result, editor) {
+      if (result.code === 1) {
+        insertImg(result.data.url);
+      }
     }
   }
 };

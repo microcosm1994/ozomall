@@ -10,21 +10,22 @@
       >
         <el-form-item label="商品图片" prop="pics">
           <div class="goodsForm-form-item">
-            <div class="item-title">
-              tip：最好使用居中格式
-            </div>
+            <div class="item-title"></div>
             <div class="item-container">
               <el-upload
+                name="file"
                 :headers="uploadHeaders"
                 action="/api/admin/goods/upload"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
                 :on-success="onSuccess"
+                :on-remove="onRemove"
+                :before-remove="handleBeforeRemove"
                 :file-list="fileList"
                 :data="{
                   goodsId: goodsData.id
                 }"
+                :limit="10"
               >
                 <i class="el-icon-plus"></i>
               </el-upload>
@@ -40,15 +41,18 @@
               tip：最好使用居中格式
             </div>
             <div class="item-container">
-              <Wangeditor />
+              <Wangeditor ref="wangeditor" :config="wangeditorConfig" />
             </div>
           </div>
         </el-form-item>
       </el-form>
     </div>
     <div class="goodsForm-btn">
+      <el-button type="primary" @click="toStep(1)">
+        上一步
+      </el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">
-        完成
+        下一步
       </el-button>
     </div>
   </div>
@@ -61,16 +65,18 @@ import {
   addGoods,
   getGoods,
   putGoods,
-  getGoodsPic
+  getGoodsPic,
+  delGoodsPic
 } from "@/api/goodsManage";
 export default {
   components: { Wangeditor },
-  props: ["pageType", "goodsData", "prevStep", "nextStep", "updateGoods"],
+  props: ["pageType", "goodsData", "toStep", "getGoods"],
   data() {
     return {
       dialogImageUrl: "",
       dialogVisible: false,
       fileList: [],
+      wangeditorConfig: {},
       ruleForm: {
         pics: "",
         details: ""
@@ -92,6 +98,7 @@ export default {
   mounted() {
     if (this.pageType) {
       this.getGoodsPic();
+      this.$refs.wangeditor.editor.txt.html(this.goodsData.details);
       for (let key in this.ruleForm) {
         this.ruleForm[key] = this.goodsData[key];
       }
@@ -111,15 +118,40 @@ export default {
         })
         .catch(err => {});
     },
-    // 删除时回调
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    // 上传文件成功回调
-    onSuccess(response, file, fileList) {
-      if (response.code === 1) {
-        this.fileList.push(response.data);
+    // 上传成功回调
+    onSuccess(res, file, fileList) {
+      if (res.code === 1) {
+        fileList[fileList.length - 1]["id"] = res.data.id;
+        fileList[fileList.length - 1]["name"] = res.data.name;
+        this.fileList = fileList;
       }
+    },
+    // 删除回调
+    onRemove(file, fileList) {
+      console.log(fileList);
+      this.fileList = fileList;
+    },
+    // 删除前回调
+    handleBeforeRemove(file) {
+      return new Promise((reslove, reject) => {
+        delGoodsPic({
+          id: file.id,
+          name: file.name
+        })
+          .then(res => {
+            if (res.data.code === 1) {
+              reslove();
+              this.$message.success(res.data.msg);
+            } else {
+              this.$message.error(res.data.msg);
+              reject();
+            }
+          })
+          .catch(err => {
+            this.$message.error("服务器错误");
+            reject();
+          });
+      });
     },
     // 查看图片
     handlePictureCardPreview(file) {
@@ -128,23 +160,44 @@ export default {
     },
     // 提交表单
     submitForm(formName) {
+      if (this.fileList.length > 0) {
+        this.ruleForm.pics = true;
+      } else {
+        this.ruleForm.pics = "";
+      }
+      let html = this.$refs.wangeditor.editor.txt.html();
+
+      if (html && html !== "<p><br></p>") {
+        this.ruleForm.details = true;
+      } else {
+        this.ruleForm.details = "";
+      }
       this.$refs[formName].validate(valid => {
         if (valid) {
-          putGoods({
-            id: this.goodsData.id,
-            ...this.ruleForm
-          })
-            .then(res => {
-              if (res.data.code === 1) {
-                this.nextStep();
-                this.$message.success(res.data.msg);
-              } else {
-                this.$message.err(res.data.msg);
-              }
+          console.log(this.goodsData.details === html)
+          console.log(this.goodsData.details)
+          console.log(html)
+          if (this.goodsData.details === html && this.goodsData.step > 2) {
+            this.toStep(this.goodsData.step);
+          } else {
+            putGoods({
+              id: this.goodsData.id,
+              details: html,
+              step: this.goodsData.step < 2 ? 2 : this.goodsData.step
             })
-            .catch(err => {
-              console.log(err);
-            });
+              .then(res => {
+                if (res.data.code === 1) {
+                  this.toStep(3);
+                  this.getGoods(this.goodsData.id);
+                  this.$message.success(res.data.msg);
+                } else {
+                  this.$message.err(res.data.msg);
+                }
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          }
         } else {
           console.log("error submit!!");
           return false;
@@ -163,7 +216,7 @@ export default {
   width: 100%;
   padding-top: 20px;
   .goodsForm-form {
-    width: 800px;
+    width: 90%;
     margin: 0 auto;
     .el-tag + .el-tag {
       margin-left: 10px;

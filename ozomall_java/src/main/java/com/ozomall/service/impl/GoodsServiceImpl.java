@@ -12,6 +12,7 @@ import com.ozomall.service.GoodsService;
 import com.ozomall.utils.Oss;
 import com.ozomall.utils.ResultGenerate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -116,13 +117,13 @@ public class GoodsServiceImpl implements GoodsService {
      */
     @Override
     public Result upload(MultipartFile file, int goodsId) throws IOException {
-        System.out.println(goodsId);
         Oss ossClient = new Oss();
-        ossClient.init();
+        ossClient.init("ozomall-goods-pic", "goodsPic/");
         //将文件上传
         String name = ossClient.uploadImg2Oss(file);
         //获取文件的URl地址  以便前台  显示
         String imgUrl = ossClient.getImgUrl(name);
+        ossClient.destory();
         GoodsPicDto pic = new GoodsPicDto();
         pic.setGoodsId(goodsId);
         pic.setUrl(imgUrl);
@@ -137,7 +138,7 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     /**
-     * 删除商品信息
+     * 获取商品图片
      *
      * @param form
      */
@@ -149,7 +150,50 @@ public class GoodsServiceImpl implements GoodsService {
         if (rows != null) {
             return ResultGenerate.genSuccessResult(rows);
         } else {
+            return ResultGenerate.genErroResult("获取失败");
+        }
+    }
+
+    /**
+     * 删除商品图片
+     *
+     * @param form
+     */
+    @Override
+    public Result delGoodsPic(GoodsPicDto form) {
+        Oss ossClient = new Oss();
+        ossClient.init("ozomall-goods-pic", "goodsPic/");
+        int rows = goodsPicMapper.deleteById(form.getId());
+        if (rows > 0) {
+            ossClient.delPic(form.getName());
+            ossClient.destory();
+            return ResultGenerate.genSuccessResult();
+        } else {
             return ResultGenerate.genErroResult("删除失败");
+        }
+    }
+
+    /**
+     * 上传商品详情图片
+     *
+     * @param file
+     */
+    @Override
+    public Result detailsUpload(MultipartFile file) throws IOException {
+        Oss ossClient = new Oss();
+        ossClient.init("ozomall-goods-pic", "goodsDetailsPic/");
+        //将文件上传
+        String name = ossClient.uploadImg2Oss(file);
+        //获取文件的URl地址  以便前台  显示
+        String imgUrl = ossClient.getImgUrl(name);
+        ossClient.destory();
+        if (!StringUtils.isEmpty(imgUrl)) {
+            GoodsPicDto pic = new GoodsPicDto();
+            pic.setUrl(imgUrl);
+            pic.setName(name);
+            return ResultGenerate.genSuccessResult(pic);
+        } else {
+            return ResultGenerate.genErroResult("图片上传失败,请重新上传。");
         }
     }
 

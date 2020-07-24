@@ -244,7 +244,7 @@
       </el-form>
     </div>
     <div class="goodsForm-btn">
-      <el-button type="primary" @click="prevStep">
+      <el-button type="primary" @click="toStep(0)">
         上一步
       </el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">
@@ -273,7 +273,7 @@ import {
   putGoods
 } from "@/api/goodsManage";
 export default {
-  props: ["pageType", "goodsData", "prevStep", "nextStep"],
+  props: ["pageType", "goodsData", "toStep", "getGoods"],
   data() {
     return {
       ruleForm: {
@@ -618,16 +618,22 @@ export default {
       }
       this.$refs[formName].validate(valid => {
         if (valid) {
-          putGoods({
-            id: this.goodsData.id,
-            step: 1
-          })
-            .then(res => {
-              if (res.data.code === 1) {
-                this.nextStep();
-              }
+          console.log(this.goodsData);
+          if (this.goodsData.step > 1) {
+            this.toStep(2);
+          } else {
+            putGoods({
+              id: this.goodsData.id,
+              step: 1
             })
-            .catch(err => {});
+              .then(res => {
+                if (res.data.code === 1) {
+                  this.toStep(2);
+                  this.getGoods(this.goodsData.id);
+                }
+              })
+              .catch(err => {});
+          }
         } else {
           return false;
         }

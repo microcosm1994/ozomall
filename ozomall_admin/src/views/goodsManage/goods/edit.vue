@@ -16,6 +16,7 @@
           <el-step title="填写商品信息"></el-step>
           <el-step title="添加商品规格"></el-step>
           <el-step title="编辑商品详情"></el-step>
+          <el-step title="完成编辑"></el-step>
         </el-steps>
       </div>
       <div class="edit-container-content">
@@ -25,8 +26,8 @@
             v-bind:is="activeComponent"
             :goodsData="goodsData"
             :updateGoods="updateGoods"
-            :prevStep="prevStep"
-            :nextStep="nextStep"
+            :toStep="toStep"
+            :getGoods="getGoods"
           ></component>
         </keep-alive>
       </div>
@@ -38,12 +39,14 @@
 import { getClassifyList, getGoods } from "@/api/goodsManage";
 import goodsInfo from "./components/goodsInfo";
 import goodsAttr from "./components/goodsAttr";
-import goodsDetails from "./components/goodsDetails";
+import goodsPic from "./components/goodsPic";
+import goodsDetail from "./components/goodsDetail";
 export default {
   components: {
     goodsInfo,
     goodsAttr,
-    goodsDetails,
+    goodsPic,
+    goodsDetail
   },
   data() {
     return {
@@ -51,7 +54,7 @@ export default {
       pageTitle: "添加商品",
       activeStep: 0,
       activeComponent: "",
-      componentsName: ["goodsInfo", "goodsAttr", 'goodsDetails'],
+      componentsName: ["goodsInfo", "goodsAttr", "goodsPic", "goodsDetail"],
       goodsData: null
     };
   },
@@ -67,31 +70,28 @@ export default {
   methods: {
     // 获取商品信息
     getGoods(id) {
-      this.activeStep = 1
-      this.activeComponent = ''
+      this.activeStep = 1;
+      this.activeComponent = "";
       getGoods({ id })
         .then(res => {
           if (res.data.code === 1) {
-            this.goodsData = res.data.data
+            this.goodsData = res.data.data;
             this.activeStep = this.goodsData.step + 1;
-            this.activeComponent = this.componentsName[this.activeStep];
+            this.activeComponent =
+              this.activeStep < 4
+                ? this.componentsName[this.activeStep]
+                : this.componentsName[this.activeStep - 1];
           }
         })
         .catch(err => {});
     },
     // 上一步
-    prevStep(){
-      this.activeComponent = this.componentsName[this.activeStep - 1];
-    },
-    // 下一步
-    nextStep(){
-      let step = this.componentsName.indexOf(this.activeComponent)
-      this.activeComponent = this.componentsName[step + 1];
-      this.getGoods(this.goodsData.id)
+    toStep(step) {
+      this.activeComponent = this.componentsName[step];
     },
     // 更新商品数据
-    updateGoods(data){
-      this.goodsData = data
+    updateGoods(data) {
+      this.goodsData = data;
     }
   }
 };

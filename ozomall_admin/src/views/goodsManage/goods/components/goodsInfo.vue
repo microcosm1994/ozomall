@@ -33,6 +33,22 @@
             placeholder="商品价格"
           ></el-input>
         </el-form-item>
+        <el-form-item label="商品封面">
+          <el-upload
+            class="avatar-uploader"
+            action="/api/admin/goods/upload"
+            :headers="uploadHeaders"
+            :data="{
+              goodsId: 1
+            }"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
       </el-form>
     </div>
     <div class="goodsForm-btn">
@@ -52,10 +68,11 @@ import {
   putGoods
 } from "@/api/goodsManage";
 export default {
-  props: ["pageType", "goodsData", "prevStep", "nextStep", "updateGoods"],
+  props: ["pageType", "goodsData", "toStep", "updateGoods", "getGoods"],
   data() {
     return {
-      classifyPlaceholder:'请选择分类',
+      imageUrl: "",
+      classifyPlaceholder: "请选择分类",
       ruleForm: {
         goodsName: "",
         classifyId: "",
@@ -100,15 +117,38 @@ export default {
       }
     };
   },
+  computed: {
+    uploadHeaders() {
+      console.log(this.$store);
+      return {
+        token: this.$store.state.user.token
+      };
+    }
+  },
   mounted() {
     if (this.pageType) {
-      this.classifyPlaceholder = this.goodsData.classify.name
+      this.classifyPlaceholder = this.goodsData.classify.name;
       for (let key in this.ruleForm) {
         this.ruleForm[key] = this.goodsData[key];
       }
     }
   },
   methods: {
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
     // 提交表单
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -132,7 +172,7 @@ export default {
         .then(res => {
           if (res.data.code === 1) {
             this.updateGoods(res.data.data);
-            this.nextStep();
+            this.toStep(1);
             this.$message.success(res.data.msg);
           } else {
             this.$message.err(res.data.msg);
@@ -153,7 +193,8 @@ export default {
       })
         .then(res => {
           if (res.data.code === 1) {
-            this.nextStep();
+            this.toStep(1);
+            this.getGoods(this.goodsData.id);
             this.$message.success(res.data.msg);
           } else {
             this.$message.err(res.data.msg);
@@ -171,6 +212,29 @@ export default {
 </script>
 
 <style scoped lang="less">
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 .goodsForm {
   width: 100%;
   padding-top: 20px;
