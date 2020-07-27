@@ -15,6 +15,23 @@
             placeholder="商品名称"
           ></el-input>
         </el-form-item>
+        <el-form-item label="商品品牌" prop="brandId">
+          <el-select v-model="ruleForm.brandId" placeholder="请选择">
+            <el-option
+              v-for="item in brandList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+              <span style="float: left">
+                <img style="height: 30px;" :src="item.url" alt="" />
+              </span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{
+                item.name
+              }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="商品分类" prop="classifyId">
           <el-cascader
             style="width:300px;"
@@ -33,19 +50,16 @@
             placeholder="商品价格"
           ></el-input>
         </el-form-item>
-        <el-form-item label="商品封面">
+        <el-form-item label="商品封面" prop="cover">
           <el-upload
             class="avatar-uploader"
-            action="/api/admin/goods/upload"
+            action="/api/admin/goods/uploadCover"
             :headers="uploadHeaders"
-            :data="{
-              goodsId: 1
-            }"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <img v-if="ruleForm.cover" :src="ruleForm.cover" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -55,7 +69,7 @@
       <el-button type="primary" @click="submitForm('ruleForm')">
         下一步
       </el-button>
-      <el-button @click="resetForm('ruleForm')">重置</el-button>
+      <el-button @click="cancel">取消</el-button>
     </div>
   </div>
 </template>
@@ -65,28 +79,37 @@ import {
   getClassifyList,
   addGoods,
   getGoods,
-  putGoods
+  putGoods,
+  getGoodsBrand
 } from "@/api/goodsManage";
 export default {
-  props: ["pageType", "goodsData", "toStep", "updateGoods", "getGoods"],
+  props: ["pageType", "goodsData", "toStep", "updateGoods", "getGoods", "cancel"],
   data() {
     return {
       imageUrl: "",
       classifyPlaceholder: "请选择分类",
       ruleForm: {
         goodsName: "",
+        brandId: "",
         classifyId: "",
-        goodsPrice: ""
+        goodsPrice: "",
+        cover: ""
       },
       rules: {
         goodsName: [
           { required: true, message: "请输入商品名称", trigger: "blur" }
+        ],
+        brandId: [
+          { required: true, message: "请选择商品品牌", trigger: "change" }
         ],
         classifyId: [
           { required: true, message: "请选择商品分类", trigger: "change" }
         ],
         goodsPrice: [
           { required: true, message: "请输入商品价格", trigger: "blur" }
+        ],
+        cover: [
+          { required: true, message: "请上传商品封面", trigger: "change" }
         ]
       },
       props: {
@@ -114,18 +137,19 @@ export default {
               console.log(err);
             });
         }
-      }
+      },
+      brandList: []
     };
   },
   computed: {
     uploadHeaders() {
-      console.log(this.$store);
       return {
         token: this.$store.state.user.token
       };
     }
   },
   mounted() {
+    this.getGoodsBrand()
     if (this.pageType) {
       this.classifyPlaceholder = this.goodsData.classify.name;
       for (let key in this.ruleForm) {
@@ -134,9 +158,28 @@ export default {
     }
   },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+    // 获取品牌列表
+    getGoodsBrand() {
+      getGoodsBrand({
+        page: 1,
+        size: 1000
+      })
+        .then(res => {
+          if (res.data.code === 1) {
+            this.brandList = res.data.data.records;
+          }
+        })
+        .catch(err => {});
     },
+    // 上传成功后调用
+    handleAvatarSuccess(res, file) {
+      console.log(res);
+      if (res.code === 1) {
+        this.ruleForm.cover = res.data.url;
+      }
+      // this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    // 上传图片前调用
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -203,9 +246,6 @@ export default {
         .catch(err => {
           console.log(err);
         });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
     }
   }
 };

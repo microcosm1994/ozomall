@@ -1,10 +1,13 @@
 package com.ozomall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ozomall.dao.GoodsBrandMapper;
 import com.ozomall.dao.GoodsMapper;
 import com.ozomall.dao.GoodsPicMapper;
+import com.ozomall.entity.GoodsBrandDto;
 import com.ozomall.entity.GoodsDto;
 import com.ozomall.entity.GoodsPicDto;
 import com.ozomall.entity.Result;
@@ -17,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +31,9 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Resource
     GoodsPicMapper goodsPicMapper;
+
+    @Resource
+    GoodsBrandMapper goodsBrandMapper;
 
     /**
      * 添加商品信息
@@ -111,6 +118,30 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     /**
+     * 上传商品封面
+     *
+     * @param file
+     */
+    @Override
+    public Result uploadCover(MultipartFile file) throws IOException {
+        Oss ossClient = new Oss();
+        ossClient.init("ozomall-goods-pic", "goods/cover/");
+        //将文件上传
+        String name = ossClient.uploadImg2Oss(file);
+        //获取文件的URl地址  以便前台  显示
+        String imgUrl = ossClient.getImgUrl(name);
+        ossClient.destory();
+        Map<String, String> map = new HashMap();
+        map.put("url", imgUrl);
+        // 存储图片链接到数据库
+        if (!StringUtils.isEmpty(imgUrl)) {
+            return ResultGenerate.genSuccessResult(map);
+        } else {
+            return ResultGenerate.genErroResult("图片上传失败,请重新上传。");
+        }
+    }
+
+    /**
      * 上传商品图片
      *
      * @param file
@@ -118,7 +149,7 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public Result upload(MultipartFile file, int goodsId) throws IOException {
         Oss ossClient = new Oss();
-        ossClient.init("ozomall-goods-pic", "goodsPic/");
+        ossClient.init("ozomall-goods-pic", "goods/pics/");
         //将文件上传
         String name = ossClient.uploadImg2Oss(file);
         //获取文件的URl地址  以便前台  显示
@@ -162,7 +193,7 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public Result delGoodsPic(GoodsPicDto form) {
         Oss ossClient = new Oss();
-        ossClient.init("ozomall-goods-pic", "goodsPic/");
+        ossClient.init("ozomall-goods-pic", "goods/pics/");
         int rows = goodsPicMapper.deleteById(form.getId());
         if (rows > 0) {
             ossClient.delPic(form.getName());
@@ -181,7 +212,7 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public Result detailsUpload(MultipartFile file) throws IOException {
         Oss ossClient = new Oss();
-        ossClient.init("ozomall-goods-pic", "goodsDetailsPic/");
+        ossClient.init("ozomall-goods-pic", "goods/details/");
         //将文件上传
         String name = ossClient.uploadImg2Oss(file);
         //获取文件的URl地址  以便前台  显示
@@ -194,6 +225,99 @@ public class GoodsServiceImpl implements GoodsService {
             return ResultGenerate.genSuccessResult(pic);
         } else {
             return ResultGenerate.genErroResult("图片上传失败,请重新上传。");
+        }
+    }
+
+
+    /**
+     * 添加品牌
+     *
+     * @param form
+     */
+    @Override
+    public Result addGoodsBrand(GoodsBrandDto form) {
+        int row = goodsBrandMapper.insert(form);
+        if (row > 0) {
+            return ResultGenerate.genSuccessResult(form);
+        } else {
+            return ResultGenerate.genErroResult("品牌添加失败，请重试！");
+        }
+    }
+
+    /**
+     * 上传品牌logo
+     *
+     * @param file
+     */
+    @Override
+    public Result uploadGoodsBrand(MultipartFile file) throws IOException {
+        Oss ossClient = new Oss();
+        ossClient.init("ozomall-goods-pic", "goods/brand/");
+        //将文件上传
+        String name = ossClient.uploadImg2Oss(file);
+        //获取文件的URl地址  以便前台  显示
+        String imgUrl = ossClient.getImgUrl(name);
+        ossClient.destory();
+        if (!StringUtils.isEmpty(imgUrl)) {
+            Map<String, String> data = new HashMap<>();
+            data.put("url", imgUrl);
+            return ResultGenerate.genSuccessResult(data);
+        } else {
+            return ResultGenerate.genErroResult("图片上传失败,请重新上传。");
+        }
+    }
+
+
+    /**
+     * 获取品牌列表
+     *
+     * @param form
+     */
+    @Override
+    public Result getGoodsBrand(GoodsBrandDto form) {
+        Page page = new Page();
+        QueryWrapper<GoodsBrandDto> wrapper = new QueryWrapper<>();
+        page.setSize(form.getSize());
+        page.setPages(form.getPage());
+        Map<String, Object> map = new HashMap();
+        map.put("name", form.getName());
+        wrapper.allEq(map, false);
+        IPage<GoodsBrandDto> rows = goodsBrandMapper.selectPage(page, wrapper);
+        if (rows != null) {
+            return ResultGenerate.genSuccessResult(rows);
+        } else {
+            return ResultGenerate.genErroResult("品牌添加失败，请重试！");
+        }
+    }
+
+
+    /**
+     * 修改品牌
+     *
+     * @param form
+     */
+    @Override
+    public Result putGoodsBrand(GoodsBrandDto form) {
+        int row = goodsBrandMapper.updateById(form);
+        if (row > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("修改失败");
+        }
+    }
+
+    /**
+     * 删除品牌
+     *
+     * @param form
+     */
+    @Override
+        public Result delGoodsBrand(GoodsBrandDto form) {
+        int row = goodsBrandMapper.deleteById(form.getId());
+        if (row > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("删除失败");
         }
     }
 

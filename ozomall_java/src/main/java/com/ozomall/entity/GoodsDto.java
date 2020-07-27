@@ -31,6 +31,9 @@ public class GoodsDto extends PageReqDto {
     @ApiModelProperty(value = "商品分类id")
     private Integer classifyId;
 
+    @ApiModelProperty(value = "商品品牌id")
+    private Integer brandId;
+
     @ApiModelProperty(value = "商品创建时间")
     private Timestamp createTime;
 

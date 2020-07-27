@@ -81,6 +81,42 @@ export function delGoodsPic(data) {
     })
 }
 
+// 获取商品品牌列表
+export function getGoodsBrand(params) {
+    return request({
+        url: '/admin/goods/getGoodsBrand',
+        method: 'get',
+        params
+    })
+}
+
+// 添加商品品牌
+export function addGoodsBrand(data) {
+    return request({
+        url: '/admin/goods/addGoodsBrand',
+        method: 'post',
+        data
+    })
+}
+
+// 修改商品品牌
+export function putGoodsBrand(data) {
+    return request({
+        url: '/admin/goods/putGoodsBrand',
+        method: 'post',
+        data
+    })
+}
+
+// 删除商品品牌
+export function delGoodsBrand(data) {
+    return request({
+        url: '/admin/goods/delGoodsBrand',
+        method: 'post',
+        data
+    })
+}
+
 // 添加商品属性
 export function addGoodsAttr(data) {
     return request({

@@ -30,10 +30,10 @@ const settingRouter = {
             meta: { title: '商品分类' }
         },
         {
-            path: 'markdown',
-            component: () => import('@/views/components-demo/markdown'),
-            name: 'MarkdownDemo',
-            meta: { title: 'Markdown' }
+            path: 'brand',
+            component: () => import('@/views/goodsManage/brand'),
+            name: 'goodsManageBrand',
+            meta: { title: '品牌管理' }
         },
     ]
 }

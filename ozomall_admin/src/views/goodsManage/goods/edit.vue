@@ -28,6 +28,7 @@
             :updateGoods="updateGoods"
             :toStep="toStep"
             :getGoods="getGoods"
+            :cancel="cancel"
           ></component>
         </keep-alive>
       </div>
@@ -92,6 +93,10 @@ export default {
     // 更新商品数据
     updateGoods(data) {
       this.goodsData = data;
+    },
+    // 返回商品管理页
+    cancel(){
+      this.$router.push("/goodsManage/goods")
     }
   }
 };

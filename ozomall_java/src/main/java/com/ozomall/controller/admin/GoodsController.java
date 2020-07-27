@@ -57,6 +57,16 @@ public class GoodsController {
         return goodsService.delGoods(form);
     }
 
+    @ApiOperation("上传商品封面")
+    @PostMapping("/uploadCover")
+    public Result uploadCover(@RequestParam("file") MultipartFile file) throws IOException {
+        if (file == null || file.getSize() <= 0) {
+            return ResultGenerate.genErroResult("文件不能为空");
+        } else {
+            return goodsService.uploadCover(file);
+        }
+    }
+
     @ApiOperation("上传商品图片")
     @PostMapping("/upload")
     public Result upload(@RequestParam("file") MultipartFile file, @RequestParam("goodsId") int goodsId) throws IOException {
@@ -174,4 +184,40 @@ public class GoodsController {
         return goodsAttrService.delGoodsParams(form);
     }
 
+    /**
+     * 品牌
+     */
+    @ApiOperation("添加品牌")
+    @PostMapping("/addGoodsBrand")
+    public Result addGoodsBrand(@RequestBody GoodsBrandDto form) {
+        return goodsService.addGoodsBrand(form);
+    }
+
+    @ApiOperation("上传品牌logo")
+    @PostMapping("/uploadGoodsBrand")
+    public Result uploadGoodsBrand(@RequestParam("file") MultipartFile file) throws IOException {
+        if (file == null || file.getSize() <= 0) {
+            return ResultGenerate.genErroResult("文件不能为空");
+        } else {
+            return goodsService.uploadGoodsBrand(file);
+        }
+    }
+
+    @ApiOperation("获取品牌列表")
+    @GetMapping("/getGoodsBrand")
+    public Result getGoodsBrand(GoodsBrandDto form) {
+        return goodsService.getGoodsBrand(form);
+    }
+
+    @ApiOperation("修改品牌")
+    @PostMapping("/putGoodsBrand")
+    public Result putGoodsBrand(@RequestBody GoodsBrandDto form) {
+        return goodsService.putGoodsBrand(form);
+    }
+
+    @ApiOperation("删除品牌")
+    @PostMapping("/delGoodsBrand")
+    public Result delGoodsBrand(@RequestBody GoodsBrandDto form) {
+        return goodsService.delGoodsBrand(form);
+    }
 }

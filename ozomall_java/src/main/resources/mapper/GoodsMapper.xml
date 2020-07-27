@@ -9,6 +9,7 @@
         <result property="goodsPrice" column="goods_price"></result>
         <result property="commentCount" column="comment_count"></result>
         <result property="sales" column="sales"></result>
+        <result property="brandId" column="brand_id"></result>
         <result property="classifyId" column="classify_id"></result>
         <result property="createTime" column="create_time"></result>
         <result property="status" column="status"></result>

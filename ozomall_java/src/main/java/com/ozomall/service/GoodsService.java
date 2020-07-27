@@ -1,5 +1,6 @@
 package com.ozomall.service;
 
+import com.ozomall.entity.GoodsBrandDto;
 import com.ozomall.entity.GoodsDto;
 import com.ozomall.entity.GoodsPicDto;
 import com.ozomall.entity.Result;
@@ -34,6 +35,11 @@ public interface GoodsService {
     Result delGoods(GoodsDto form);
 
     /**
+     * 上传商品封面
+     */
+    Result uploadCover(MultipartFile file) throws IOException;
+
+    /**
      * 上传商品图片
      */
     Result upload(MultipartFile file, int goodsId) throws IOException;
@@ -52,4 +58,28 @@ public interface GoodsService {
      * 上传商品详情图片
      */
     Result detailsUpload(MultipartFile file) throws IOException;
+
+    /**
+     * 添加品牌
+     */
+    Result addGoodsBrand(GoodsBrandDto form);
+
+    /**
+     * 上传品牌logo
+     */
+    Result uploadGoodsBrand(MultipartFile file) throws IOException;
+
+    /**
+     * 获取品牌列表
+     */
+    Result getGoodsBrand(GoodsBrandDto form);
+
+    /**
+     * 修改品牌
+     */
+    Result putGoodsBrand(GoodsBrandDto form);
+    /**
+     * 获取品牌列表
+     */
+    Result delGoodsBrand(GoodsBrandDto form);
 }

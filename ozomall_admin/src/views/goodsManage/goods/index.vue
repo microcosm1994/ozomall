@@ -53,6 +53,9 @@
             label="商品封面"
             width="180"
           >
+            <template slot-scope="scope">
+              <img :src="scope.row.cover" style="width: 120px;" alt="">
+            </template>
           </el-table-column>
           <el-table-column
             align="center"

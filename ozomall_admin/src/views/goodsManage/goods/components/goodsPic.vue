@@ -54,6 +54,9 @@
       <el-button type="primary" @click="submitForm('ruleForm')">
         下一步
       </el-button>
+      <el-button @click="cancel">
+        取消
+      </el-button>
     </div>
   </div>
 </template>
@@ -70,7 +73,7 @@ import {
 } from "@/api/goodsManage";
 export default {
   components: { Wangeditor },
-  props: ["pageType", "goodsData", "toStep", "getGoods"],
+  props: ["pageType", "goodsData", "toStep", "getGoods", "cancel"],
   data() {
     return {
       dialogImageUrl: "",
@@ -174,9 +177,9 @@ export default {
       }
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this.goodsData.details === html)
-          console.log(this.goodsData.details)
-          console.log(html)
+          console.log(this.goodsData.details === html);
+          console.log(this.goodsData.details);
+          console.log(html);
           if (this.goodsData.details === html && this.goodsData.step > 2) {
             this.toStep(this.goodsData.step);
           } else {

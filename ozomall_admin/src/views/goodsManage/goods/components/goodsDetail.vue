@@ -21,7 +21,7 @@
             <el-form-item label="商品封面：">
               <el-image
                 style="width: 100px; height: 100px"
-                :src="goodsData.safeBoxcover"
+                :src="goodsData.cover"
                 fit="cover"
               ></el-image>
             </el-form-item>

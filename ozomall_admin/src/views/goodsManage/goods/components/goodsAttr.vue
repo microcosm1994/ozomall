@@ -250,7 +250,7 @@
       <el-button type="primary" @click="submitForm('ruleForm')">
         下一步
       </el-button>
-      <el-button @click="resetForm('ruleForm')">重置</el-button>
+      <el-button @click="cancel">取消</el-button>
     </div>
   </div>
 </template>
@@ -273,7 +273,7 @@ import {
   putGoods
 } from "@/api/goodsManage";
 export default {
-  props: ["pageType", "goodsData", "toStep", "getGoods"],
+  props: ["pageType", "goodsData", "toStep", "getGoods", "cancel"],
   data() {
     return {
       ruleForm: {
