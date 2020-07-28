@@ -15,7 +15,7 @@
               <el-upload
                 name="file"
                 :headers="uploadHeaders"
-                action="/api/admin/goods/upload"
+                action="/api/goods/upload"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-success="onSuccess"

@@ -1,8 +1,8 @@
-package com.ozomall.controller.admin;
+package com.ozomall.controller;
 
-import com.ozomall.entity.AdminClassifyDto;
+import com.ozomall.entity.ClassifyDto;
 import com.ozomall.entity.Result;
-import com.ozomall.service.AdminClassifyService;
+import com.ozomall.service.ClassifyService;
 import com.ozomall.utils.ResultGenerate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,17 +14,17 @@ import javax.annotation.Resource;
 
 @Api(tags = "商品分类接口")
 @Controller
-@RequestMapping("/admin/classify")
+@RequestMapping("/classify")
 @ResponseBody
 public class ClassifyController {
     @Resource
-    private AdminClassifyService adminClassifyService;
+    private ClassifyService classifyService;
 
     @ApiOperation("添加商品分类")
     @PostMapping("/add")
-    public Result addClassify(@RequestBody AdminClassifyDto form) {
+    public Result addClassify(@RequestBody ClassifyDto form) {
         if (!StringUtils.isEmpty(form.getName()) && !StringUtils.isEmpty(form.getClassifyLevel())) {
-            return adminClassifyService.addClassify(form);
+            return classifyService.addClassify(form);
         } else {
             return ResultGenerate.genErroResult("分类等级与分类名称不能为空");
         }
@@ -32,8 +32,8 @@ public class ClassifyController {
 
     @ApiOperation("获取分类列表")
     @GetMapping("/list")
-    public Result queryClassify(AdminClassifyDto form) {
-        return adminClassifyService.queryClassify(form);
+    public Result queryClassify(ClassifyDto form) {
+        return classifyService.queryClassify(form);
     }
 
 }

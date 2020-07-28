@@ -2,7 +2,7 @@ package com.ozomall.controller.admin;
 
 import com.google.code.kaptcha.Constants;
 import com.ozomall.entity.Result;
-import com.ozomall.service.AdminUserService;
+import com.ozomall.service.admin.AdminUserService;
 import com.ozomall.utils.ResultGenerate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

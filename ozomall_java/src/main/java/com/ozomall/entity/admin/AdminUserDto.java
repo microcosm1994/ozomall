@@ -1,4 +1,4 @@
-package com.ozomall.entity;
+package com.ozomall.entity.admin;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

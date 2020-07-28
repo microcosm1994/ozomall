@@ -53,7 +53,7 @@
         <el-form-item label="商品封面" prop="cover">
           <el-upload
             class="avatar-uploader"
-            action="/api/admin/goods/uploadCover"
+            action="/api/goods/uploadCover"
             :headers="uploadHeaders"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -83,7 +83,14 @@ import {
   getGoodsBrand
 } from "@/api/goodsManage";
 export default {
-  props: ["pageType", "goodsData", "toStep", "updateGoods", "getGoods", "cancel"],
+  props: [
+    "pageType",
+    "goodsData",
+    "toStep",
+    "updateGoods",
+    "getGoods",
+    "cancel"
+  ],
   data() {
     return {
       imageUrl: "",
@@ -114,7 +121,7 @@ export default {
       },
       props: {
         lazy: true,
-        emitPath: false,
+        emitPath: true,
         lazyLoad(node, resolve) {
           const { level, value } = node;
           getClassifyList({ classifyLevel: level + 1, parentId: value })
@@ -149,9 +156,14 @@ export default {
     }
   },
   mounted() {
-    this.getGoodsBrand()
+    this.getGoodsBrand();
     if (this.pageType) {
-      this.classifyPlaceholder = this.goodsData.classify.name;
+      this.classifyPlaceholder = `${this.goodsData.classify1.name}/${this.goodsData.classify2.name}/${this.goodsData.classify3.name}`;
+      this.ruleForm.classifyId = [
+        this.goodsData.classify1Id,
+        this.goodsData.classify2Id,
+        this.goodsData.classify3Id
+      ];
       for (let key in this.ruleForm) {
         this.ruleForm[key] = this.goodsData[key];
       }
@@ -210,7 +222,10 @@ export default {
     // 添加
     addGoods() {
       addGoods({
-        ...this.ruleForm
+        ...this.ruleForm,
+        classify1Id: this.ruleForm.classifyId[0],
+        classify2Id: this.ruleForm.classifyId[1],
+        classify3Id: this.ruleForm.classifyId[2]
       })
         .then(res => {
           if (res.data.code === 1) {
@@ -232,7 +247,11 @@ export default {
       }
       putGoods({
         id: this.goodsData.id,
-        ...this.ruleForm
+        ...this.ruleForm,
+        ...this.ruleForm,
+        classify1Id: this.ruleForm.classifyId[0],
+        classify2Id: this.ruleForm.classifyId[1],
+        classify3Id: this.ruleForm.classifyId[2]
       })
         .then(res => {
           if (res.data.code === 1) {

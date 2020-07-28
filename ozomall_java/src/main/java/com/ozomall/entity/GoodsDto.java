@@ -28,8 +28,14 @@ public class GoodsDto extends PageReqDto {
     @ApiModelProperty(value = "商品销量")
     private Integer sales;
 
-    @ApiModelProperty(value = "商品分类id")
-    private Integer classifyId;
+    @ApiModelProperty(value = "商品1级分类id")
+    private Integer classify1Id;
+
+    @ApiModelProperty(value = "商品2级分类id")
+    private Integer classify2Id;
+
+    @ApiModelProperty(value = "商品3级分类id")
+    private Integer classify3Id;
 
     @ApiModelProperty(value = "商品品牌id")
     private Integer brandId;

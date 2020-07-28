@@ -13,13 +13,10 @@
           :rules="rules"
           label-width="80px"
         >
-          <el-form-item label="品牌名称" prop="name">
-            <el-input v-model="ruleForm.name"></el-input>
-          </el-form-item>
-          <el-form-item label="品牌logo" prop="url">
+          <el-form-item label="图片" prop="url">
             <el-upload
               class="avatar-uploader"
-              action="/api/goods/uploadGoodsBrand"
+              action="/api/banner/upload"
               :headers="uploadHeaders"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
@@ -27,6 +24,9 @@
               <img v-if="ruleForm.url" :src="ruleForm.url" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
+          </el-form-item>
+          <el-form-item label="跳转链接" prop="link">
+            <el-input v-model="ruleForm.link"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { addGoodsBrand, putGoodsBrand } from "@/api/goodsManage";
+import { addBanner, putBanner } from "@/api/mallManage";
 export default {
   props: ["closeModal", "row"],
   data() {
@@ -47,12 +47,14 @@ export default {
     return {
       title: "新建",
       ruleForm: {
-        name: "",
+        link: "",
         url: ""
       },
       rules: {
-        name: [{ required: true, message: "请输入品牌名称", trigger: "blur" }],
-        url: [{ required: true, message: "请上传品牌logo", trigger: "change" }]
+        link: [{ required: true, message: "请输入跳转链接", trigger: "blur" }],
+        url: [
+          { required: true, message: "请上传banner图片", trigger: "change" }
+        ]
       }
     };
   },
@@ -66,7 +68,7 @@ export default {
   mounted() {
     if (this.row.id) {
       this.title = "修改";
-      this.ruleForm.name = this.row.name;
+      this.ruleForm.link = this.row.link;
       this.ruleForm.url = this.row.url;
     }
   },
@@ -85,7 +87,7 @@ export default {
         if (valid) {
           if (this.row.id) {
             // 修改
-            putGoodsBrand({
+            putBanner({
               id: this.row.id,
               ...this.ruleForm
             })
@@ -102,7 +104,7 @@ export default {
               });
           } else {
             // 添加
-            addGoodsBrand(this.ruleForm)
+            addBanner(this.ruleForm)
               .then(res => {
                 if (res.data.code === 1) {
                   this.closeModal();

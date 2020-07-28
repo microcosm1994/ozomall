@@ -13,7 +13,7 @@
               {{ goodsData.goodsName }}
             </el-form-item>
             <el-form-item label="所属类别：">
-              {{ goodsData.classify.name }}
+              {{ goodsData.classify1.name }} / {{goodsData.classify2.name}} / {{goodsData.classify3.name}}
             </el-form-item>
             <el-form-item label="商品价格：">
               ￥{{ goodsData.goodsPrice }}

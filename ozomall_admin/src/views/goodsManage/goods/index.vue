@@ -59,12 +59,29 @@
           </el-table-column>
           <el-table-column
             align="center"
-            prop="classifyId"
-            label="所属类别"
+            label="一级分类"
             width="180"
           >
             <template slot-scope="scope">
-              {{ scope.row.classify.name }}
+              {{ scope.row.classify1.name }}
+            </template>
+          </el-table-column>
+           <el-table-column
+            align="center"
+            label="二级分类"
+            width="180"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.classify2.name }}
+            </template>
+          </el-table-column>
+           <el-table-column
+            align="center"
+            label="三级分类"
+            width="180"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.classify3.name }}
             </template>
           </el-table-column>
           <el-table-column
@@ -231,7 +248,6 @@ export default {
       getGoodsList(data)
         .then(res => {
           if (res.data.code === 1) {
-            console.log(res);
             this.tableData = res.data.data.records;
             this.pageParams.page = res.data.data.current;
             this.pageParams.current = res.data.data.current;

@@ -10,9 +10,9 @@ import lombok.Data;
 import java.sql.Timestamp;
 
 @ApiModel
-@TableName("admin_classify")
+@TableName("classify")
 @Data
-public class AdminClassifyDto extends PageReqDto {
+public class ClassifyDto extends PageReqDto {
     @ApiModelProperty(value = "分类id")
     @TableId(type = IdType.AUTO)
     private Integer id;

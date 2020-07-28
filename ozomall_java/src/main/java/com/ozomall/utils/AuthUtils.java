@@ -1,7 +1,7 @@
 package com.ozomall.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.ozomall.entity.AdminUserDto;
+import com.ozomall.entity.admin.AdminUserDto;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -6,27 +6,27 @@ const settingRouter = {
     redirect: '/mallManage/index',
     name: 'mallManage',
     meta: {
-        title: '商城配置',
+        title: '商城管理',
         icon: 'el-icon-s-shop'
     },
     children: [
         {
             path: 'index',
-            component: () => import('@/views/menuSetting/index'),
-            name: 'mallManage_info',
+            component: () => import('@/views/mallManage/banner'),
+            name: 'mallManageBanner',
             meta: { title: 'banner管理' }
         },
         {
-            path: 'theme',
-            component: () => import('@/views/theme/index'),
-            name: 'theme',
-            meta: { title: '更换主题' }
+            path: 'recoClassify',
+            component: () => import('@/views/mallManage/recoClassify'),
+            name: 'mallManageRecoClassify',
+            meta: { title: '推荐分类' }
         },
         {
-            path: 'markdown',
-            component: () => import('@/views/components-demo/markdown'),
-            name: 'MarkdownDemo',
-            meta: { title: 'Markdown' }
+            path: 'recoGoods',
+            component: () => import('@/views/mallManage/recoGoods'),
+            name: 'mallManageRecoGoods',
+            meta: { title: '推荐商品' }
         },
     ]
 }

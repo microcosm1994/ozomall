@@ -2,10 +2,10 @@ package com.ozomall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import com.ozomall.dao.AdminClassifyMapper;
-import com.ozomall.entity.AdminClassifyDto;
+import com.ozomall.dao.ClassifyMapper;
+import com.ozomall.entity.ClassifyDto;
 import com.ozomall.entity.Result;
-import com.ozomall.service.AdminClassifyService;
+import com.ozomall.service.ClassifyService;
 import com.ozomall.utils.ResultGenerate;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +15,16 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class AdminClassifyServiceImpl implements AdminClassifyService {
+public class ClassifyServiceImpl implements ClassifyService {
     @Resource
-    private AdminClassifyMapper adminClassifyMapper;
+    private ClassifyMapper classifyMapper;
 
     /**
      * 添加分类
      */
     @Override
-    public Result addClassify(AdminClassifyDto form) {
-        int row = adminClassifyMapper.insert(form);
+    public Result addClassify(ClassifyDto form) {
+        int row = classifyMapper.insert(form);
         if (row > 0) {
             return ResultGenerate.genSuccessResult();
         } else {
@@ -36,14 +36,14 @@ public class AdminClassifyServiceImpl implements AdminClassifyService {
      * 查询类别分组
      */
     @Override
-    public Result queryClassify(AdminClassifyDto form) {
-        Map<SFunction<AdminClassifyDto, ?>, Object> params = new HashMap<>();
-        LambdaQueryWrapper<AdminClassifyDto> wrapper = new LambdaQueryWrapper<>();
-        params.put(AdminClassifyDto::getName, form.getName());
-        params.put(AdminClassifyDto::getParentId, form.getParentId());
-        params.put(AdminClassifyDto::getClassifyLevel, form.getClassifyLevel());
+    public Result queryClassify(ClassifyDto form) {
+        Map<SFunction<ClassifyDto, ?>, Object> params = new HashMap<>();
+        LambdaQueryWrapper<ClassifyDto> wrapper = new LambdaQueryWrapper<>();
+        params.put(ClassifyDto::getName, form.getName());
+        params.put(ClassifyDto::getParentId, form.getParentId());
+        params.put(ClassifyDto::getClassifyLevel, form.getClassifyLevel());
         wrapper.allEq(params, false);
-        List<AdminClassifyDto> rows = adminClassifyMapper.selectList(wrapper);
+        List<ClassifyDto> rows = classifyMapper.selectList(wrapper);
         if (rows != null) {
             return ResultGenerate.genSuccessResult(rows);
         } else {

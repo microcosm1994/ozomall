@@ -1,4 +1,4 @@
-package com.ozomall.controller.admin;
+package com.ozomall.controller;
 
 import com.ozomall.entity.*;
 import com.ozomall.service.GoodsAttrService;
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @Controller
 @ResponseBody
-@RequestMapping("/admin/goods")
+@RequestMapping("/goods")
 @Api(tags = "商品管理接口")
 public class GoodsController {
     @Resource

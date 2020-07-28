@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 新建分类
 export function addClassify(data) {
     return request({
-        url: '/admin/classify/add',
+        url: '/classify/add',
         method: 'post',
         data
     })
@@ -12,7 +12,7 @@ export function addClassify(data) {
 // 获取分类列表
 export function getClassifyList(params) {
     return request({
-        url: '/admin/classify/list',
+        url: '/classify/list',
         method: 'get',
         params
     })
@@ -21,7 +21,7 @@ export function getClassifyList(params) {
 // 添加商品信息
 export function addGoods(data) {
     return request({
-        url: '/admin/goods/add',
+        url: '/goods/add',
         method: 'post',
         data
     })
@@ -30,7 +30,7 @@ export function addGoods(data) {
 // 获取商品列表
 export function getGoodsList(params) {
     return request({
-        url: '/admin/goods/list',
+        url: '/goods/list',
         method: 'get',
         params
     })
@@ -39,7 +39,7 @@ export function getGoodsList(params) {
 // 根据id获取商品信息
 export function getGoods(params) {
     return request({
-        url: '/admin/goods/get',
+        url: '/goods/get',
         method: 'get',
         params
     })
@@ -48,7 +48,7 @@ export function getGoods(params) {
 // 修改商品信息
 export function putGoods(data) {
     return request({
-        url: '/admin/goods/put',
+        url: '/goods/put',
         method: 'post',
         data
     })
@@ -57,7 +57,7 @@ export function putGoods(data) {
 // 删除商品信息
 export function delGoods(data) {
     return request({
-        url: '/admin/goods/del',
+        url: '/goods/del',
         method: 'post',
         data
     })
@@ -66,7 +66,7 @@ export function delGoods(data) {
 // 获取商品图片
 export function getGoodsPic(params) {
     return request({
-        url: '/admin/goods/getGoodsPic',
+        url: '/goods/getGoodsPic',
         method: 'get',
         params
     })
@@ -75,7 +75,7 @@ export function getGoodsPic(params) {
 // 删除商品图片
 export function delGoodsPic(data) {
     return request({
-        url: '/admin/goods/delGoodsPic',
+        url: '/goods/delGoodsPic',
         method: 'post',
         data
     })
@@ -84,7 +84,7 @@ export function delGoodsPic(data) {
 // 获取商品品牌列表
 export function getGoodsBrand(params) {
     return request({
-        url: '/admin/goods/getGoodsBrand',
+        url: '/goods/getGoodsBrand',
         method: 'get',
         params
     })
@@ -93,7 +93,7 @@ export function getGoodsBrand(params) {
 // 添加商品品牌
 export function addGoodsBrand(data) {
     return request({
-        url: '/admin/goods/addGoodsBrand',
+        url: '/goods/addGoodsBrand',
         method: 'post',
         data
     })
@@ -102,7 +102,7 @@ export function addGoodsBrand(data) {
 // 修改商品品牌
 export function putGoodsBrand(data) {
     return request({
-        url: '/admin/goods/putGoodsBrand',
+        url: '/goods/putGoodsBrand',
         method: 'post',
         data
     })
@@ -111,7 +111,7 @@ export function putGoodsBrand(data) {
 // 删除商品品牌
 export function delGoodsBrand(data) {
     return request({
-        url: '/admin/goods/delGoodsBrand',
+        url: '/goods/delGoodsBrand',
         method: 'post',
         data
     })
@@ -120,7 +120,7 @@ export function delGoodsBrand(data) {
 // 添加商品属性
 export function addGoodsAttr(data) {
     return request({
-        url: '/admin/goods/addGoodsAttr',
+        url: '/goods/addGoodsAttr',
         method: 'post',
         data
     })
@@ -129,7 +129,7 @@ export function addGoodsAttr(data) {
 // 获取商品属性
 export function getGoodsAttr(params) {
     return request({
-        url: '/admin/goods/getGoodsAttr',
+        url: '/goods/getGoodsAttr',
         method: 'get',
         params
     })
@@ -138,7 +138,7 @@ export function getGoodsAttr(params) {
 // 删除商品属性
 export function delGoodsAttr(data) {
     return request({
-        url: '/admin/goods/delGoodsAttr',
+        url: '/goods/delGoodsAttr',
         method: 'post',
         data
     })
@@ -147,7 +147,7 @@ export function delGoodsAttr(data) {
 // 添加商品属性值
 export function addGoodsAttrVal(data) {
     return request({
-        url: '/admin/goods/addGoodsAttrVal',
+        url: '/goods/addGoodsAttrVal',
         method: 'post',
         data
     })
@@ -156,7 +156,7 @@ export function addGoodsAttrVal(data) {
 // 删除商品属性值
 export function delGoodsAttrVal(data) {
     return request({
-        url: '/admin/goods/delGoodsAttrVal',
+        url: '/goods/delGoodsAttrVal',
         method: 'post',
         data
     })
@@ -165,7 +165,7 @@ export function delGoodsAttrVal(data) {
 // 添加商品价格
 export function addGoodsSku(data) {
     return request({
-        url: '/admin/goods/addGoodsSku',
+        url: '/goods/addGoodsSku',
         method: 'post',
         data
     })
@@ -174,7 +174,7 @@ export function addGoodsSku(data) {
 // 获取商品价格
 export function getGoodsSkuList(params) {
     return request({
-        url: '/admin/goods/getGoodsSkuList',
+        url: '/goods/getGoodsSkuList',
         method: 'get',
         params
     })
@@ -183,7 +183,7 @@ export function getGoodsSkuList(params) {
 // 修改商品价格
 export function putGoodsSku(data) {
     return request({
-        url: '/admin/goods/putGoodsSku',
+        url: '/goods/putGoodsSku',
         method: 'post',
         data
     })
@@ -192,7 +192,7 @@ export function putGoodsSku(data) {
 // 删除商品价格
 export function delGoodsSku(data) {
     return request({
-        url: '/admin/goods/delGoodsSku',
+        url: '/goods/delGoodsSku',
         method: 'post',
         data
     })
@@ -201,7 +201,7 @@ export function delGoodsSku(data) {
 // 添加商品参数
 export function addGoodsParams(data) {
     return request({
-        url: '/admin/goods/addGoodsParams',
+        url: '/goods/addGoodsParams',
         method: 'post',
         data
     })
@@ -210,7 +210,7 @@ export function addGoodsParams(data) {
 // 添加商品参数
 export function getGoodsParams(params) {
     return request({
-        url: '/admin/goods/getGoodsParams',
+        url: '/goods/getGoodsParams',
         method: 'get',
         params
     })
@@ -219,7 +219,7 @@ export function getGoodsParams(params) {
 // 修改商品参数
 export function putGoodsParams(data) {
     return request({
-        url: '/admin/goods/putGoodsParams',
+        url: '/goods/putGoodsParams',
         method: 'post',
         data
     })
@@ -228,7 +228,7 @@ export function putGoodsParams(data) {
 // 删除商品参数
 export function delGoodsParams(data) {
     return request({
-        url: '/admin/goods/delGoodsParams',
+        url: '/goods/delGoodsParams',
         method: 'post',
         data
     })

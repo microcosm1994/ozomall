@@ -1,4 +1,4 @@
-package com.ozomall.service;
+package com.ozomall.service.admin;
 
 import com.ozomall.entity.Result;
 

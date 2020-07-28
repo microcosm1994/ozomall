@@ -10,47 +10,66 @@
         <result property="commentCount" column="comment_count"></result>
         <result property="sales" column="sales"></result>
         <result property="brandId" column="brand_id"></result>
-        <result property="classifyId" column="classify_id"></result>
+        <result property="classify1Id" column="classify1_id"></result>
+        <result property="classify2Id" column="classify2_id"></result>
+        <result property="classify3Id" column="classify3_id"></result>
         <result property="createTime" column="create_time"></result>
         <result property="status" column="status"></result>
         <result property="step" column="step"></result>
         <result property="cover" column="cover"></result>
         <result property="details" column="details"></result>
-        <association property="classify" javaType="com.ozomall.entity.AdminClassifyDto" columnPrefix="classify_">
+        <association property="classify1" javaType="com.ozomall.entity.ClassifyDto" columnPrefix="classify1_">
             <id property="id" column="id"></id>
-            <result property="parentId" column="parent_id"/>
-            <result property="classifyLevel" column="classify_level"/>
             <result property="name" column="name"/>
-            <result property="createTime" column="create_time"/>
+        </association>
+        <association property="classify2" javaType="com.ozomall.entity.ClassifyDto" columnPrefix="classify2_">
+            <id property="id" column="id"></id>
+            <result property="name" column="name"/>
+        </association>
+        <association property="classify3" javaType="com.ozomall.entity.ClassifyDto" columnPrefix="classify3_">
+            <id property="id" column="id"></id>
+            <result property="name" column="name"/>
         </association>
     </resultMap>
     <select id="goodsList" parameterType="com.ozomall.entity.GoodsDto" resultMap="goodsMap">
         select goods.*,
-        admin_classify.id as classify_id,
-        admin_classify.parent_id as classify_parentId,
-        admin_classify.classify_level as classify_classifyLevel,
-        admin_classify.name as classify_name,
-        admin_classify.create_time as classify_createTime
-        from goods left join admin_classify on
-        goods.classify_id=admin_classify.id
+        classify1.id as classify1_id,
+        classify1.name as classify1_name,
+        classify2.id as classify2_id,
+        classify2.name as classify2_name,
+        classify3.id as classify3_id,
+        classify3.name as classify3_name
+        from goods
+        left join classify as classify1 on goods.classify1_id=classify1.id
+        left join classify as classify2 on goods.classify2_id=classify2.id
+        left join classify as classify3 on goods.classify3_id=classify3.id
         where goods.del=0
         <if test="form.goodsName != null">
             and goods.goods_name=#{form.goodsName}
         </if>
-        <if test="form.classifyId != null">
-            and goods.classify_id=#{form.classifyId}
+        <if test="form.classify1Id != null">
+            and goods.classify1_id=#{form.classify1Id}
+        </if>
+        <if test="form.classify2Id != null">
+            and goods.classify2_id=#{form.classify2Id}
+        </if>
+        <if test="form.classify3Id != null">
+            and goods.classify3_id=#{form.classify3Id}
         </if>
     </select>
 
     <select id="getGoodsById" parameterType="int" resultMap="goodsMap">
         select goods.*,
-        admin_classify.id as classify_id,
-        admin_classify.parent_id as classify_parentId,
-        admin_classify.classify_level as classify_classifyLevel,
-        admin_classify.name as classify_name,
-        admin_classify.create_time as classify_createTime
-        from goods left join admin_classify on
-        goods.classify_id=admin_classify.id
+       classify1.id as classify1_id,
+        classify1.name as classify1_name,
+        classify2.id as classify2_id,
+        classify2.name as classify2_name,
+        classify3.id as classify3_id,
+        classify3.name as classify3_name
+        from goods
+        left join classify as classify1 on goods.classify1_id=classify1.id
+        left join classify as classify2 on goods.classify2_id=classify2.id
+        left join classify as classify3 on goods.classify3_id=classify3.id
         where goods.id=#{id}
     </select>
 </mapper>

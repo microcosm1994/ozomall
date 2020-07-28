@@ -1,11 +1,11 @@
-package com.ozomall.service.impl;
+package com.ozomall.service.admin.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ozomall.dao.AdminUserMapper;
+import com.ozomall.dao.admin.AdminUserMapper;
 import com.ozomall.entity.Result;
-import com.ozomall.entity.AdminUserDto;
-import com.ozomall.service.AdminUserService;
+import com.ozomall.entity.admin.AdminUserDto;
+import com.ozomall.service.admin.AdminUserService;
 import com.ozomall.utils.AuthUtils;
 import com.ozomall.utils.ResultGenerate;
 import org.springframework.data.redis.core.RedisTemplate;
