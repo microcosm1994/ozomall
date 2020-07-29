@@ -54,32 +54,20 @@
             width="180"
           >
             <template slot-scope="scope">
-              <img :src="scope.row.cover" style="width: 120px;" alt="">
+              <img :src="scope.row.cover" style="width: 120px;" alt="" />
             </template>
           </el-table-column>
-          <el-table-column
-            align="center"
-            label="一级分类"
-            width="180"
-          >
+          <el-table-column align="center" label="一级分类" width="180">
             <template slot-scope="scope">
               {{ scope.row.classify1.name }}
             </template>
           </el-table-column>
-           <el-table-column
-            align="center"
-            label="二级分类"
-            width="180"
-          >
+          <el-table-column align="center" label="二级分类" width="180">
             <template slot-scope="scope">
               {{ scope.row.classify2.name }}
             </template>
           </el-table-column>
-           <el-table-column
-            align="center"
-            label="三级分类"
-            width="180"
-          >
+          <el-table-column align="center" label="三级分类" width="180">
             <template slot-scope="scope">
               {{ scope.row.classify3.name }}
             </template>
@@ -195,7 +183,8 @@ export default {
       tableData: [],
       props: {
         lazy: true,
-        emitPath: false,
+        checkStrictly: true,
+        emitPath: true,
         lazyLoad(node, resolve) {
           const { level, value } = node;
           getClassifyList({ classifyLevel: level + 1, parentId: value })
@@ -240,7 +229,11 @@ export default {
     // 获取商品列表
     getData() {
       let data = {
-        ...this.ruleForm,
+        goodsName: this.ruleForm.goodsName,
+        status: this.ruleForm.status,
+        classify1Id: this.ruleForm.classifyId[0] ? this.ruleForm.classifyId[0] : null,
+        classify2Id: this.ruleForm.classifyId[1] ? this.ruleForm.classifyId[1] : null ,
+        classify3Id: this.ruleForm.classifyId[2] ? this.ruleForm.classifyId[2] : null,
         page: this.pageParams.page,
         size: this.pageParams.size
       };

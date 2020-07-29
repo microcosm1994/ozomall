@@ -12,6 +12,9 @@
             <el-form-item label="商品名称：">
               {{ goodsData.goodsName }}
             </el-form-item>
+            <el-form-item label="商品品牌：">
+              {{ goodsData.brand.name }}
+            </el-form-item>
             <el-form-item label="所属类别：">
               {{ goodsData.classify1.name }} / {{goodsData.classify2.name}} / {{goodsData.classify3.name}}
             </el-form-item>

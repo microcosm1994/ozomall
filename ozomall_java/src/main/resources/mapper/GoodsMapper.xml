@@ -30,6 +30,11 @@
             <id property="id" column="id"></id>
             <result property="name" column="name"/>
         </association>
+        <association property="brand" javaType="com.ozomall.entity.GoodsBrandDto" columnPrefix="brand_">
+            <id property="id" column="id"></id>
+            <result property="name" column="name"/>
+            <result property="url" column="url"/>
+        </association>
     </resultMap>
     <select id="goodsList" parameterType="com.ozomall.entity.GoodsDto" resultMap="goodsMap">
         select goods.*,
@@ -38,11 +43,15 @@
         classify2.id as classify2_id,
         classify2.name as classify2_name,
         classify3.id as classify3_id,
-        classify3.name as classify3_name
+        classify3.name as classify3_name,
+        goods_brand.id as brand_id,
+        goods_brand.name as brand_name,
+        goods_brand.url as brand_url
         from goods
         left join classify as classify1 on goods.classify1_id=classify1.id
         left join classify as classify2 on goods.classify2_id=classify2.id
         left join classify as classify3 on goods.classify3_id=classify3.id
+        left join goods_brand on goods.brand_id=goods_brand.id
         where goods.del=0
         <if test="form.goodsName != null">
             and goods.goods_name=#{form.goodsName}
@@ -65,11 +74,15 @@
         classify2.id as classify2_id,
         classify2.name as classify2_name,
         classify3.id as classify3_id,
-        classify3.name as classify3_name
+        classify3.name as classify3_name,
+        goods_brand.id as brand_id,
+        goods_brand.name as brand_name,
+        goods_brand.url as brand_url
         from goods
         left join classify as classify1 on goods.classify1_id=classify1.id
         left join classify as classify2 on goods.classify2_id=classify2.id
         left join classify as classify3 on goods.classify3_id=classify3.id
+        left join goods_brand on goods.brand_id=goods_brand.id
         where goods.id=#{id}
     </select>
 </mapper>
