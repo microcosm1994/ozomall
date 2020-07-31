@@ -1,4 +1,4 @@
-import { logout, getInfo } from '@/api/user'
+import { logout, getInfo } from '@/api/userManage'
 import router from '@/router'
 
 const state = {

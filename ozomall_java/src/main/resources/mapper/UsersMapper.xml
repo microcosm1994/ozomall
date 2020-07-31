@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozomall.dao.UserMapper">
+    <resultMap id="usersMap" type="com.ozomall.vo.UsersVo">
+        <id property="id" column="id"></id>
+        <result property="userName" column="user_name"></result>
+        <result property="nickName" column="nick_name"></result>
+        <result property="roleId" column="role_id"></result>
+        <result property="phone" column="phone"></result>
+        <result property="avator" column="avator"></result>
+        <result property="type" column="type"></result>
+        <association property="role" javaType="com.ozomall.entity.RoleDto" columnPrefix="roles_">
+            <id property="id" column="id"></id>
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
+    <select id="userList" parameterType="com.ozomall.entity.UserDto" resultMap="usersMap">
+        select sys_users.*,
+        sys_roles.id as roles_id,
+        sys_roles.name as roles_name
+        from sys_users
+        left join sys_roles on sys_users.role_id=sys_roles.id
+        where sys_users.id is not null
+        <if test="form.userName != null">
+            and sys_users.user_name=#{form.userName}
+        </if>
+        <if test="form.nickName != null">
+            and sys_users.nick_name=#{form.nickName}
+        </if>
+        <if test="form.phone != null">
+            and sys_users.phone=#{form.phone}
+        </if>
+        <if test="form.roleId != null">
+            and sys_users.role_id=#{form.roleId}
+        </if>
+        <if test="form.type != null">
+            and sys_users.type=#{form.type}
+        </if>
+    </select>
+
+    <select id="getUsers" parameterType="String" resultMap="usersMap">
+        select sys_users.*,
+       sys_roles.id as roles_id,
+       sys_roles.name as roles_name
+        from sys_users
+        left join sys_roles on sys_users.role_id=sys_roles.id
+        where sys_users.user_name=#{userName}
+    </select>
+</mapper>

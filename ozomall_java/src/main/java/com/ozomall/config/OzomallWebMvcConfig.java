@@ -18,6 +18,7 @@ public class OzomallWebMvcConfig implements WebMvcConfigurer {
         List<String> excludePathList = new ArrayList<>();
         excludePathList.add("/admin/verify/code");
         excludePathList.add("/admin/user/login");
-        registry.addInterceptor(adminInterceptor).addPathPatterns("/admin/**").excludePathPatterns(excludePathList);
+        excludePathList.add("/mall/goods/**");
+        registry.addInterceptor(adminInterceptor).addPathPatterns("/**").excludePathPatterns(excludePathList);
     }
 }

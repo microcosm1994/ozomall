@@ -2,10 +2,12 @@ package com.ozomall.service.admin.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ozomall.dao.admin.AdminUserMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ozomall.dao.UserMapper;
 import com.ozomall.entity.Result;
-import com.ozomall.entity.admin.AdminUserDto;
-import com.ozomall.service.admin.AdminUserService;
+import com.ozomall.entity.UserDto;
+import com.ozomall.service.admin.UserService;
 import com.ozomall.utils.AuthUtils;
 import com.ozomall.utils.ResultGenerate;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,9 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class AdminUserServiceImpl implements AdminUserService {
+public class UserServiceImpl implements UserService {
     @Resource
-    private AdminUserMapper adminUserMapper;
+    private UserMapper userMapper;
     @Resource
     RedisTemplate<String, String> redisTemplate;
 
@@ -34,9 +36,9 @@ public class AdminUserServiceImpl implements AdminUserService {
     public Result login(String userName, String passWord) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         Map resultData = new HashMap();
-        LambdaQueryWrapper<AdminUserDto> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(AdminUserDto::getUserName,userName);
-        AdminUserDto userResult = adminUserMapper.selectOne(wrapper);
+        LambdaQueryWrapper<UserDto> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserDto::getUserName, userName);
+        UserDto userResult = userMapper.selectOne(wrapper);
         if (userResult == null) {
             return ResultGenerate.genErroResult("用户名或密码错误");
         }
@@ -63,9 +65,45 @@ public class AdminUserServiceImpl implements AdminUserService {
     public Result getUserInfo(String token) {
         String tokenValue = redisTemplate.opsForValue().get(token);
         String userName = JSONObject.parseObject(tokenValue).getString("userName");
-        LambdaQueryWrapper<AdminUserDto> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(AdminUserDto::getUserName,userName);
-        AdminUserDto userResult = adminUserMapper.selectOne(wrapper);
+        UserDto userResult = userMapper.getUsers(userName);
         return ResultGenerate.genSuccessResult(userResult);
+    }
+
+    /**
+     * 获取用户列表
+     *
+     * @param form
+     * @return 返回用户列表
+     */
+    @Override
+    public Result getUserList(UserDto form) {
+        Page page = new Page();
+        page.setPages(form.getPage());
+        page.setSize(form.getSize());
+        IPage<Map> rows = userMapper.userList(page, form);
+        if (rows != null) {
+            return ResultGenerate.genSuccessResult(rows);
+        } else {
+            return ResultGenerate.genErroResult("失败");
+        }
+    }
+
+    /**
+     * 添加新用户
+     *
+     * @param form
+     */
+    @Override
+    public Result addUser(UserDto form) {
+        System.out.println(form.toString());
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String pwd = encoder.encode(form.getPassWord());
+        form.setPassWord(pwd);
+        int row = userMapper.insert(form);
+        if (row > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("失败");
+        }
     }
 }

@@ -1,6 +1,6 @@
 import Layout from '@/layout'
 
-const settingRouter = {
+export default {
     path: '/setting',
     component: Layout,
     redirect: '/setting/index',
@@ -30,5 +30,3 @@ const settingRouter = {
         },
     ]
 }
-
-export default settingRouter

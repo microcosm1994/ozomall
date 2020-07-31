@@ -65,10 +65,14 @@ export default {
   },
   computed: {
     ...mapGetters([
+      'userInfo',
       'sidebar',
       'avatar',
       'device'
     ])
+  },
+  mounted(){
+    console.log(this.userInfo)
   },
   methods: {
     toggleSideBar() {
