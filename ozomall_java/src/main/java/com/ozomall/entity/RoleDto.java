@@ -14,4 +14,10 @@ public class RoleDto {
 
     @ApiModelProperty(value = "角色名称")
     private String name;
+
+    @ApiModelProperty(value = "角色代码")
+    private String code;
+
+    @ApiModelProperty(value = "角色类型")
+    private int type;
 }

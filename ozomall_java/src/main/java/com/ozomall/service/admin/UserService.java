@@ -34,4 +34,18 @@ public interface UserService {
      * @param form
      */
     Result addUser(UserDto form);
+
+    /**
+     * 修改用户
+     *
+     * @param form
+     */
+    Result putUser(UserDto form);
+
+    /**
+     * 删除用户
+     *
+     * @param form
+     */
+    Result delUser(UserDto form);
 }

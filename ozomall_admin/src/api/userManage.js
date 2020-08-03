@@ -11,20 +11,21 @@ export function login(data) {
   })
 }
 
+// 登出
+export function logout(data) {
+  return request({
+    url: '/admin/user/logout',
+    method: 'post',
+    data
+  })
+}
+
 // 根据token查询用户信息
 export function getInfo(token) {
   return request({
     url: '/admin/user/info',
     method: 'get',
     params: { token }
-  })
-}
-
-// 登出
-export function logout() {
-  return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
   })
 }
 
@@ -41,6 +42,24 @@ export function getUserList(params) {
 export function addUser(data) {
   return request({
     url: '/admin/user/add',
+    method: 'post',
+    data
+  })
+}
+
+// 修改用户
+export function putUser(data) {
+  return request({
+    url: '/admin/user/put',
+    method: 'post',
+    data
+  })
+}
+
+// 删除用户
+export function delUser(data) {
+  return request({
+    url: '/admin/user/del',
     method: 'post',
     data
   })

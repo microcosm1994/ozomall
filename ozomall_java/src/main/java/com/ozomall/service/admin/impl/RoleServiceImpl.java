@@ -44,6 +44,8 @@ public class RoleServiceImpl implements RoleService {
         LambdaQueryWrapper<RoleDto> wrapper = new LambdaQueryWrapper<>();
         Map<SFunction<RoleDto, ?>, Object> map = new HashMap<>();
         map.put(RoleDto::getName, form.getName());
+        map.put(RoleDto::getCode, form.getCode());
+        map.put(RoleDto::getType, form.getType());
         wrapper.allEq(map, false);
         List<RoleDto> rows = roleMapper.selectList(wrapper);
         if (rows != null) {

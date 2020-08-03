@@ -6,6 +6,7 @@
     <div class="modal-container">
       <div class="modal-container-form">
         <el-form
+          :status-icon="true"
           ref="ruleForm"
           :model="ruleForm"
           :rules="rules"
@@ -31,11 +32,14 @@
           <el-form-item label="用户账号" prop="userName">
             <el-input v-model="ruleForm.userName"></el-input>
           </el-form-item>
-          <el-form-item label="用户密码" prop="passWord">
+          <el-form-item v-if="!row" label="用户密码" prop="passWord">
             <el-input type="passWord" v-model="ruleForm.passWord"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码" prop="passWordCheck">
-            <el-input type="passWord" v-model="ruleForm.passWordCheck"></el-input>
+          <el-form-item v-if="!row" label="确认密码" prop="passWordCheck">
+            <el-input
+              type="passWord"
+              v-model="ruleForm.passWordCheck"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -48,11 +52,31 @@
 </template>
 
 <script>
-import { getRole, addUser } from "@/api/userManage";
+import { addUser, putUser } from "@/api/userManage";
 import cryptoMd5 from "crypto-js/md5";
+
 export default {
-  props: ["closeModal", "row"],
+  props: ["closeModal", "row", "roleList"],
   data() {
+    const validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.ruleForm.checkPass !== "") {
+          this.$refs.ruleForm.validateField("checkPass");
+        }
+        callback();
+      }
+    };
+    const validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.ruleForm.passWord) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
     return {
       title: "添加用户",
       ruleForm: {
@@ -70,57 +94,71 @@ export default {
           { required: true, message: "请选择用户角色", trigger: "change" }
         ],
         userName: [{ required: true, message: "请输入账号", trigger: "blur" }],
-        passWord: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        passWordCheck: [
-          { required: true, message: "请确认密码", trigger: "blur" }
-        ]
+        passWord: [{ validator: validatePass, trigger: "blur" }],
+        passWordCheck: [{ validator: validatePass2, trigger: "blur" }]
       },
-      roleList: [],
       options: []
     };
   },
   mounted() {
-    this.getRole();
-    if (this.row.id) {
+    if (this.row) {
       this.title = "编辑用户";
+      this.ruleForm.nickName = this.row.nickName;
+      this.ruleForm.userName = this.row.userName;
+      this.ruleForm.roleId = this.row.roleId;
     }
   },
   methods: {
-    // 获取分类
-    getRole() {
-      getRole()
-        .then(res => {
-          if (res.data.code === 1) {
-            this.roleList = res.data.data;
-          } else {
-            this.$message.error(res.data.msg);
-          }
-        })
-        .catch(err => {});
-    },
     // 提交请求
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          addUser({
-            ...this.ruleForm,
-            passWord: cryptoMd5(encodeURI(this.ruleForm.passWord)).toString()
-          })
-            .then(res => {
-              if (res.data.code === 1) {
-                this.closeModal();
-                this.$message.success(res.data.msg);
-              } else {
-                this.$message.error(res.data.msg);
-              }
-            })
-            .catch(err => {
-              console.log(err);
-            });
+          if (this.row) {
+            this.putUser();
+          } else {
+            this.addUser();
+          }
         } else {
           return false;
         }
       });
+    },
+    // 添加用户
+    addUser() {
+      addUser({
+        ...this.ruleForm,
+        passWord: cryptoMd5(encodeURI(this.ruleForm.passWord)).toString()
+      })
+        .then(res => {
+          if (res.data.code === 1) {
+            this.closeModal();
+            this.$message.success(res.data.msg);
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 修改用户
+    putUser() {
+      putUser({
+        ...this.ruleForm,
+        id: this.row.id,
+        passWord: cryptoMd5(encodeURI(this.ruleForm.passWord)).toString()
+      })
+        .then(res => {
+          if (res.data.code === 1) {
+            this.closeModal();
+            this.$message.success(res.data.msg);
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

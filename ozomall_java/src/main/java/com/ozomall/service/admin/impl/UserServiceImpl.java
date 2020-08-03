@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
             String token = AuthUtils.genToken(userName);
             resultData.put("token", token);
             String jsonTokenValue = AuthUtils.setToken(token, userResult);
-            redisTemplate.opsForValue().set(token, jsonTokenValue);
+            redisTemplate.opsForValue().set(token, jsonTokenValue, 12, TimeUnit.HOURS);
             return ResultGenerate.genSuccessResult(resultData);
         } else {
             return ResultGenerate.genErroResult("密码错误");
@@ -66,7 +67,11 @@ public class UserServiceImpl implements UserService {
         String tokenValue = redisTemplate.opsForValue().get(token);
         String userName = JSONObject.parseObject(tokenValue).getString("userName");
         UserDto userResult = userMapper.getUsers(userName);
-        return ResultGenerate.genSuccessResult(userResult);
+        if (userResult != null) {
+            return ResultGenerate.genSuccessResult(userResult);
+        } else {
+            return ResultGenerate.genErroResult("失败");
+        }
     }
 
     /**
@@ -95,11 +100,47 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Result addUser(UserDto form) {
-        System.out.println(form.toString());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String pwd = encoder.encode(form.getPassWord());
         form.setPassWord(pwd);
         int row = userMapper.insert(form);
+        if (row > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("失败");
+        }
+    }
+
+    /**
+     * 修改用户
+     *
+     * @param form
+     */
+    @Override
+    public Result putUser(UserDto form) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String pwd = encoder.encode(form.getPassWord());
+        form.setPassWord(pwd);
+        int row = userMapper.updateById(form);
+        if (row > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("失败");
+        }
+    }
+
+    /**
+     * 删除用户
+     *
+     * @param form
+     */
+    @Override
+    public Result delUser(UserDto form) {
+        UserDto user = userMapper.selectById(form.getId());
+        if ("admin".equals(user.getUserName())) {
+            return ResultGenerate.genErroResult("admin账号不能删除");
+        }
+        int row = userMapper.deleteById(form.getId());
         if (row > 0) {
             return ResultGenerate.genSuccessResult();
         } else {

@@ -7,9 +7,10 @@ const mutations = {
   ADD_VISITED_VIEW: (state, view) => {
     if (state.visitedViews.some(v => v.path === view.path)) return
     state.visitedViews.push(
-      Object.assign({}, view, {
+      {
+        ...view,
         title: view.meta.title || 'no-name'
-      })
+      }
     )
   },
   ADD_CACHED_VIEW: (state, view) => {
@@ -59,7 +60,10 @@ const mutations = {
   UPDATE_VISITED_VIEW: (state, view) => {
     for (let v of state.visitedViews) {
       if (v.path === view.path) {
-        v = Object.assign(v, view)
+        v = {
+          ...view,
+          title: view.meta.title || 'no-name'
+        }
         break
       }
     }

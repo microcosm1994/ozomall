@@ -23,7 +23,7 @@ const mutations = {
 
 const actions = {
   // 获取用户信息
-  getInfo({ commit, state }) {
+  getInfo({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
@@ -31,6 +31,7 @@ const actions = {
           commit('SET_UserInfo', data.data)
           resolve(data.data)
         } else {
+          dispatch("logout")
           reject('Verification failed, please Login again.')
         }
       }).catch(error => {
@@ -42,9 +43,8 @@ const actions = {
   // 用户登出
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      logout().then(() => {
         commit('SET_TOKEN', '')
-        resetRouter()
         dispatch('tagsView/delAllViews', null, { root: true })
 
         resolve()
@@ -71,7 +71,6 @@ const actions = {
 
     const { roles } = await dispatch('getInfo')
 
-    resetRouter()
 
     // generate accessible routes map based on roles
     const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })

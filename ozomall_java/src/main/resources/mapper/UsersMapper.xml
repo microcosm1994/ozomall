@@ -14,12 +14,16 @@
         <association property="role" javaType="com.ozomall.entity.RoleDto" columnPrefix="roles_">
             <id property="id" column="id"></id>
             <result property="name" column="name"/>
+            <result property="code" column="code"/>
+            <result property="type" column="type"/>
         </association>
     </resultMap>
     <select id="userList" parameterType="com.ozomall.entity.UserDto" resultMap="usersMap">
         select sys_users.*,
         sys_roles.id as roles_id,
-        sys_roles.name as roles_name
+        sys_roles.name as roles_name,
+        sys_roles.type as roles_type,
+        sys_roles.code as roles_code
         from sys_users
         left join sys_roles on sys_users.role_id=sys_roles.id
         where sys_users.id is not null
@@ -43,7 +47,9 @@
     <select id="getUsers" parameterType="String" resultMap="usersMap">
         select sys_users.*,
        sys_roles.id as roles_id,
-       sys_roles.name as roles_name
+       sys_roles.name as roles_name,
+       sys_roles.type as roles_type,
+       sys_roles.code as roles_code
         from sys_users
         left join sys_roles on sys_users.role_id=sys_roles.id
         where sys_users.user_name=#{userName}

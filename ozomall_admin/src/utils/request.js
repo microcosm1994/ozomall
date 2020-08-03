@@ -14,8 +14,9 @@ service.interceptors.request.use(
       config.headers['token'] = store.state.user.token
     }
     if (config.method === "get") {
+      console.log(config.params)
       for (let key in config.params) {
-        if (!config.params[key]){
+        if (!config.params[key] && config.params[key] !== 0) {
           delete config.params[key]
         }
       }
@@ -31,6 +32,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
+    console.log(res)
     switch (response.status) {
       case 401:
         Message({
@@ -47,12 +49,22 @@ service.interceptors.response.use(
     return response
   },
   error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-    })
-    return Promise.reject(error)
+    if (error.message.includes("401")) {
+      Message({
+        message: '登陆过期，请重新登录。',
+        type: 'error',
+      })
+      store.dispatch('user/logout').then(() => {
+        location.reload()
+      })
+      return false
+    } else {
+      Message({
+        message: error.message,
+        type: 'error',
+      })
+      return Promise.reject(error)
+    }
   }
 )
 
