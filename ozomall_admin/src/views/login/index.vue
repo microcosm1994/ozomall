@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { login } from "@/api/userManage";
+import { login } from "@/api/sysManage";
 import cryptoMd5 from "crypto-js/md5";
 export default {
   name: "Login",

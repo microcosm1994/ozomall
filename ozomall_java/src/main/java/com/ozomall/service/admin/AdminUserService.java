@@ -1,10 +1,10 @@
 package com.ozomall.service.admin;
 
 import com.ozomall.entity.Result;
-import com.ozomall.entity.UserDto;
+import com.ozomall.entity.admin.AdminUserDto;
 
 
-public interface UserService {
+public interface AdminUserService {
     /**
      * 登陆
      *
@@ -25,7 +25,7 @@ public interface UserService {
      *
      * @param form
      */
-    Result getUserList(UserDto form);
+    Result getUserList(AdminUserDto form);
 
 
     /**
@@ -33,19 +33,19 @@ public interface UserService {
      *
      * @param form
      */
-    Result addUser(UserDto form);
+    Result addUser(AdminUserDto form);
 
     /**
      * 修改用户
      *
      * @param form
      */
-    Result putUser(UserDto form);
+    Result putUser(AdminUserDto form);
 
     /**
      * 删除用户
      *
      * @param form
      */
-    Result delUser(UserDto form);
+    Result delUser(AdminUserDto form);
 }

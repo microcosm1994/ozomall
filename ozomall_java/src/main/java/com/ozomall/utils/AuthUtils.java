@@ -1,7 +1,7 @@
 package com.ozomall.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.ozomall.entity.UserDto;
+import com.ozomall.entity.admin.AdminUserDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class AuthUtils {
      * @param token    token
      * @param userInfo 用户信息
      */
-    public static String setToken(String token, UserDto userInfo) {
+    public static String setToken(String token, AdminUserDto userInfo) {
         Map tokenVal = new HashMap();
         tokenVal.put("userName", userInfo.getUserName());
         tokenVal.put("role", userInfo.getRoleId());

@@ -1,7 +1,6 @@
 package com.ozomall.interceptor;
 
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -28,11 +27,7 @@ public class AdminInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object arg2) throws Exception {
         String token = request.getHeader("token");
         if (!StringUtils.isEmpty(token)) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             String tokenJsonValue = redisTemplate.opsForValue().get(token);
-//           String userName = JSONObject.parseObject(tokenJsonValue).getString("userName");
-//           // 验证token
-//           boolean flag = encoder.matches(userName, token);
             if (!StringUtils.isEmpty(tokenJsonValue)) {
                 return true;
             } else {

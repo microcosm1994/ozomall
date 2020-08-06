@@ -4,15 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ozomall.dao.UserMapper;
+import com.ozomall.dao.admin.AdminUserMapper;
 import com.ozomall.entity.Result;
-import com.ozomall.entity.UserDto;
-import com.ozomall.service.admin.UserService;
+import com.ozomall.entity.admin.AdminUserDto;
+import com.ozomall.service.admin.AdminUserService;
 import com.ozomall.utils.AuthUtils;
 import com.ozomall.utils.ResultGenerate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -20,9 +21,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class AdminUserServiceImpl implements AdminUserService {
     @Resource
-    private UserMapper userMapper;
+    private AdminUserMapper adminUserMapper;
     @Resource
     RedisTemplate<String, String> redisTemplate;
 
@@ -37,9 +38,9 @@ public class UserServiceImpl implements UserService {
     public Result login(String userName, String passWord) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         Map resultData = new HashMap();
-        LambdaQueryWrapper<UserDto> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(UserDto::getUserName, userName);
-        UserDto userResult = userMapper.selectOne(wrapper);
+        LambdaQueryWrapper<AdminUserDto> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AdminUserDto::getUserName, userName);
+        AdminUserDto userResult = adminUserMapper.selectOne(wrapper);
         if (userResult == null) {
             return ResultGenerate.genErroResult("用户名或密码错误");
         }
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
     public Result getUserInfo(String token) {
         String tokenValue = redisTemplate.opsForValue().get(token);
         String userName = JSONObject.parseObject(tokenValue).getString("userName");
-        UserDto userResult = userMapper.getUsers(userName);
+        AdminUserDto userResult = adminUserMapper.getUsers(userName);
         if (userResult != null) {
             return ResultGenerate.genSuccessResult(userResult);
         } else {
@@ -81,11 +82,11 @@ public class UserServiceImpl implements UserService {
      * @return 返回用户列表
      */
     @Override
-    public Result getUserList(UserDto form) {
+    public Result getUserList(AdminUserDto form) {
         Page page = new Page();
         page.setPages(form.getPage());
         page.setSize(form.getSize());
-        IPage<Map> rows = userMapper.userList(page, form);
+        IPage<Map> rows = adminUserMapper.userList(page, form);
         if (rows != null) {
             return ResultGenerate.genSuccessResult(rows);
         } else {
@@ -99,11 +100,11 @@ public class UserServiceImpl implements UserService {
      * @param form
      */
     @Override
-    public Result addUser(UserDto form) {
+    public Result addUser(AdminUserDto form) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String pwd = encoder.encode(form.getPassWord());
         form.setPassWord(pwd);
-        int row = userMapper.insert(form);
+        int row = adminUserMapper.insert(form);
         if (row > 0) {
             return ResultGenerate.genSuccessResult();
         } else {
@@ -117,11 +118,13 @@ public class UserServiceImpl implements UserService {
      * @param form
      */
     @Override
-    public Result putUser(UserDto form) {
+    public Result putUser(AdminUserDto form) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String pwd = encoder.encode(form.getPassWord());
-        form.setPassWord(pwd);
-        int row = userMapper.updateById(form);
+        if (!StringUtils.isEmpty(form.getPassWord())) {
+            String pwd = encoder.encode(form.getPassWord());
+            form.setPassWord(pwd);
+        }
+        int row = adminUserMapper.updateById(form);
         if (row > 0) {
             return ResultGenerate.genSuccessResult();
         } else {
@@ -135,12 +138,12 @@ public class UserServiceImpl implements UserService {
      * @param form
      */
     @Override
-    public Result delUser(UserDto form) {
-        UserDto user = userMapper.selectById(form.getId());
+    public Result delUser(AdminUserDto form) {
+        AdminUserDto user = adminUserMapper.selectById(form.getId());
         if ("admin".equals(user.getUserName())) {
             return ResultGenerate.genErroResult("admin账号不能删除");
         }
-        int row = userMapper.deleteById(form.getId());
+        int row = adminUserMapper.deleteById(form.getId());
         if (row > 0) {
             return ResultGenerate.genSuccessResult();
         } else {

@@ -11,10 +11,10 @@
   <div class="my">
     <div class="my-header">
       <div class="my-header-avator">
-        <image mode="aspectFit" src="/static/img/avator.jpg" />
+        <image mode="aspectFit" :src="users.avatarUrl" />
       </div>
       <div class="my-header-title">
-        强悍黑钻H08
+        {{users.nickName}}
       </div>
     </div>
     <div class="my-content">
@@ -89,7 +89,7 @@
         </view>
       </van-cell>
     </div>
-    <div class="my-btn">
+    <div class="my-btn" @tap="toLogin">
       退出登陆
     </div>
   </div>
@@ -100,7 +100,14 @@ import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
 
 wepy.page({
-  mixins: [jumpMixin]
+  mixins: [jumpMixin],
+  data: {
+    users: {}
+  },
+  onLoad() {
+    this.users = wx.getStorageSync("users")
+    console.log(this)
+  },
 });
 </script>
 <style lang="less">

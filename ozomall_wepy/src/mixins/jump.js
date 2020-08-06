@@ -3,6 +3,13 @@ export default {
         mixin: 'MixinText'
     },
     methods: {
+        // 跳转到登录页
+        toLogin() {
+            wx.clearStorage()
+            wx.navigateTo({
+                url: '/pages/login/index',
+            });
+        },
         // 跳转到搜索页
         toSearch() {
             wx.navigateTo({

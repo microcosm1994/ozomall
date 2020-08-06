@@ -2,11 +2,11 @@ package com.ozomall.controller.admin;
 
 import com.google.code.kaptcha.Constants;
 import com.ozomall.entity.Result;
-import com.ozomall.entity.RoleDto;
-import com.ozomall.entity.UserDto;
-import com.ozomall.service.admin.UserService;
+import com.ozomall.entity.admin.RoleDto;
+import com.ozomall.entity.admin.AdminUserDto;
+import com.ozomall.service.admin.AdminUserService;
 import com.ozomall.utils.ResultGenerate;
-import com.ozomall.vo.UsersVo;
+import com.ozomall.vo.admin.UsersVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,7 +23,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/admin/user")
 @ResponseBody
-public class UserController {
+public class AdminUserController {
     @Resource
     HttpServletRequest request;
     @Resource
@@ -31,7 +31,7 @@ public class UserController {
     @Resource
     private HttpSession session;
     @Resource
-    private UserService userService;
+    private AdminUserService adminUserService;
 
     @ApiOperation(value = "登陆")
     @PostMapping(value = "/login")
@@ -41,7 +41,7 @@ public class UserController {
         // 比对验证码
         if (loginInfo.get("code").equals(kaptchaSessionCode)) {
             // 调用登陆方法
-            return userService.login(loginInfo.get("userName"), loginInfo.get("passWord"));
+            return adminUserService.login(loginInfo.get("userName"), loginInfo.get("passWord"));
         } else {
             // 验证码错误
             return ResultGenerate.genErroResult("验证码错误");
@@ -60,7 +60,7 @@ public class UserController {
     @GetMapping(value = "/info")
     public Result info(@RequestParam("token") String token) {
         if (!StringUtils.isEmpty(token)) {
-            return userService.getUserInfo(token);
+            return adminUserService.getUserInfo(token);
         } else {
             return ResultGenerate.genErroResult("参数不能为空");
         }
@@ -68,21 +68,21 @@ public class UserController {
 
     @ApiOperation("获取用户列表")
     @GetMapping(value = "/get")
-    public Result getUserList(UserDto form) {
-        return userService.getUserList(form);
+    public Result getUserList(AdminUserDto form) {
+        return adminUserService.getUserList(form);
     }
 
     @ApiOperation("添加新用户")
     @PostMapping(value = "/add")
-    public Result addUser(@RequestBody UserDto form) {
+    public Result addUser(@RequestBody AdminUserDto form) {
         String token = request.getHeader("token");
-        Result<UsersVo> result = userService.getUserInfo(token);
+        Result<UsersVo> result = adminUserService.getUserInfo(token);
         UsersVo user = result.getData();
         RoleDto role = user.getRole();
         String roleCode = role.getCode();
         System.out.println(request.getHeader("token"));
         if (roleCode.equals("ADMIN")) {
-            return userService.addUser(form);
+            return adminUserService.addUser(form);
         } else {
             return ResultGenerate.genErroResult("没有权限，请联系超级管理员。");
         }
@@ -90,14 +90,14 @@ public class UserController {
 
     @ApiOperation("修改用户信息")
     @PostMapping(value = "/put")
-    public Result putUser(@RequestBody UserDto form) {
+    public Result putUser(@RequestBody AdminUserDto form) {
         String token = request.getHeader("token");
-        Result<UsersVo> result = userService.getUserInfo(token);
+        Result<UsersVo> result = adminUserService.getUserInfo(token);
         UsersVo user = result.getData();
         RoleDto role = user.getRole();
         String roleCode = role.getCode();
         if (roleCode.equals("ADMIN")) {
-            return userService.putUser(form);
+            return adminUserService.putUser(form);
         } else {
             return ResultGenerate.genErroResult("没有权限，请联系超级管理员。");
         }
@@ -105,15 +105,15 @@ public class UserController {
 
     @ApiOperation("删除用户")
     @PostMapping(value = "/del")
-    public Result delUser(@RequestBody UserDto form) {
+    public Result delUser(@RequestBody AdminUserDto form) {
         String token = request.getHeader("token");
-        Result<UsersVo> result = userService.getUserInfo(token);
+        Result<UsersVo> result = adminUserService.getUserInfo(token);
         UsersVo user = result.getData();
         RoleDto role = user.getRole();
         String roleCode = role.getCode();
         if (roleCode.equals("ADMIN")) {
             if (user.getId() != form.getId()) {
-                return userService.delUser(form);
+                return adminUserService.delUser(form);
             } else {
                 return ResultGenerate.genErroResult("失败");
             }

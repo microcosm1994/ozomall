@@ -1,59 +1,43 @@
-import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
-import store from '@/store'
-
-const service = axios.create({
-    baseURL: '/api',
-    withCredentials: true,
-    timeout: 10000
+const domain = "http://localhost:8090"
+let token = ''
+wx.getStorage({
+    key: 'token',
+    success: function (res) {
+        console.log(res)
+        token = res.data
+    }
 })
-
-service.interceptors.request.use(
-    config => {
-        if (store.getters.token) {
-            config.headers['token'] = store.state.user.token
-        }
+const service = async (config) => {
+    config['baseUrl'] = ''
+    config['headers'] = {
+        token: token
+    }
+    return new Promise((relove, reject) => {
+        let data = {};
         if (config.method === "get") {
-            for (let key in config.params) {
-                if (!config.params[key]) {
-                    delete config.params[key]
-                }
+            data = config.params
+        }
+        if (config.method === "post") {
+            data = config.data
+        }
+        console.log(wx)
+        wx.request({
+            url: domain + config.baseUrl + config.url,
+            method: config.method,
+            data: data,
+            header: {
+                ...config.headers,
+                'Content-Type': 'application/json'
+            },
+            success: function (res) {
+                relove(res)
+            },
+            fail: function (error) {
+                reject(error)
             }
-        }
-        return config
-    },
-    error => {
-        console.log(error)
-        return Promise.reject(error)
-    }
-)
-// response
-service.interceptors.response.use(
-    response => {
-        const res = response.data
-        switch (response.status) {
-            case 401:
-                Message({
-                    message: res.message || '登陆过期，请重新登录。',
-                    type: 'error',
-                })
-                store.dispatch('user/logout').then(() => {
-                    location.reload()
-                })
-                break
-            default:
-                break
-        }
-        return response
-    },
-    error => {
-        console.log('err' + error) // for debug
-        Message({
-            message: error.message,
-            type: 'error',
-        })
-        return Promise.reject(error)
-    }
-)
+        });
+    })
+};
+
 
 export default service

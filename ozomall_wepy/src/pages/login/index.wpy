@@ -1,0 +1,103 @@
+<config>
+{
+    navigationBarTitleText: '登录',
+    usingComponents: {
+      "van-icon": "../../components/vant/icon",
+      "van-cell": "../../components/vant/cell",
+      "van-image": "../../components/vant/image",
+    }
+}
+</config>
+<template>
+  <div class="login">
+    <div class="login-logo">
+      <van-image
+        width="100%"
+        height="100%"
+        fit="contain"
+        src="/static/img/logo.png"
+      />
+    </div>
+    <div class="login-title">
+      有毒的运动*潮流*好物
+    </div>
+    <div class="login-btn">
+      <button
+        open-type="getUserInfo"
+        bindgetuserinfo="getUserInfo"
+        class="login-btn-phone"
+      >
+        手机号登陆/注册
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import jumpMixin from '../../mixins/jump.js';
+
+wepy.page({
+  mixins: [jumpMixin],
+  created() {},
+  methods: {
+    getUserInfo() {
+      console.log(1);
+      wx.getSetting({
+        success: function (res) {
+          console.log(res);
+          if (res.authSetting['scope.userInfo']) {
+            wx.getUserInfo({
+              success: function (userInfoRes) {
+                wx.navigateTo({
+                  url: '/pages/login/login',
+                  success: function (routeRes) {
+                    // 通过eventChannel向b页面传送数据
+                    routeRes.eventChannel.emit('userInfo', userInfoRes.userInfo);
+                  },
+                });
+              },
+            });
+          }
+        },
+      });
+    },
+  },
+});
+</script>
+<style lang="less">
+.login {
+  width: 100%;
+  text-align: center;
+  padding-top: 200rpx;
+  .login-logo {
+    width: 130rpx;
+    height: 130rpx;
+    margin: 0 auto;
+    image {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .login-title {
+    width: 100%;
+    text-align: center;
+    font-size: 50rpx;
+    font-weight: 600;
+    line-height: 200rpx;
+  }
+  .login-btn {
+    width: 100%;
+    padding: 50rpx;
+    .login-btn-phone {
+      width: 100%;
+      height: 90rpx;
+      background: #11cccc;
+      text-align: center;
+      line-height: 90rpx;
+      font-size: 36rpx;
+      color: #fff;
+    }
+  }
+}
+</style>

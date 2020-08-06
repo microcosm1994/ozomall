@@ -1,10 +1,10 @@
 import Layout from '@/layout'
 
 export default {
-    path: '/setting',
+    path: '/sys',
     component: Layout,
-    redirect: '/setting/index',
-    name: 'setting',
+    redirect: '/sys/index',
+    name: 'sys',
     meta: {
         title: '系统设置',
         icon: 'el-icon-setting'
@@ -17,16 +17,16 @@ export default {
             meta: { title: '配置菜单' }
         },
         {
-            path: 'theme',
-            component: () => import('@/views/theme/index'),
-            name: 'theme',
-            meta: { title: '更换主题' }
+            path: 'user',
+            component: () => import('@/views/sysManage/user'),
+            name: 'sysManageUser',
+            meta: { title: '账号管理' }
         },
         {
-            path: 'markdown',
-            component: () => import('@/views/components-demo/markdown'),
-            name: 'MarkdownDemo',
-            meta: { title: 'Markdown' }
+            path: 'role',
+            component: () => import('@/views/sysManage/role'),
+            name: 'sysManageRole',
+            meta: { title: '角色管理' }
         },
     ]
 }

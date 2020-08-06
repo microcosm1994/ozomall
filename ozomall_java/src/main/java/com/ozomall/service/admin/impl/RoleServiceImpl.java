@@ -2,9 +2,9 @@ package com.ozomall.service.admin.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import com.ozomall.dao.RoleMapper;
+import com.ozomall.dao.admin.RoleMapper;
 import com.ozomall.entity.Result;
-import com.ozomall.entity.RoleDto;
+import com.ozomall.entity.admin.RoleDto;
 import com.ozomall.service.admin.RoleService;
 import com.ozomall.utils.ResultGenerate;
 import org.springframework.stereotype.Service;
@@ -34,6 +34,22 @@ public class RoleServiceImpl implements RoleService {
         }
     }
 
+
+    /**
+     * 修改用户角色
+     *
+     * @param form
+     */
+    @Override
+    public Result putRole(RoleDto form) {
+        int row = roleMapper.updateById(form);
+        if (row > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("添加失败");
+        }
+    }
+
     /**
      * 获取用户角色
      *
@@ -52,6 +68,21 @@ public class RoleServiceImpl implements RoleService {
             return ResultGenerate.genSuccessResult(rows);
         } else {
             return ResultGenerate.genErroResult("获取失败");
+        }
+    }
+
+    /**
+     * 删除用户角色
+     *
+     * @param form
+     */
+    @Override
+    public Result delRole(RoleDto form) {
+        int row = roleMapper.deleteById(form.getId());
+        if (row > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("失败");
         }
     }
 }

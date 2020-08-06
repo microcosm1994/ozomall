@@ -78,11 +78,29 @@ export function addRole(data) {
   })
 }
 
+// 添加角色
+export function putRole(data) {
+  return request({
+    url: '/admin/role/put',
+    method: 'post',
+    data
+  })
+}
+
 // 获取角色
 export function getRole(params) {
   return request({
     url: '/admin/role/get',
     method: 'get',
     params
+  })
+}
+
+// 添加角色
+export function delRole(data) {
+  return request({
+    url: '/admin/role/del',
+    method: 'post',
+    data
   })
 }

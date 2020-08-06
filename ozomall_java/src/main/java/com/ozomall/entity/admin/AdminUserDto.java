@@ -1,8 +1,9 @@
-package com.ozomall.entity;
+package com.ozomall.entity.admin;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ozomall.entity.PageReqDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,7 +11,7 @@ import lombok.Data;
 @TableName("sys_users")
 @ApiModel
 @Data
-public class UserDto extends PageReqDto {
+public class AdminUserDto extends PageReqDto {
     @ApiModelProperty(value = "用户id")
     @TableId(type = IdType.AUTO)
     private long id;

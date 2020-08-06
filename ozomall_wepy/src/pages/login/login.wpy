@@ -1,0 +1,201 @@
+<config>
+{
+    navigationBarTitleText: '登录',
+    usingComponents: {
+      "van-icon": "../../components/vant/icon",
+      "van-field": "../../components/vant/field",
+      "van-image": "../../components/vant/image",
+      "van-toast": "../../components/vant/toast",
+    }
+}
+</config>
+<template>
+  <div class="login">
+    <div class="login-logo">
+      <van-image
+        width="100%"
+        height="100%"
+        fit="contain"
+        src="/static/img/logo.png"
+      />
+    </div>
+    <div class="login-form">
+      <div class="login-form-field">
+        <van-field
+          :value="phone"
+          clearable
+          label="+86"
+          placeholder="请输入手机号"
+          :error-message="errMsg"
+          maxlength="11"
+          type="number"
+          @input="phoneChange"
+        />
+      </div>
+      <div class="login-form-field">
+        <van-field
+          v-model="code"
+          center
+          clearable
+          label="验证码"
+          placeholder="请输入短信验证码"
+          maxlength="6"
+          type="number"
+          @input="codeChange"
+        >
+          <van-button slot="button" size="small" type="text" @tap="sendMsage">{{
+            timerNum === 60 ? '发送验证码' : '重新发送 ' + timerNum + ' s'
+          }}</van-button>
+        </van-field>
+      </div>
+    </div>
+    <div class="login-btn">
+      <div class="login-btn-submit" @tap="login">
+        登录
+      </div>
+    </div>
+    <van-toast id="van-toast" />
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import jumpMixin from '../../mixins/jump.js';
+import { sendMessage, login } from '../../api/user.js';
+import Toast from '../../components/vant/toast/toast';
+
+wepy.page({
+  mixins: [jumpMixin],
+  data: {
+    form: {
+      nickName: '',
+      avatarUrl: '',
+      gender: '',
+      phone: '',
+      code: '',
+    },
+    errMsg: '',
+    timer: null,
+    timerNum: 60,
+  },
+  created() {},
+  onLoad() {
+    const eventChannel = this.$wx.getOpenerEventChannel();
+    // 通过eventChannel监听a页面传过来的数据
+    eventChannel.on('userInfo', (data) => {
+      console.log(data);
+      this.form.nickName = data.nickName;
+      this.form.avatarUrl = data.avatarUrl;
+      this.form.gender = data.gender;
+    });
+  },
+  methods: {
+    // 手机号
+    phoneChange(e) {
+      this.form.phone = e.$wx.detail;
+      this.errMsg = '';
+    },
+    // 验证码
+    codeChange(e) {
+      this.form.code = e.$wx.detail;
+      this.errMsg = '';
+    },
+    // 发送短信验证码
+    sendMsage() {
+      if (this.timer && this.timerNum < 60) {
+        return false;
+      }
+      if (
+        this.form.phone.length === 11 &&
+        /^1[3456789]\d{9}$/.test(this.form.phone)
+      ) {
+        sendMessage({
+          phone: this.form.phone,
+        }).then((res) => {
+          if (res.data.code === 1) {
+            Toast.success('短信已发送');
+            clearInterval(this.timer);
+            this.timer = setInterval(() => {
+              this.timerNum--;
+              if (this.timerNum < 1) {
+                this.timerNum = 60;
+                clearInterval(this.timer);
+                this.timer = null;
+              }
+            }, 1000);
+          } else {
+            Toast.fail(res.data.msg);
+          }
+        });
+      } else {
+        this.errMsg = '手机号格式错误';
+      }
+    },
+    // 登录
+    login() {
+      if (!this.form.phone) {
+        Toast.fail('请输入手机号');
+        return false;
+      }
+      if (!this.form.code) {
+        Toast.fail('请输入验证码');
+        return false;
+      }
+      login({
+        ...this.form,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          wx.setStorageSync('token', res.data.data.token);
+          wx.setStorageSync('users', res.data.data.users);
+          wx.switchTab({
+            url: '/pages/my/index',
+          });
+        } else {
+          Toast.fail(res.data.msg);
+        }
+      });
+      console.log(this.form);
+    },
+  },
+});
+</script>
+<style lang="less">
+.login {
+  width: 100%;
+  text-align: center;
+  padding-top: 100rpx;
+  .login-logo {
+    width: 130rpx;
+    height: 130rpx;
+    margin: 0 auto;
+    image {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .login-form {
+    width: 100%;
+    text-align: left;
+    font-size: 32rpx;
+    padding-top: 80rpx;
+    .login-form-field {
+      width: 100%;
+      height: 100rpx;
+      margin-top: 20rpx;
+    }
+  }
+  .login-btn {
+    width: 100%;
+    padding: 50rpx;
+    .login-btn-submit {
+      width: 100%;
+      height: 90rpx;
+      background: #11cccc;
+      text-align: center;
+      line-height: 90rpx;
+      font-size: 36rpx;
+      color: #fff;
+    }
+  }
+}
+</style>

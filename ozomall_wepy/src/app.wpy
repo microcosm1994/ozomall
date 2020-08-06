@@ -23,9 +23,6 @@ view {
 <script>
 import wepy from '@wepy/core';
 import eventHub from './common/eventHub';
-import vuex from '@wepy/x';
-
-wepy.use(vuex);
 
 wepy.app({
   hooks: {
@@ -68,16 +65,18 @@ wepy.app({
 {
     pages: [
       'pages/index/index', //   首页
+      'pages/my/index', // 我的
+      'pages/login/index', //   登录授权
+      'pages/login/login', //   登录
+      'components/prod-card', // 商品卡片
+      'components/prod-list', // 商品列表
+      'pages/identify/index', // 鉴别查询
       'pages/account/index', //   我的账户
       'pages/account/list', //   我的账户-账户明细
       'pages/order/index', //   订单
-      'pages/identify/index', // 鉴别查询
-      'pages/my/index', // 我的
       'pages/buyList/index', // 最近购买
       'pages/prodDetails/index', // 商品详情
       'pages/search/index', // 搜索页
-      'components/prod-list', // 商品列表
-      'components/prod-card', // 商品卡片
       'pages/classify/index', // 分类
     ],
     window: {

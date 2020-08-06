@@ -11,7 +11,7 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested' 
-import settingRouter from './modules/setting' // 后台系统设置
+import sysManage from './modules/sysManage' // 后台系统设置
 import mallManage from './modules/mallManage' // 商城管理模块
 import goodsManage from './modules/goodsManage' // 商品管理模块
 import userManage from './modules/userManage' // 用户管理模块
@@ -92,6 +92,6 @@ export default new Router({
     goodsManage,
     userManage,
     mallManage,
-    settingRouter,
+    sysManage,
   ]
 })
