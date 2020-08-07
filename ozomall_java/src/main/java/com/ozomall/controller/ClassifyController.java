@@ -9,8 +9,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 @Api(tags = "商品分类接口")
 @Controller
@@ -30,6 +32,12 @@ public class ClassifyController {
         }
     }
 
+    @ApiOperation("上传商品分类图片")
+    @PostMapping("/upload")
+    public Result classifyUpload(@RequestBody MultipartFile file) throws IOException {
+        return classifyService.classifyUpload(file);
+    }
+
     @ApiOperation("获取分类列表")
     @GetMapping("/list")
     public Result queryClassify(ClassifyDto form) {
@@ -40,6 +48,12 @@ public class ClassifyController {
     @GetMapping("/childrenList")
     public Result queryChildrenList(ClassifyDto form) {
         return classifyService.queryChildrenList(form);
+    }
+
+    @ApiOperation("修改商品分类")
+    @PostMapping("/put")
+    public Result putClassify(@RequestBody ClassifyDto form) {
+        return classifyService.putClassify(form);
     }
 
 }

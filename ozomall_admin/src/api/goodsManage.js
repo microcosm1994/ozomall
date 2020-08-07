@@ -9,6 +9,15 @@ export function addClassify(data) {
     })
 }
 
+// 修改分类
+export function putClassify(data) {
+    return request({
+        url: '/classify/put',
+        method: 'post',
+        data
+    })
+}
+
 // 获取分类列表
 export function getClassifyList(params) {
     return request({

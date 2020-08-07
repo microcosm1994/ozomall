@@ -7,6 +7,7 @@
     <select id="childrenList" parameterType="int" resultType="com.ozomall.entity.ClassifyDto">
         select * from classify where parent_id
         in (select id from classify where parent_id=#{id})
+        and del=0
         or parent_id=#{id}
     </select>
 </mapper>

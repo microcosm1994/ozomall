@@ -51,25 +51,10 @@
             align="center"
             prop="cover"
             label="商品封面"
-            width="180"
+            width="120"
           >
             <template slot-scope="scope">
-              <img :src="scope.row.cover" style="width: 120px;" alt="" />
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="一级分类" width="180">
-            <template slot-scope="scope">
-              {{ scope.row.classify1.name }}
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="二级分类" width="180">
-            <template slot-scope="scope">
-              {{ scope.row.classify2.name }}
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="三级分类" width="180">
-            <template slot-scope="scope">
-              {{ scope.row.classify3.name }}
+              <img :src="scope.row.cover" style="height: 50px;" alt="" />
             </template>
           </el-table-column>
           <el-table-column
@@ -123,6 +108,15 @@
             label="创建时间"
             width="180"
           >
+          </el-table-column>
+          <el-table-column align="center" label="所属类别" width="180">
+            <template slot-scope="scope">
+              {{scope.row.classify1.name}}
+              <span style="color:#000;font-weight:600;">/</span>
+              {{scope.row.classify2.name}}
+              <span style="color:#000;font-weight:600;">/</span>
+              {{scope.row.classify3.name}}
+            </template>
           </el-table-column>
           <el-table-column
             width="200"
@@ -231,9 +225,15 @@ export default {
       let data = {
         goodsName: this.ruleForm.goodsName,
         status: this.ruleForm.status,
-        classify1Id: this.ruleForm.classifyId[0] ? this.ruleForm.classifyId[0] : null,
-        classify2Id: this.ruleForm.classifyId[1] ? this.ruleForm.classifyId[1] : null ,
-        classify3Id: this.ruleForm.classifyId[2] ? this.ruleForm.classifyId[2] : null,
+        classify1Id: this.ruleForm.classifyId[0]
+          ? this.ruleForm.classifyId[0]
+          : null,
+        classify2Id: this.ruleForm.classifyId[1]
+          ? this.ruleForm.classifyId[1]
+          : null,
+        classify3Id: this.ruleForm.classifyId[2]
+          ? this.ruleForm.classifyId[2]
+          : null,
         page: this.pageParams.page,
         size: this.pageParams.size
       };

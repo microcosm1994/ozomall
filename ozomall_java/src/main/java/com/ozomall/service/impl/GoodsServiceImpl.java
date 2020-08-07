@@ -278,7 +278,7 @@ public class GoodsServiceImpl implements GoodsService {
         Page page = new Page();
         QueryWrapper<GoodsBrandDto> wrapper = new QueryWrapper<>();
         page.setSize(form.getSize());
-        page.setPages(form.getPage());
+        page.setCurrent(form.getPage());
         Map<String, Object> map = new HashMap();
         map.put("name", form.getName());
         wrapper.allEq(map, false);

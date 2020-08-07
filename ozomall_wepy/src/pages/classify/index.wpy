@@ -51,7 +51,7 @@
                   :key="childItem.id"
                 >
                   <div class="content-item-img">
-                    <image mode="aspectFit" src="/static/img/yezy.jpg" />
+                    <image mode="aspectFit" :src="childItem.url" />
                   </div>
                   <div class="content-item-text">{{ childItem.name }}</div>
                 </div>
@@ -82,22 +82,25 @@ wepy.page({
   methods: {
     // 查询1级分类列表
     queryClassify() {
+      this.classifyData = [];
       queryClassify({
         classifyLevel: 1,
         del: 0,
       }).then((res) => {
         if (res.data.code === 1) {
           this.classifyData = res.data.data;
+          this.onSidebarChange(this.classifyData[0]);
         }
       });
     },
+    // 根据一级分类查询2、3级分类
     onSidebarChange(val) {
-      console.log(val);
+      console.log(val)
+      this.classifyTree = [];
       childrenList({
         id: val.id,
       }).then((res) => {
         if (res.data.code === 1) {
-          console.log(res);
           this.classifyTree = res.data.data.filter(
             (item) => item.parentId === val.id
           );
@@ -177,7 +180,7 @@ wepy.page({
               vertical-align: top;
               .content-item-img {
                 width: 100%;
-                height: 160rpx;
+                height: 120rpx;
                 image {
                   width: 100%;
                   height: 100%;
@@ -190,6 +193,7 @@ wepy.page({
                 color: #333;
                 font-size: 28rpx;
                 text-align: center;
+                margin-top: 20rpx;
               }
             }
           }

@@ -22,6 +22,8 @@ public class ClassifyDto extends PageReqDto {
     private String name;
     @ApiModelProperty(value = "分类级别")
     private Integer classifyLevel;
+    @ApiModelProperty(value = "分类图片")
+    private String url;
     @ApiModelProperty(value = "创建时间")
     private Timestamp createTime;
     @ApiModelProperty(value = "删除标记")

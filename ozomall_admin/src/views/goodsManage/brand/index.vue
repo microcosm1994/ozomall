@@ -39,7 +39,7 @@
             width="180"
           >
             <template slot-scope="scope">
-              <img :src="scope.row.url" style="width: 120px;" alt="" />
+              <img :src="scope.row.url" style="width: 50px;" alt="" />
             </template>
           </el-table-column>
           <el-table-column align="center" prop="name" label="品牌名称">
@@ -152,10 +152,12 @@ export default {
       this.dialogVisible = false;
       this.getData();
     },
-    handleSizeChange() {
+    handleSizeChange(val) {
+      this.pageParams.size = val
       this.getData();
     },
-    handleCurrentChange() {
+    handleCurrentChange(val) {
+      this.pageParams.page = val
       this.getData();
     }
   }

@@ -6,7 +6,7 @@ const settingRouter = {
     redirect: '/goodsManage/goods',
     name: 'goodsManage',
     meta: {
-        title: '商品管理',
+        title: '品类中心',
         icon: 'el-icon-s-goods'
     },
     children: [
