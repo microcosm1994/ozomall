@@ -51,4 +51,17 @@ public class ClassifyServiceImpl implements ClassifyService {
         }
     }
 
+    /**
+     * 查询2、3级类别
+     */
+    @Override
+    public Result queryChildrenList(ClassifyDto form) {
+        List<ClassifyDto> rows = classifyMapper.childrenList(form.getId());
+        if (rows != null) {
+            return ResultGenerate.genSuccessResult(rows);
+        } else {
+            return ResultGenerate.genErroResult("数据获取失败");
+        }
+    }
+
 }

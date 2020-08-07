@@ -16,12 +16,6 @@ export default {
             name: 'userManageUser',
             meta: { title: '用户管理' }
         },
-        {
-            path: 'role',
-            component: () => import('@/views/userManage/role'),
-            name: 'userManageRole',
-            meta: { title: '角色管理' }
-        }
     ]
 }
 

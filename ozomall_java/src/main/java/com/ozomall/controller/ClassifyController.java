@@ -36,4 +36,10 @@ public class ClassifyController {
         return classifyService.queryClassify(form);
     }
 
+    @ApiOperation("获取2、3级分类列表")
+    @GetMapping("/childrenList")
+    public Result queryChildrenList(ClassifyDto form) {
+        return classifyService.queryChildrenList(form);
+    }
+
 }

@@ -3,10 +3,13 @@ package com.ozomall.service.admin.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ozomall.dao.admin.AdminUserMapper;
+import com.ozomall.dao.mall.MallUserMapper;
 import com.ozomall.entity.Result;
 import com.ozomall.entity.admin.AdminUserDto;
+import com.ozomall.entity.mall.MallUserDto;
 import com.ozomall.service.admin.AdminUserService;
 import com.ozomall.utils.AuthUtils;
 import com.ozomall.utils.ResultGenerate;
@@ -24,6 +27,10 @@ import java.util.concurrent.TimeUnit;
 public class AdminUserServiceImpl implements AdminUserService {
     @Resource
     private AdminUserMapper adminUserMapper;
+
+    @Resource
+    private MallUserMapper mallUserMapper;
+
     @Resource
     RedisTemplate<String, String> redisTemplate;
 
@@ -146,6 +153,33 @@ public class AdminUserServiceImpl implements AdminUserService {
         int row = adminUserMapper.deleteById(form.getId());
         if (row > 0) {
             return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("失败");
+        }
+    }
+
+    /**
+     * 获取商城用户列表
+     *
+     * @param form
+     * @return 返回用户列表
+     */
+    @Override
+    public Result getMallUserList(MallUserDto form) {
+        LambdaQueryWrapper<MallUserDto> wrapper = new LambdaQueryWrapper<>();
+        Map<SFunction<MallUserDto, ?>, Object> map = new HashMap<>();
+        map.put(MallUserDto::getId, form.getId());
+        map.put(MallUserDto::getNickName, form.getNickName());
+        map.put(MallUserDto::getPhone, form.getPhone());
+        map.put(MallUserDto::getVip, form.getVip());
+        map.put(MallUserDto::getGender, form.getGender());
+        wrapper.allEq(map, false);
+        Page page = new Page();
+        page.setPages(form.getPage());
+        page.setSize(form.getSize());
+        IPage<Map> rows = mallUserMapper.selectPage(page, wrapper);
+        if (rows != null) {
+            return ResultGenerate.genSuccessResult(rows);
         } else {
             return ResultGenerate.genErroResult("失败");
         }

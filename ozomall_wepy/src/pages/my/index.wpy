@@ -14,7 +14,13 @@
         <image mode="aspectFit" :src="users.avatarUrl" />
       </div>
       <div class="my-header-title">
-        {{users.nickName}}
+        {{ users.nickName }}
+      </div>
+      <div v-if="users.gender === 1" class="my-header-gender1">
+        ♂
+      </div>
+      <div v-if="users.gender === 2" class="my-header-gender2">
+        ♀
       </div>
     </div>
     <div class="my-content">
@@ -102,11 +108,11 @@ import jumpMixin from '../../mixins/jump.js';
 wepy.page({
   mixins: [jumpMixin],
   data: {
-    users: {}
+    users: {},
   },
   onLoad() {
-    this.users = wx.getStorageSync("users")
-    console.log(this)
+    this.users = wx.getStorageSync('users');
+    console.log(this);
   },
 });
 </script>
@@ -139,6 +145,26 @@ wepy.page({
       line-height: 100rpx;
       color: #333;
       font-size: 40rpx;
+      font-weight: 600;
+    }
+    .my-header-gender1 {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 20rpx;
+      height: 100rpx;
+      line-height: 100rpx;
+      color: #11CCCC;
+      font-size: 30rpx;
+      font-weight: 600;
+    }
+    .my-header-gender2 {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 20rpx;
+      height: 100rpx;
+      line-height: 100rpx;
+      color: #FDA3C6;
+      font-size: 30rpx;
       font-weight: 600;
     }
   }

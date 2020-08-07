@@ -6,6 +6,8 @@
       "van-divider": "~@/components/vant/divider",
       "van-sticky": "~@/components/vant/sticky",
       "van-search": "~@/components/vant/search",
+      "van-sidebar": "~@/components/vant/sidebar",
+      "van-sidebar-item": "~@/components/vant/sidebar-item",
       "van-tree-select": "~@/components/vant/tree-select",
       "prod-list": '~@/components/prod-list',
     }
@@ -16,208 +18,109 @@
     <van-sticky>
       <van-search disabled placeholder="请输入搜索关键词" @tap="search" />
     </van-sticky>
-    <van-tree-select
-      style="height: 100%;"
-      items="{{ classifyData }}"
-      main-active-index="{{ mainActiveIndex }}"
-      active-id="{{ activeId }}"
-      bind:click-nav="onClickNav"
-      bind:click-item="onClickItem"
-    >
-      <div slot="content" class="home-container">
+    <div class="home-box">
+      <div class="home-box-sidebar">
         <scroll-view scroll-y="true" style="height: 100%;">
-          <div class="container-item">
-            <div class="item-title">
-              <van-divider contentPosition="center">热门推荐</van-divider>
-            </div>
-            <div class="item-contentList">
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-            </div>
-          </div>
-          <div class="container-item">
-            <div class="item-title">
-              <van-divider contentPosition="center">热门推荐</van-divider>
-            </div>
-            <div class="item-contentList">
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-            </div>
-          </div>
-          <div class="container-item">
-            <div class="item-title">
-              <van-divider contentPosition="center">热门推荐</van-divider>
-            </div>
-            <div class="item-contentList">
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-              <div class="content-item">
-                <div class="content-item-img">
-                  <image mode="aspectFit" src="/static/img/yezy.jpg" />
-                </div>
-                <div class="content-item-text">yezy</div>
-              </div>
-            </div>
-          </div>
+          <van-sidebar :active-key="0">
+            <van-sidebar-item
+              v-for="item in classifyData"
+              :key="item.id"
+              :title="item.name"
+              @tap="onSidebarChange(item)"
+            />
+          </van-sidebar>
         </scroll-view>
       </div>
-    </van-tree-select>
+      <div class="home-box-content">
+        <div slot="content" class="home-container">
+          <scroll-view scroll-y="true" style="height: 100%;">
+            <div
+              class="container-item"
+              v-for="item in classifyTree"
+              :key="item.id"
+            >
+              <div class="item-title">
+                <van-divider contentPosition="center">{{
+                  item.name
+                }}</van-divider>
+              </div>
+              <div class="item-contentList">
+                <div
+                  class="content-item"
+                  v-for="childItem in item.children"
+                  :key="childItem.id"
+                >
+                  <div class="content-item-img">
+                    <image mode="aspectFit" src="/static/img/yezy.jpg" />
+                  </div>
+                  <div class="content-item-text">{{ childItem.name }}</div>
+                </div>
+              </div>
+            </div>
+          </scroll-view>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import wepy from '@wepy/core';
+import { queryClassify, childrenList } from '../../api/mall.js';
 
 wepy.page({
   data: {
-    classifyData: [
-      {
-        text: '品牌',
-      },
-      {
-        text: '系列',
-      },
-      {
-        text: '球鞋',
-      },
-      {
-        text: '潮搭',
-      },
-      {
-        text: '手表',
-      },
-      {
-        text: '配饰',
-      },
-      {
-        text: '箱包',
-      },
-      {
-        text: '潮玩',
-      },
-      {
-        text: '数码',
-      },
-      {
-        text: '家电',
-      },
-      {
-        text: '美妆',
-      },
-      {
-        text: '家居',
-      },
-      {
-        text: '汽车',
-      },
-    ],
+    classifyData: [],
+    classifyTree: [],
+    activeKey: 0,
     mainActiveIndex: 0,
     activeId: null,
   },
+  onLoad() {
+    this.queryClassify();
+  },
   methods: {
+    // 查询1级分类列表
+    queryClassify() {
+      queryClassify({
+        classifyLevel: 1,
+        del: 0,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.classifyData = res.data.data;
+        }
+      });
+    },
+    onSidebarChange(val) {
+      console.log(val);
+      childrenList({
+        id: val.id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          console.log(res);
+          this.classifyTree = res.data.data.filter(
+            (item) => item.parentId === val.id
+          );
+          this.classifyTree = this.classifyTree.map((item) => {
+            return {
+              ...item,
+              children: res.data.data.filter(
+                (childItem) => childItem.parentId === item.id
+              ),
+            };
+          });
+          console.log(this.classifyTree);
+        }
+      });
+    },
     // 跳转到搜索页
     search() {
       wx.navigateTo({
         url: '/pages/search/index',
       });
     },
-    onClickNav({ detail = {} }) {
+    onClickNav(detail) {
+      console.log(detail);
       this.mainActiveIndex = detail.index || 0;
     },
 
@@ -232,47 +135,62 @@ wepy.page({
   width: 100%;
   height: 100%;
   background: #eeeef0;
-  .van-tree-select {
-    height: 100% !important;
-    .van-sidebar-item {
-      text-align: center;
+  .home-box {
+    width: 100%;
+    height: 100%;
+    padding-left: 170rpx;
+    position: relative;
+    .home-box-sidebar {
+      display: inline-block;
+      vertical-align: top;
+      width: 170rpx;
+      height: 100%;
+      position: absolute;
+      left: 0;
     }
-    .home-container {
+    .home-box-content {
+      display: inline-block;
+      vertical-align: top;
       width: 100%;
       height: 100%;
-      .container-item {
+      background: #fff;
+      .home-container {
         width: 100%;
-        padding-bottom: 40rpx;
-        .item-title {
+        height: 100%;
+        .container-item {
           width: 100%;
-          .van-divider {
-            height: 80rpx;
-            line-height: 80rpx;
-            margin: 0;
-          }
-        }
-        .item-contentList {
-          width: 100%;
-          .content-item {
-            width: 33%;
-            height: 200rpx;
-            display: inline-block;
-            vertical-align: top;
-            .content-item-img {
-              width: 100%;
-              height: 160rpx;
-              image {
-                width: 100%;
-                height: 100%;
-              }
+          padding-bottom: 40rpx;
+          .item-title {
+            width: 100%;
+            .van-divider {
+              height: 80rpx;
+              line-height: 80rpx;
+              margin: 0;
             }
-            .content-item-text {
-              width: 100%;
-              height: 40rpx;
-              line-height: 40rpx;
-              color: #333;
-              font-size: 28rpx;
-              text-align: center;
+          }
+          .item-contentList {
+            width: 100%;
+            .content-item {
+              width: 33%;
+              height: 200rpx;
+              display: inline-block;
+              vertical-align: top;
+              .content-item-img {
+                width: 100%;
+                height: 160rpx;
+                image {
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+              .content-item-text {
+                width: 100%;
+                height: 40rpx;
+                line-height: 40rpx;
+                color: #333;
+                font-size: 28rpx;
+                text-align: center;
+              }
             }
           }
         }

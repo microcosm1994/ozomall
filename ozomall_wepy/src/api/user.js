@@ -17,3 +17,11 @@ export function login(data) {
         data
     })
 }
+
+// 登出
+export function logout() {
+    return service({
+        url: '/mall/user/logout',
+        method: 'post'
+    })
+}

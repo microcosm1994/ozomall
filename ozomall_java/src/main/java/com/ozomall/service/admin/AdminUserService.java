@@ -2,6 +2,7 @@ package com.ozomall.service.admin;
 
 import com.ozomall.entity.Result;
 import com.ozomall.entity.admin.AdminUserDto;
+import com.ozomall.entity.mall.MallUserDto;
 
 
 public interface AdminUserService {
@@ -48,4 +49,11 @@ public interface AdminUserService {
      * @param form
      */
     Result delUser(AdminUserDto form);
+
+    /**
+     * 获取商城用户列表
+     *
+     * @param form
+     */
+    Result getMallUserList(MallUserDto form);
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Controller
@@ -41,6 +42,14 @@ public class MallUserController {
         } else {
             return ResultGenerate.genErroResult("验证码错误");
         }
+    }
+
+    @ApiOperation(value = "登陆")
+    @PostMapping(value = "/logout")
+    public Result logout(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        redisTemplate.delete(token);
+        return ResultGenerate.genSuccessResult();
     }
 
 }

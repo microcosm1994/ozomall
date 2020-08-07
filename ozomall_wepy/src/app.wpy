@@ -64,6 +64,7 @@ wepy.app({
 <config>
 {
     pages: [
+      'pages/classify/index', // 分类
       'pages/index/index', //   首页
       'pages/my/index', // 我的
       'pages/login/index', //   登录授权
@@ -77,7 +78,6 @@ wepy.app({
       'pages/buyList/index', // 最近购买
       'pages/prodDetails/index', // 商品详情
       'pages/search/index', // 搜索页
-      'pages/classify/index', // 分类
     ],
     window: {
       backgroundTextStyle: 'light',

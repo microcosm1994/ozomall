@@ -15,13 +15,13 @@ import lombok.Data;
 public class MallUserDto extends PageReqDto {
     @ApiModelProperty(value = "用户id")
     @TableId(type = IdType.AUTO)
-    private long id;
+    private Integer id;
 
     @ApiModelProperty(value = "用户昵称")
     private String nickName;
 
     @ApiModelProperty(value = "是否vip：0否，1是")
-    private int vip;
+    private Integer vip;
 
     @ApiModelProperty(value = "用户手机号")
     private String phone;

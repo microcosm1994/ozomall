@@ -4,6 +4,7 @@ import com.google.code.kaptcha.Constants;
 import com.ozomall.entity.Result;
 import com.ozomall.entity.admin.RoleDto;
 import com.ozomall.entity.admin.AdminUserDto;
+import com.ozomall.entity.mall.MallUserDto;
 import com.ozomall.service.admin.AdminUserService;
 import com.ozomall.utils.ResultGenerate;
 import com.ozomall.vo.admin.UsersVo;
@@ -120,5 +121,11 @@ public class AdminUserController {
         } else {
             return ResultGenerate.genErroResult("没有权限，请联系超级管理员。");
         }
+    }
+
+    @ApiOperation("获取商城用户列表")
+    @GetMapping(value = "/getMallUser")
+    public Result getMallUserList(MallUserDto form) {
+        return adminUserService.getMallUserList(form);
     }
 }

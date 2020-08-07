@@ -18,7 +18,11 @@
       <div class="home-search">
         <van-row>
           <van-col span="20">
-            <van-search disabled placeholder="请输入搜索关键词" @tap="toSearch" />
+            <van-search
+              disabled
+              placeholder="请输入搜索关键词"
+              @tap="toSearch"
+            />
           </van-col>
           <van-col span="4" @tap="toClassify">分类</van-col>
         </van-row>
@@ -44,17 +48,8 @@
         interval="{{3000}}"
         duration="{{500}}"
       >
-        <swiper-item>
-          <image style="width: 100%;" src="/static/img/banner1.jpg" />
-        </swiper-item>
-        <swiper-item>
-          <image style="width: 100%;" src="/static/img/banner2.jpg" />
-        </swiper-item>
-        <swiper-item>
-          <image style="width: 100%;" src="/static/img/banner3.jpg" />
-        </swiper-item>
-        <swiper-item>
-          <image style="width: 100%;" src="/static/img/banner4.jpg" />
+        <swiper-item v-for="item in bannerList" :key="item.id">
+          <image mode="aspectFill" style="width: 100%;" :src="item.url" />
         </swiper-item>
       </swiper>
     </div>
@@ -143,11 +138,13 @@
 <script>
 import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
+import { getBanner } from '../../api/mall.js';
 
 wepy.page({
   mixins: [jumpMixin],
   data: {
     classifyType: 1,
+    bannerList: [],
     prodList: [
       {
         id: 0,
@@ -221,7 +218,18 @@ wepy.page({
       },
     ],
   },
+  onLoad() {
+    this.getBanner();
+  },
   methods: {
+    // 获取banner
+    getBanner() {
+      getBanner().then((res) => {
+        if (res.data.code === 1) {
+          this.bannerList = res.data.data;
+        }
+      });
+    },
     // 点击搜索框下边分类
     classifyTap(type) {
       this.classifyType = type;

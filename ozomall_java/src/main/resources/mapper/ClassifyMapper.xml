@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozomall.dao.ClassifyMapper">
+
+    <select id="childrenList" parameterType="int" resultType="com.ozomall.entity.ClassifyDto">
+        select * from classify where parent_id
+        in (select id from classify where parent_id=#{id})
+        or parent_id=#{id}
+    </select>
+</mapper>

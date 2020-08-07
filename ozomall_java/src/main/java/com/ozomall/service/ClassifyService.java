@@ -15,4 +15,9 @@ public interface ClassifyService {
      */
     Result queryClassify(ClassifyDto form);
 
+    /**
+     * 查询2、3级分类
+     */
+    Result queryChildrenList(ClassifyDto form);
+
 }
