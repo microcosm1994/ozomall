@@ -20,8 +20,8 @@
         </el-form-item>
         <el-form-item label="商品状态">
           <el-select v-model="ruleForm.status" placeholder="商品状态">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+            <el-option label="下架" :value="0"></el-option>
+            <el-option label="上架" :value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -91,6 +91,9 @@
             label="商品状态"
             width="180"
           >
+            <template slot-scope="scope">
+              {{ scope.row.status | status }}
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
@@ -111,11 +114,11 @@
           </el-table-column>
           <el-table-column align="center" label="所属类别" width="180">
             <template slot-scope="scope">
-              {{scope.row.classify1.name}}
+              {{ scope.row.classify1.name }}
               <span style="color:#000;font-weight:600;">/</span>
-              {{scope.row.classify2.name}}
+              {{ scope.row.classify2.name }}
               <span style="color:#000;font-weight:600;">/</span>
-              {{scope.row.classify3.name}}
+              {{ scope.row.classify3.name }}
             </template>
           </el-table-column>
           <el-table-column
@@ -131,6 +134,9 @@
                 type="text"
                 size="small"
                 >查看</el-button
+              >
+              <el-button type="text" size="small" @click="openHandle(scope.row)"
+                >处理</el-button
               >
               <el-button type="text" size="small" @click="openEdit(scope.row)"
                 >编辑</el-button
@@ -155,15 +161,48 @@
         </el-pagination>
       </div>
     </div>
+    <!-- 处理弹框 -->
+    <el-dialog :visible.sync="dialogVisible" width="500px">
+      <div class="modal">
+        <div class="modal-header">
+          <div slot="title" class="modal-header-title">
+            处理
+          </div>
+        </div>
+        <div class="modal-container">
+          <div class="modal-container-form">
+            <el-form :model="handleForm" class="demo-form-inline">
+              <el-form-item label="商品状态">
+                <el-select v-model="handleForm.status" placeholder="商品状态">
+                  <el-option label="下架" :value="0"></el-option>
+                  <el-option label="上架" :value="1"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </div>
+          <div class="modal-container-btn">
+            <el-button type="primary" @click="handleSubmit">确定</el-button>
+            <el-button @click="dialogVisible = false">取消</el-button>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getClassifyList, getGoodsList, delGoods } from "@/api/goodsManage";
+import {
+  getClassifyList,
+  getGoodsList,
+  delGoods,
+  putGoods
+} from "@/api/goodsManage";
 import { defaults } from "codemirror";
 export default {
   data() {
     return {
+      dialogVisible: false,
+      row: null,
       pageParams: {
         page: 1,
         size: 10,
@@ -173,6 +212,9 @@ export default {
         goodsName: "",
         status: "",
         classifyId: ""
+      },
+      handleForm: {
+        status: ""
       },
       tableData: [],
       props: {
@@ -214,6 +256,19 @@ export default {
           return "未完成";
           break;
       }
+    },
+    status(val) {
+      switch (val - 0) {
+        case 0:
+          return "下架";
+          break;
+        case 1:
+          return "上架";
+          break;
+        default:
+          return "---";
+          break;
+      }
     }
   },
   mounted() {
@@ -248,6 +303,12 @@ export default {
           }
         })
         .catch(err => {});
+    },
+    // 打开处理弹框
+    openHandle(row) {
+      this.handleForm.status = row.status;
+      this.row = row;
+      this.dialogVisible = true;
     },
     // 跳转编辑商品页
     openEdit(row) {
@@ -288,11 +349,25 @@ export default {
           console.log(err);
         });
     },
-    handleSizeChange() {
+    handleSizeChange(val) {
+      this.pageParams.size = val;
       this.getData();
     },
-    handleCurrentChange() {
+    handleCurrentChange(val) {
+      this.pageParams.page = val;
       this.getData();
+    },
+    // 处理弹框提交
+    handleSubmit() {
+      putGoods({
+        id: this.row.id,
+        ...this.handleForm
+      }).then(res => {
+        if (res.data.code === 1) {
+          this.dialogVisible = false
+          this.getData();
+        }
+      });
     }
   }
 };
@@ -300,4 +375,5 @@ export default {
 
 <style scoped lang="less">
 @import "../../../assets/css/page.css";
+@import "../../../assets/css/modal.css";
 </style>

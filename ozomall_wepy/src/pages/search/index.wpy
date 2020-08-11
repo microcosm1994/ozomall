@@ -63,53 +63,79 @@
         <div class="menu-item">新品</div>
         <div class="menu-item">尺码</div>
       </div>
-      <prod-list :data="prodList"></prod-list>
+      <scroll-view
+        class="scroll-view_H"
+        scroll-y="true"
+        style="height:{{scrollHeight}}rpx;"
+        lower-threshold="50"
+        bindscrolltolower="scrolltolower"
+      >
+        <prod-list :data="prodList"></prod-list>
+      </scroll-view>
     </div>
   </div>
 </template>
 
 <script>
 import wepy from '@wepy/core';
+import { searchGoods } from '../../api/goods.js';
 
 wepy.page({
   data: {
     disvible: true,
+    timer: null,
     searchText: '',
-    prodList: [
-      {
-        id: 0,
-        url: '/static/img/timg.jpg',
-        name: 'AJ airasd',
-        price: 199,
-        count: 6,
-      },
-      {
-        id: 1,
-        url: '/static/img/timg.jpg',
-        name: 'Yeyzy airasd',
-        price: 199,
-        count: 18,
-      },
-      {
-        id: 2,
-        url: '/static/img/timg.jpg',
-        name: 'Yasd airasd',
-        price: 399,
-        count: 336,
-      },
-      {
-        id: 3,
-        url: '/static/img/timg.jpg',
-        name: 'Nake airasd',
-        price: 200,
-        count: 14,
-      },
-    ],
+    prodList: [],
+    scrollHeight: 0,
+    page: 0,
+    size: 10,
+    total: 0,
+  },
+  onLoad() {
+    this.computedScroll();
   },
   methods: {
+    // 计算scroll高度
+    computedScroll() {
+      let h = wx.getSystemInfoSync().windowHeight;
+      console.log(wx.getSystemInfoSync().windowHeight);
+      this.scrollHeight = (h - 87) * 2;
+    },
+    // 搜索事件
     search() {
-      console.log(this);
-      console.log(this.searchText);
+      this.page = 0
+      this.prodList = []
+      this.searchGoods()
+    },
+    // 搜索方法
+    searchGoods() {
+      searchGoods({
+        goodsName: this.searchText,
+        del: 0,
+        page: this.page,
+        size: this.size,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.prodList = [...this.prodList, ...res.data.data.records];
+          this.page = res.data.data.page;
+          this.size = res.data.data.size;
+          this.total = res.data.data.total;
+          this.disvible = false;
+        }
+      });
+    },
+    // 滚动加载
+    scrolltolower() {
+      if (!this.timer) {
+        this.page++;
+        this.searchGoods();
+        this.timer = setTimeout(() => {
+          clearTimeout(this.timer);
+          this.timer = null;
+        }, 2000);
+      } else {
+        return false;
+      }
     },
     searchChange(val) {
       console.log(this.searchText);

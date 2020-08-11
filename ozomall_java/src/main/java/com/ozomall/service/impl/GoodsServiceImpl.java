@@ -3,10 +3,12 @@ package com.ozomall.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ozomall.dao.GoodsBrandMapper;
 import com.ozomall.dao.GoodsMapper;
 import com.ozomall.dao.GoodsPicMapper;
+import com.ozomall.dao.mall.MallGoodsMapper;
 import com.ozomall.entity.GoodsBrandDto;
 import com.ozomall.entity.GoodsDto;
 import com.ozomall.entity.GoodsPicDto;
@@ -14,6 +16,9 @@ import com.ozomall.entity.Result;
 import com.ozomall.service.GoodsService;
 import com.ozomall.utils.Oss;
 import com.ozomall.utils.ResultGenerate;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,13 +32,16 @@ import java.util.Map;
 @Service
 public class GoodsServiceImpl implements GoodsService {
     @Resource
-    GoodsMapper goodsMapper;
+    private GoodsMapper goodsMapper;
 
     @Resource
-    GoodsPicMapper goodsPicMapper;
+    private GoodsPicMapper goodsPicMapper;
 
     @Resource
-    GoodsBrandMapper goodsBrandMapper;
+    private GoodsBrandMapper goodsBrandMapper;
+
+    @Resource
+    private MallGoodsMapper mallGoodsMapper;
 
     /**
      * 添加商品信息
@@ -44,6 +52,7 @@ public class GoodsServiceImpl implements GoodsService {
     public Result addGoods(GoodsDto form) {
         int row = goodsMapper.insert(form);
         if (row > 0) {
+            mallGoodsMapper.save(form);
             return ResultGenerate.genSuccessResult(form);
         } else {
             return ResultGenerate.genErroResult("商品信息添加失败，请重试！");
@@ -61,6 +70,56 @@ public class GoodsServiceImpl implements GoodsService {
         page.setCurrent(form.getPage());
         page.setSize(form.getSize());
         IPage<Map> rows = goodsMapper.goodsList(page, form);
+        if (rows != null) {
+            return ResultGenerate.genSuccessResult(rows);
+        } else {
+            return ResultGenerate.genErroResult("商品信息添加失败，请重试！");
+        }
+    }
+
+    /**
+     * 搜索商品
+     *
+     * @param form
+     */
+    @Override
+    public Result searchGoods(GoodsDto form) {
+        NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder();
+        searchQueryBuilder.withQuery(QueryBuilders.matchQuery("goodsName", form.getGoodsName()));
+        searchQueryBuilder.withPageable(PageRequest.of(form.getPage(), form.getSize()));
+        org.springframework.data.domain.Page<GoodsDto> rows = mallGoodsMapper.search(searchQueryBuilder.build());
+        if (rows != null) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("page", rows.getNumber());
+            data.put("size", rows.getSize());
+            data.put("total", rows.getTotalElements());
+            data.put("records", rows.getContent());
+            return ResultGenerate.genSuccessResult(data);
+        } else {
+            return ResultGenerate.genErroResult("失败！");
+        }
+    }
+
+    /**
+     * 商城商品列表
+     *
+     * @param form
+     */
+    @Override
+    public Result mallGoodsList(GoodsDto form) {
+        Page page = new Page();
+        page.setCurrent(form.getPage());
+        page.setSize(form.getSize());
+        LambdaQueryWrapper<GoodsDto> wrapper = new LambdaQueryWrapper<>();
+        Map<SFunction<GoodsDto, ?>, Object> map = new HashMap<>();
+        map.put(GoodsDto::getClassify1Id, form.getClassify1Id());
+        map.put(GoodsDto::getClassify2Id, form.getClassify2Id());
+        map.put(GoodsDto::getClassify3Id, form.getClassify3Id());
+        map.put(GoodsDto::getGoodsName, form.getGoodsName());
+        map.put(GoodsDto::getDel, form.getDel());
+        map.put(GoodsDto::getStatus, form.getStatus());
+        wrapper.allEq(map, false);
+        IPage<Map> rows = goodsMapper.selectPage(page, wrapper);
         if (rows != null) {
             return ResultGenerate.genSuccessResult(rows);
         } else {

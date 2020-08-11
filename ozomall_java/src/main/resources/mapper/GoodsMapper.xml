@@ -65,6 +65,9 @@
         <if test="form.classify3Id != null">
             and goods.classify3_id=#{form.classify3Id}
         </if>
+        <if test="form.status != null">
+            and goods.status=#{form.status}
+        </if>
     </select>
 
     <select id="getGoodsById" parameterType="int" resultMap="goodsMap">

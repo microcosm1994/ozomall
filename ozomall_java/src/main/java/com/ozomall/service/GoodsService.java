@@ -15,9 +15,19 @@ public interface GoodsService {
     Result addGoods(GoodsDto form);
 
     /**
-     * 添加商品信息
+     * 获取商品列表
      */
     Result goodsList(GoodsDto form);
+
+    /**
+     * 商城商品列表
+     */
+    Result mallGoodsList(GoodsDto form);
+
+    /**
+     * 搜索商品
+     */
+    Result searchGoods(GoodsDto form);
 
     /**
      * 根据id查询商品信息

@@ -2,13 +2,16 @@
   <div class="home-commoditys">
     <div class="home-commoditys-item" v-for="item in data" :key="item.id" @tap="toProdDetails">
       <div class="item-img">
-        <image :src="item.url" mode="aspectFit" />
+        <image :src="item.cover" mode="aspectFit" />
       </div>
-      <div class="item-text">{{ item.name }}</div>
+      <div class="item-text">{{ item.goodsName }}</div>
       <div class="item-info">
-        <div class="item-info-left">￥{{ item.price }}</div>
-        <div class="item-info-right">{{ item.count }}人付款</div>
+        <div class="item-info-left">￥{{ item.goodsPrice }}</div>
+        <div class="item-info-right">{{ item.sales }}人付款</div>
       </div>
+    </div>
+    <div class="home-commoditys-emty" v-if="data.length === 0">
+      暂无数据
     </div>
   </div>
 </template>
@@ -20,11 +23,13 @@ import jumpMixin from '../mixins/jump.js';
 wepy.component({
   mixins: [jumpMixin],
   props: ['data'],
+  methods:{}
 });
 </script>
 <style lang="less">
 .home-commoditys {
   width: 100%;
+  height: 100%;
   overflow: hidden;
   margin-top: 2rpx;
   background: #eeeef0;
@@ -53,10 +58,12 @@ wepy.component({
       height: 80rpx;
       line-height: 40rpx;
       color: #666;
+      overflow: hidden;
     }
     .item-info {
       width: 100%;
       overflow: hidden;
+      padding-top: 20rpx;
       .item-info-left {
         display: inline-block;
         vertical-align: middle;
@@ -72,6 +79,12 @@ wepy.component({
         font-size: 24rpx;
       }
     }
+  }
+  .home-commoditys-emty{
+    text-align: center;
+    padding-top: 100rpx;
+    font-size: 30rpx;
+    color: #999;
   }
 }
 </style>

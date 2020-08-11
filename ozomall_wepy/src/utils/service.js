@@ -4,7 +4,11 @@ const service = async (config) => {
     return new Promise((relove, reject) => {
         let data = {};
         if (config.method === "get") {
-            data = config.params
+            for (let key in config.params) {
+                if (config.params[key]) {
+                    data[key] = config.params[key]
+                }
+            }
         }
         if (config.method === "post") {
             data = config.data
