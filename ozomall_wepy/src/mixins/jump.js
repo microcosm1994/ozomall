@@ -27,12 +27,6 @@ export default {
                 url: '/pages/classify/index',
             });
         },
-        // 跳转到商品详情页
-        toProdDetails() {
-            wx.navigateTo({
-                url: '/pages/prodDetails/index',
-            });
-        },
         // 跳转到最近购买页
         toBuyList() {
             wx.navigateTo({

@@ -1,17 +1,24 @@
 package com.ozomall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.ozomall.dao.GoodsAttrMapper;
 import com.ozomall.dao.GoodsAttrValMapper;
 import com.ozomall.dao.GoodsParamsMapper;
 import com.ozomall.dao.GoodsSkuMapper;
 import com.ozomall.entity.*;
 import com.ozomall.service.GoodsAttrService;
+import com.ozomall.utils.Oss;
 import com.ozomall.utils.ResultGenerate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GoodsAttrServiceImpl implements GoodsAttrService {
@@ -125,6 +132,30 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
         }
     }
 
+
+    /**
+     * 上传sku展示图片
+     *
+     * @param file
+     */
+    @Override
+    public Result goodsSkuUpload(MultipartFile file) throws IOException {
+        Oss ossClient = new Oss();
+        ossClient.init("ozomall-goods-pic", "goods/skuPic/");
+        //将文件上传
+        String name = ossClient.uploadImg2Oss(file);
+        //获取文件的URl地址  以便前台  显示
+        String imgUrl = ossClient.getImgUrl(name);
+        ossClient.destory();
+        Map<String, String> map = new HashMap();
+        map.put("url", imgUrl);
+        if (!StringUtils.isEmpty(imgUrl)) {
+            return ResultGenerate.genSuccessResult(map);
+        } else {
+            return ResultGenerate.genErroResult("失败！");
+        }
+    }
+
     /**
      * 获取商品价格
      *
@@ -133,7 +164,12 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
     @Override
     public Result getGoodsSkuList(GoodsSkuDto form) {
         LambdaQueryWrapper<GoodsSkuDto> wrapper = new LambdaQueryWrapper();
-        wrapper.eq(GoodsSkuDto::getGoodsId, form.getGoodsId());
+        Map<SFunction<GoodsSkuDto, ?>, Object> map = new HashMap<>();
+        map.put(GoodsSkuDto::getGoodsId, form.getGoodsId());
+        map.put(GoodsSkuDto::getSpe1Id, form.getSpe1Id());
+        map.put(GoodsSkuDto::getSpe2Id, form.getSpe2Id());
+        map.put(GoodsSkuDto::getSpe3Id, form.getSpe3Id());
+        wrapper.allEq(map, false);
         wrapper.orderByAsc(GoodsSkuDto::getId);
         List<GoodsSkuDto> rows = goodsSkuMapper.selectList(wrapper);
         if (rows != null) {

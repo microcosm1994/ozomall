@@ -14,26 +14,22 @@ const service = async (config) => {
             data = config.data
         }
         // 获取token
-        wx.getStorage({
-            key: 'token',
+        let token = wx.getStorageSync("token")
+        wx.request({
+            url: domain + config.baseUrl + config.url,
+            method: config.method,
+            data: data,
+            header: {
+                token: token,
+                'Content-Type': 'application/json'
+            },
             success: function (res) {
-                wx.request({
-                    url: domain + config.baseUrl + config.url,
-                    method: config.method,
-                    data: data,
-                    header: {
-                        token: res.data,
-                        'Content-Type': 'application/json'
-                    },
-                    success: function (res) {
-                        relove(res)
-                    },
-                    fail: function (error) {
-                        reject(error)
-                    }
-                });
+                relove(res)
+            },
+            fail: function (error) {
+                reject(error)
             }
-        })
+        });
     })
 };
 

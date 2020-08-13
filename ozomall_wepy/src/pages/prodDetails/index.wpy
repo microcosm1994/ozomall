@@ -10,7 +10,7 @@
       "van-sticky": "~@/components/vant/sticky",
       "van-popup": "~@/components/vant/popup",
       "van-cell": "~@/components/vant/cell",
-      "van-icon": "~@/components/vant/icon"
+      "van-icon": "~@/components/vant/icon",
     }
 }
 </config>
@@ -25,38 +25,21 @@
         interval="{{3000}}"
         duration="{{500}}"
       >
-        <swiper-item>
-          <image mode="scaleToFill" src="/static/img/banner1.jpg" />
-        </swiper-item>
-        <swiper-item>
-          <image mode="scaleToFill" src="/static/img/banner2.jpg" />
-        </swiper-item>
-        <swiper-item>
-          <image mode="scaleToFill" src="/static/img/banner3.jpg" />
-        </swiper-item>
-        <swiper-item>
-          <image mode="scaleToFill" src="/static/img/banner4.jpg" />
+        <swiper-item v-for="item in goodsPicList" :key="item.id">
+          <image mode="scaleToFill" :src="item.url" />
         </swiper-item>
       </swiper>
     </div>
     <div class="home-title">
-      安德森卡拉卡拉弗兰克激烈对抗asdsda
+      {{ goodsInfo.goodsName }}
     </div>
-    <div class="home-price">
-      ￥109
-    </div>
-    <div class="home-size">
+    <div class="home-price">￥{{ goodsInfo.goodsPrice }}</div>
+    <div class="home-sku">
       <van-cell
         title="选择尺码"
         is-link
-        value="请选择尺码"
-        @tap="
-          {
-            {
-              show = true;
-            }
-          }
-        "
+        value="{{ skuForm.spe1.id ? skuForm.spe1.name + ' ' + skuForm.spe2.name + ' ' + skuForm.spe3.name : '请选择尺码'}}"
+        @tap="getGoodsAttr"
       />
     </div>
     <div class="home-ensure">
@@ -501,73 +484,17 @@
       </div>
       <div class="detail-subTitle">参数</div>
       <div class="detail-param">
-        <div class="param-item">
-          <div class="param-item-title">货号</div>
-          <div class="param-item-content">F3887</div>
-        </div>
-        <div class="param-item">
-          <div class="param-item-title">发售价格</div>
-          <div class="param-item-content">￥248</div>
-        </div>
-        <div class="param-item">
-          <div class="param-item-title">发售日期</div>
-          <div class="param-item-content">2020.03</div>
-        </div>
-        <div class="param-item">
-          <div class="param-item-title">厚度</div>
-          <div class="param-item-content">常规</div>
-        </div>
-        <div class="param-fold">
-          <div
-            class="param-fold-title"
-            v-if="!foldShow"
-            @tap="
-              {
-                {
-                  foldShow = true;
-                }
-              }
-            "
-          >
-            <van-cell>
-              <view slot="title" class="van-cell-title">
-                <div style="color: #666; font-size: 28rpx;">
-                  点击展开
-                </div>
-              </view>
-              <van-icon
-                slot="right-icon"
-                name="arrow-down"
-                class="custom-icon"
-              />
-            </van-cell>
-          </div>
-          <div class="param-fold-content" v-if="foldShow">
-            <div class="param-item">
-              <div class="param-item-title">图案</div>
-              <div class="param-item-content">字母</div>
-            </div>
-            <div class="param-item">
-              <div class="param-item-title">版型</div>
-              <div class="param-item-content">常规</div>
-            </div>
-            <div class="param-item">
-              <div class="param-item-title">衣长</div>
-              <div class="param-item-content">常规款</div>
-            </div>
-            <div class="param-item">
-              <div class="param-item-title">袖型</div>
-              <div class="param-item-content">常规</div>
-            </div>
-            <div class="param-item">
-              <div class="param-item-title">风格</div>
-              <div class="param-item-content">青春活力</div>
-            </div>
-          </div>
+        <div
+          class="param-item"
+          v-for="item in goodsParamList"
+          :key="item.id"
+        >
+          <div class="param-item-title">{{ item.name }}</div>
+          <div class="param-item-content">{{ item.value }}</div>
         </div>
       </div>
       <div class="detail-content">
-        <rich-text nodes="{{htmlSnip}}"></rich-text>
+        <rich-text nodes="{{goodsInfo.details}}"></rich-text>
       </div>
     </div>
     <div class="home-shoppingTips">
@@ -608,16 +535,7 @@
       <prod-list :data="prodList"></prod-list>
     </div>
     <div class="home-btn">
-      <div
-        class="home-btn-buy"
-        @tap="
-          {
-            {
-              show = true;
-            }
-          }
-        "
-      >
+      <div class="home-btn-buy" @tap="getGoodsAttr">
         立即购买
       </div>
     </div>
@@ -636,49 +554,48 @@
     <!-- 尺码弹出框 -->
     <van-popup
       style="height: 70%;"
-      show="{{ show }}"
+      show="{{ skuShow }}"
       position="bottom"
       custom-style="height: 70%;"
       bind:close="onClose"
       closeable
     >
-      <div class="home-size">
-        <div class="home-size-header">
+      <div class="home-sku">
+        <div class="home-sku-header">
           <div class="header-left">
-            <image mode="aspectFit" src="/static/img/timg.jpg" />
+            <image mode="aspectFit" :src="skuInfo.pic" />
           </div>
           <div class="header-right">
-            <div class="header-right-price">
-              ￥109
+            <div class="header-right-price" v-if="skuInfo.stock > 0">
+              ￥{{ skuInfo.price }}
             </div>
+            <div class="header-right-price" v-else>暂时无货</div>
             <div class="header-right-des">
-              已选XS
+              已选： {{ skuForm.spe1.name }} {{ skuForm.spe2.name }}
+              {{ skuForm.spe3.name }}
             </div>
           </div>
         </div>
-        <div class="home-size-content">
-          <div class="content-item">
-            <div class="item-title">XS</div>
-            <div class="item-des">￥109</div>
-          </div>
-          <div class="content-item">
-            <div class="item-title">S</div>
-            <div class="item-des">￥109</div>
-          </div>
-          <div class="content-item">
-            <div class="item-title">M</div>
-            <div class="item-des">￥109</div>
-          </div>
-          <div class="content-item">
-            <div class="item-title">L</div>
-            <div class="item-des">￥109</div>
-          </div>
-          <div class="content-item">
-            <div class="item-title">XL</div>
-            <div class="item-des">￥109</div>
+        <div class="home-sku-content">
+          <div class="sku-attr" v-for="(item, idx) in goodsSkuList" :key="idx">
+            <div class="sku-attr-title">{{ item.name }}</div>
+            <div class="sku-attr-content">
+              <div
+                class="content-item"
+                :class="{
+                  'content-item-active':
+                    skuForm['spe' + (idx + 1)].id === child.id,
+                }"
+                v-for="child in item.children"
+                :key="child.id"
+                @tap="changeSku('spe' + (idx + 1), child)"
+              >
+                <div class="item-title">{{ child.value }}</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="home-size-btn">
+        <div class="home-sku-btn">
           <div class="btn-buy">
             <text style="font-weight: 600; font-size: 32rpx;">￥109</text>
             <text> | </text>
@@ -693,16 +610,39 @@
 <script>
 import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
+import {
+  getGoods,
+  getGoodsPic,
+  getGoodsAttr,
+  getGoodsSkuList,
+  getGoodsParams,
+} from '../../api/goods.js';
 
 wepy.page({
   mixins: [jumpMixin],
   data: {
-    show: false,
+    skuShow: false,
     relevantShow: false,
     foldShow: false,
-    actions: [
-      { name: '获取用户信息', color: '#07c160', openType: 'getUserInfo' },
-    ],
+    goodsInfo: {},
+    goodsPicList: [],
+    goodsSkuList: [],
+    goodsParamList: [],
+    skuForm: {
+      spe1: {
+        id: '',
+        name: '',
+      },
+      spe2: {
+        id: '',
+        name: '',
+      },
+      spe3: {
+        id: '',
+        name: '',
+      },
+    },
+    skuInfo: {},
     prodList: [
       {
         id: 0,
@@ -733,23 +673,99 @@ wepy.page({
         count: 14,
       },
     ],
-    htmlSnip: `<div class="div_class">
-  <h1>商品展示</h1>gftrrrrrrrrrrrrrrr
-  <p class="p">
-    Life is&nbsp;<i>like</i>&nbsp;a box of
-    <b>&nbsp;chocolates</b>.
-  </p>
-</div>
-`,
+  },
+  onShow() {
+    const eventChannel = this.$wx.getOpenerEventChannel();
+    // 通过eventChannel监听a页面传过来的数据
+    eventChannel.on('goodsData', (data) => {
+      console.log(data);
+      this.getGoods(data.id);
+      this.getGoodsPic(data.id);
+    });
   },
   methods: {
+    // 获取商品信息
+    getGoods(id) {
+      getGoods({
+        id: id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.goodsInfo = res.data.data;
+          this.getGoodsParamsList();
+        }
+      });
+    },
+    // 获取商品图片
+    getGoodsPic(id) {
+      getGoodsPic({
+        goodsId: id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.goodsPicList = res.data.data;
+        }
+      });
+    },
+    // 获取商品规格
+    getGoodsAttr() {
+      this.skuShow = true;
+      getGoodsAttr({
+        goodsId: this.goodsInfo.id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.goodsSkuList = res.data.data;
+          if (this.goodsSkuList.length > 0 && !this.skuForm.spe1.id) {
+            this.skuForm.spe1.id = this.goodsSkuList[0].children[0].id;
+            this.skuForm.spe1.name = this.goodsSkuList[0].children[0].value;
+          }
+          if (this.goodsSkuList.length > 1 && !this.skuForm.spe2.id) {
+            this.skuForm.spe2.id = this.goodsSkuList[1].children[0].id;
+            this.skuForm.spe2.name = this.goodsSkuList[1].children[0].value;
+          }
+          if (this.goodsSkuList.length > 2 && !this.skuForm.spe3.id) {
+            this.skuForm.spe3.id = this.goodsSkuList[2].children[0].id;
+            this.skuForm.spe3.name = this.goodsSkuList[2].children[0].value;
+          }
+          this.getGoodsSkuList(); // 获取价格
+        }
+      });
+    },
+    // 选择规格
+    changeSku(key, data) {
+      this.skuForm[key].id = data.id;
+      this.skuForm[key].name = data.value;
+      this.getGoodsSkuList();
+    },
+    // 获取价格
+    getGoodsSkuList() {
+      this.skuInfo = {};
+      getGoodsSkuList({
+        spe1Id: this.skuForm.spe1.id,
+        spe2Id: this.skuForm.spe2.id,
+        spe3Id: this.skuForm.spe3.id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.skuInfo = res.data.data[0];
+        }
+      });
+    },
+    // 获取商品参数
+    getGoodsParamsList() {
+      this.goodsParamList = [];
+      getGoodsParams({
+        goodsId: this.goodsInfo.id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.goodsParamList = res.data.data;
+        }
+      });
+    },
     // 关闭推荐弹框
     onRelevantClose() {
       this.relevantShow = false;
     },
     // 关闭尺码弹框
     onClose() {
-      this.show = false;
+      this.skuShow = false;
     },
   },
 });
@@ -775,7 +791,6 @@ wepy.page({
     text-align: center;
     font-size: 32rpx;
     color: #333;
-    word-break: break-all;
     line-height: 60rpx;
     background: #fff;
   }
@@ -788,7 +803,7 @@ wepy.page({
     font-weight: 600;
     background: #fff;
   }
-  .home-size {
+  .home-sku {
     margin-top: 4rpx;
   }
   .home-ensure {
@@ -977,12 +992,13 @@ wepy.page({
     }
     .detail-content {
       width: 100%;
+      padding-top: 40rpx;
     }
   }
   .home-shoppingTips {
     width: 100%;
     margin-top: 4rpx;
-    padding: 20rpx 40rpx;
+    padding: 40rpx 40rpx;
     background: #fff;
     .home-shoppingTips-content {
       width: 100%;
@@ -1045,11 +1061,11 @@ wepy.page({
     font-weight: 600;
     padding-left: 40rpx;
   }
-  .home-size {
+  .home-sku {
     width: 100%;
     height: 100%;
     background: #eeeef0;
-    .home-size-header {
+    .home-sku-header {
       width: 100%;
       padding: 10rpx 20rpx;
       background: #fff;
@@ -1083,37 +1099,43 @@ wepy.page({
         }
       }
     }
-    .home-size-content {
+    .home-sku-content {
       width: 100%;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
       padding-top: 10rpx;
-      .content-item {
-        width: 22%;
-        height: 150rpx;
-        background: #fff;
-        border-radius: 4rpx;
-        overflow: hidden;
-        margin: 10rpx;
-        .item-title {
-          height: 90rpx;
-          line-height: 90rpx;
-          color: #333;
+      .sku-attr {
+        width: 100%;
+        .sku-attr-title {
+          width: 100%;
+          line-height: 80rpx;
           font-size: 32rpx;
-          font-weight: 600;
-          text-align: center;
+          padding-left: 20rpx;
         }
-        .item-des {
-          height: 60rpx;
-          line-height: 60rpx;
-          color: #666;
-          font-size: 28rpx;
-          text-align: center;
+        .sku-attr-content {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          .content-item-active {
+            border: 1px solid #666;
+          }
+          .content-item {
+            width: 22%;
+            background: #fff;
+            border-radius: 4rpx;
+            overflow: hidden;
+            margin: 10rpx;
+            .item-title {
+              height: 90rpx;
+              line-height: 90rpx;
+              color: #333;
+              font-size: 32rpx;
+              font-weight: 600;
+              text-align: center;
+            }
+          }
         }
       }
     }
-    .home-size-btn {
+    .home-sku-btn {
       width: 100%;
       height: 150rpx;
       position: fixed;

@@ -3,6 +3,7 @@
     navigationBarTitleText: 'OZO',
     usingComponents: {
       "van-icon": "~@/components/vant/icon",
+      "van-dialog": "~@/components/vant/dialog",
       "prod-list": '~@/components/prod-list',
     }
 }
@@ -39,17 +40,21 @@
           <div class="hotSearch-li">啊实打实打算</div>
           <div class="hotSearch-li">阿萨</div>
         </div>
-        <div class="home-hotSearch-title">
+        <div class="home-hotSearch-title" v-if="historyList.length !== 0">
           历史搜索
           <div class="title-icon">
-            <van-icon name="delete" size="28rpx" />
+            <van-icon name="delete" size="28rpx" @tap="clearHistoryList"/>
           </div>
         </div>
         <div class="home-hotSearch-container">
-          <div class="hotSearch-li">asdasdasdasd</div>
-          <div class="hotSearch-li">asdasd阿三打撒撒旦asdasd</div>
-          <div class="hotSearch-li">啊实打实打算</div>
-          <div class="hotSearch-li">阿萨</div>
+          <div
+            v-for="(item, index) in historyList"
+            :key="index"
+            class="hotSearch-li"
+            @tap="tapSearch(item)"
+          >
+            {{ item }}
+          </div>
         </div>
       </div>
       <div class="home-searchList" v-else>
@@ -73,11 +78,14 @@
         <prod-list :data="prodList"></prod-list>
       </scroll-view>
     </div>
+    <!-- 消息确认 -->
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 
 <script>
 import wepy from '@wepy/core';
+import Dialog from '../../components/vant/dialog/dialog.js';
 import { searchGoods } from '../../api/goods.js';
 
 wepy.page({
@@ -86,15 +94,43 @@ wepy.page({
     timer: null,
     searchText: '',
     prodList: [],
+    historyList: [],
     scrollHeight: 0,
     page: 0,
     size: 10,
     total: 0,
   },
   onLoad() {
+    this.getHistoryList();
     this.computedScroll();
   },
   methods: {
+    // 获取历史搜索列表
+    getHistoryList() {
+      this.historyList = wx.getStorageSync('historySearch');
+    },
+    // 添加历史搜索列表
+    setHistoryList() {
+      let list = new Set([this.searchText, ...this.historyList]);
+      this.historyList = [...list];
+      if (this.historyList.length > 10) {
+        this.historyList.splice(10);
+      }
+      wx.setStorageSync('historySearch', this.historyList);
+    },
+    // 清除历史搜索纪录
+    clearHistoryList() {
+      Dialog.confirm({
+        message: '清空历史记录？',
+      })
+        .then(() => {
+          wx.clearStorageSync();
+          this.getHistoryList();
+        })
+        .catch(() => {
+          // on cancel
+        });
+    },
     // 计算scroll高度
     computedScroll() {
       let h = wx.getSystemInfoSync().windowHeight;
@@ -103,9 +139,9 @@ wepy.page({
     },
     // 搜索事件
     search() {
-      this.page = 0
-      this.prodList = []
-      this.searchGoods()
+      this.page = 0;
+      this.prodList = [];
+      this.searchGoods();
     },
     // 搜索方法
     searchGoods() {
@@ -121,6 +157,7 @@ wepy.page({
           this.size = res.data.data.size;
           this.total = res.data.data.total;
           this.disvible = false;
+          this.setHistoryList();
         }
       });
     },
@@ -137,13 +174,16 @@ wepy.page({
         return false;
       }
     },
+    // 值改变时触发
     searchChange(val) {
-      console.log(this.searchText);
       this.disvible = true;
+      if (val === '') {
+        this.getHistoryList();
+      }
     },
+    // 点击搜索
     tapSearch(val) {
       this.searchText = val;
-      this.disvible = false;
       this.search();
     },
   },
@@ -226,10 +266,10 @@ wepy.page({
   }
   .home-result {
     width: 100%;
-    background: #fff;
     .result-menu {
       width: 100%;
       height: 70rpx;
+      background: #fff;
       .menu-item {
         height: 70rpx;
         line-height: 70rpx;

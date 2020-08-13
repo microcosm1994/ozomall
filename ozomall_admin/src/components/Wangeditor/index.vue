@@ -48,7 +48,7 @@ export default {
       ];
       this.editor.customConfig.zIndex = 100;
       this.editor.customConfig.pasteIgnoreImg = false;
-      this.editor.customConfig.uploadImgServer = "/api/admin/goods/detailsUpload";
+      this.editor.customConfig.uploadImgServer = "/api/goods/detailsUpload";
       this.editor.customConfig.uploadFileName = "file";
       this.editor.customConfig.showLinkImg = false
       this.editor.customConfig.uploadImgHeaders = {

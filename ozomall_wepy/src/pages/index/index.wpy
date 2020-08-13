@@ -206,6 +206,7 @@ wepy.page({
       let h = wx.getSystemInfoSync().windowHeight;
       console.log(wx.getSystemInfoSync().windowHeight);
       this.scrollHeight = (h - 87) * 2;
+      console.log(this.scrollHeight)
     },
     // 获取banner
     getBanner() {
@@ -256,6 +257,7 @@ wepy.page({
 <style lang="less">
 .home {
   width: 100%;
+  height: 100vh;
   background: #eeeef0;
   overflow: hidden;
   .home-search {

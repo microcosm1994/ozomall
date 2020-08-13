@@ -134,12 +134,18 @@ public class GoodsController {
     }
 
     /**
-     * 价格
+     * sku
      */
     @ApiOperation("添加商品价格")
     @PostMapping("/addGoodsSku")
     public Result addGoodsSku(@RequestBody GoodsSkuDto form) {
         return goodsAttrService.addGoodsSku(form);
+    }
+
+    @ApiOperation("上传sku展示图片")
+    @PostMapping("/goodsSkuUpload")
+    public Result goodsSkuUpload(MultipartFile file) throws IOException {
+        return goodsAttrService.goodsSkuUpload(file);
     }
 
     @ApiOperation("获取商品价格")

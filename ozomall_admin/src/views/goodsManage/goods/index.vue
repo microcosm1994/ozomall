@@ -19,7 +19,7 @@
           ></el-cascader>
         </el-form-item>
         <el-form-item label="商品状态">
-          <el-select v-model="ruleForm.status" placeholder="商品状态">
+          <el-select v-model="ruleForm.status" placeholder="商品状态" clearable>
             <el-option label="下架" :value="0"></el-option>
             <el-option label="上架" :value="1"></el-option>
           </el-select>
@@ -68,38 +68,47 @@
             align="center"
             prop="goodsPrice"
             label="商品价格"
-            width="180"
-          >
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="commentCount"
-            label="商品评论数量"
-            width="180"
-          >
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="sales"
-            label="商品销量"
-            width="180"
+            width="100"
           >
           </el-table-column>
           <el-table-column
             align="center"
             prop="status"
             label="商品状态"
-            width="180"
+            width="120"
           >
             <template slot-scope="scope">
               {{ scope.row.status | status }}
             </template>
           </el-table-column>
+          <el-table-column align="center" label="所属类别" width="180">
+            <template slot-scope="scope">
+              {{ scope.row.classify1.name }}
+              <span style="color:#000;font-weight:600;">/</span>
+              {{ scope.row.classify2.name }}
+              <span style="color:#000;font-weight:600;">/</span>
+              {{ scope.row.classify3.name }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="commentCount"
+            label="商品评论数量"
+            width="100"
+          >
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="sales"
+            label="商品销量"
+            width="100"
+          >
+          </el-table-column>
           <el-table-column
             align="center"
             prop="step"
             label="商品填写进度"
-            width="180"
+            width="120"
           >
             <template slot-scope="scope">
               {{ scope.row.step | step }}
@@ -111,15 +120,6 @@
             label="创建时间"
             width="180"
           >
-          </el-table-column>
-          <el-table-column align="center" label="所属类别" width="180">
-            <template slot-scope="scope">
-              {{ scope.row.classify1.name }}
-              <span style="color:#000;font-weight:600;">/</span>
-              {{ scope.row.classify2.name }}
-              <span style="color:#000;font-weight:600;">/</span>
-              {{ scope.row.classify3.name }}
-            </template>
           </el-table-column>
           <el-table-column
             width="200"
@@ -364,7 +364,7 @@ export default {
         ...this.handleForm
       }).then(res => {
         if (res.data.code === 1) {
-          this.dialogVisible = false
+          this.dialogVisible = false;
           this.getData();
         }
       });

@@ -39,13 +39,10 @@ import jumpMixin from '../../mixins/jump.js';
 
 wepy.page({
   mixins: [jumpMixin],
-  created() {},
   methods: {
     getUserInfo() {
-      console.log(1);
       wx.getSetting({
         success: function (res) {
-          console.log(res);
           if (res.authSetting['scope.userInfo']) {
             wx.getUserInfo({
               success: function (userInfoRes) {
@@ -53,7 +50,10 @@ wepy.page({
                   url: '/pages/login/login',
                   success: function (routeRes) {
                     // 通过eventChannel向b页面传送数据
-                    routeRes.eventChannel.emit('userInfo', userInfoRes.userInfo);
+                    routeRes.eventChannel.emit(
+                      'userInfo',
+                      userInfoRes.userInfo
+                    );
                   },
                 });
               },

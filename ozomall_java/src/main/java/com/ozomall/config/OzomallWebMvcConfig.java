@@ -22,6 +22,10 @@ public class OzomallWebMvcConfig extends WebMvcConfigurerAdapter {
         excludePathList.add("/banner/get");
         excludePathList.add("/classify/list");
         excludePathList.add("/classify/childrenList");
+        excludePathList.add("/goods/get");
+        excludePathList.add("/goods/getGoodsPic");
+        excludePathList.add("/goods/getGoodsAttr");
+        excludePathList.add("/goods/getGoodsSkuList");
         excludePathList.add("/mall/goods/**");
         excludePathList.add("/mall/user/**");
         registry.addInterceptor(adminInterceptor).excludePathPatterns(excludePathList);

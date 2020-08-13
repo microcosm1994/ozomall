@@ -17,3 +17,48 @@ export function searchGoods(params) {
         params
     })
 }
+
+// 获取商品信息
+export function getGoods(params) {
+    return service({
+        url: '/goods/get',
+        method: 'get',
+        params
+    })
+}
+
+// 获取商品图片
+export function getGoodsPic(params) {
+    return service({
+        url: '/goods/getGoodsPic',
+        method: 'get',
+        params
+    })
+}
+
+// 获取商品规格
+export function getGoodsAttr(params) {
+    return service({
+        url: '/goods/getGoodsAttr',
+        method: 'get',
+        params
+    })
+}
+
+// 获取商品价格
+export function getGoodsSkuList(params) {
+    return service({
+        url: '/goods/getGoodsSkuList',
+        method: 'get',
+        params
+    })
+}
+
+// 获取商品参数
+export function getGoodsParams(params) {
+    return service({
+        url: '/goods/getGoodsParams',
+        method: 'get',
+        params
+    })
+}

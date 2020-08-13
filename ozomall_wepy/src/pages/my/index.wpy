@@ -4,6 +4,7 @@
     usingComponents: {
       "van-icon": "../../components/vant/icon",
       "van-cell": "../../components/vant/cell",
+      "van-toast": "../../components/vant/toast",
     }
 }
 </config>
@@ -98,12 +99,14 @@
     <div class="my-btn" @tap="toLogin">
       退出登陆
     </div>
+    <van-toast id="van-toast" />
   </div>
 </template>
 
 <script>
 import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
+import Toast from '../../components/vant/toast/toast.js';
 
 wepy.page({
   mixins: [jumpMixin],
@@ -111,8 +114,14 @@ wepy.page({
     users: {},
   },
   onLoad() {
-    this.users = wx.getStorageSync('users');
     console.log(this);
+  },
+  onShow() {
+    this.users = wx.getStorageSync('users');
+    if (!this.users.id) {
+      Toast('请先登录');
+      this.toLogin();
+    }
   },
 });
 </script>
@@ -153,7 +162,7 @@ wepy.page({
       margin-left: 20rpx;
       height: 100rpx;
       line-height: 100rpx;
-      color: #11CCCC;
+      color: #11cccc;
       font-size: 30rpx;
       font-weight: 600;
     }
@@ -163,7 +172,7 @@ wepy.page({
       margin-left: 20rpx;
       height: 100rpx;
       line-height: 100rpx;
-      color: #FDA3C6;
+      color: #fda3c6;
       font-size: 30rpx;
       font-weight: 600;
     }

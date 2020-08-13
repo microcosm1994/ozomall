@@ -1,6 +1,9 @@
 package com.ozomall.service;
 
 import com.ozomall.entity.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface GoodsAttrService {
 
@@ -36,6 +39,11 @@ public interface GoodsAttrService {
      * 添加商品价格
      */
     Result addGoodsSku(GoodsSkuDto form);
+
+    /**
+     * 上传sku展示图片
+     */
+    Result goodsSkuUpload(MultipartFile file) throws IOException;
 
     /**
      * 获取商品价格

@@ -16,16 +16,16 @@ public class GoodsSkuDto {
     private int id;
 
     @ApiModelProperty(value = "关联商品id")
-    private int goodsId;
+    private Integer goodsId;
 
     @ApiModelProperty(value = "关联属性 id1")
-    private int spe1Id;
+    private Integer spe1Id;
 
     @ApiModelProperty(value = "关联属性 id2")
-    private int spe2Id;
+    private Integer spe2Id;
 
     @ApiModelProperty(value = "关联属性 id3")
-    private int spe3Id;
+    private Integer spe3Id;
 
     @ApiModelProperty(value = "价格")
     private BigDecimal price;

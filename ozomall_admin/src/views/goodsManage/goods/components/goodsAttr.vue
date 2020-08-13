@@ -117,6 +117,33 @@
                   </el-select>
                 </template>
               </el-table-column>
+              <el-table-column align="center" label="展示图片" width="120">
+                <template slot-scope="scope">
+                  <el-upload
+                    class="avatar-uploader"
+                    action="/api/goods/goodsSkuUpload"
+                    :headers="uploadHeaders"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload"
+                    :disabled="scope.row.isDisabled"
+                  >
+                    <img
+                      v-if="skuData[scope.$index].pic"
+                      :src="skuData[scope.$index].pic"
+                      class="avatar"
+                    />
+                    <el-button
+                      v-else
+                      type="text"
+                      size="small"
+                      :disabled="scope.row.isDisabled"
+                      @click="skuIndex = scope.$index"
+                      >点击上传</el-button
+                    >
+                  </el-upload>
+                </template>
+              </el-table-column>
               <el-table-column align="center" label="价格" width="120">
                 <template slot-scope="scope">
                   <el-input
@@ -135,7 +162,7 @@
                   ></el-input>
                 </template>
               </el-table-column>
-              <el-table-column align="center" fixed="right" label="操作">
+              <el-table-column align="center" fixed="right" label="操作" width="120">
                 <template slot-scope="scope">
                   <el-button
                     v-if="!scope.row.isDisabled"
@@ -299,17 +326,26 @@ export default {
           isDisabled: false
         }
       ],
+      skuIndex: 0,
       skuData: [
         {
           spe1Id: null, // 属性1
           spe2Id: null, // 属性2
           spe3Id: null, // 属性3
+          pic: "", // 展示图片
           price: "", // 价格
           stock: "", // 库存
           isDisabled: false
         }
       ]
     };
+  },
+  computed: {
+    uploadHeaders() {
+      return {
+        token: this.$store.state.user.token
+      };
+    }
   },
   mounted() {
     if (this.pageType) {
@@ -319,6 +355,27 @@ export default {
     }
   },
   methods: {
+    // 上传成功后调用
+    handleAvatarSuccess(res, file) {
+      console.log(res);
+      console.log(this.skuIndex);
+      if (res.code === 1) {
+        this.skuData[this.skuIndex].pic = res.data.url;
+      }
+    },
+    // 上传图片前调用
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
     // 删除属性标签
     attrRemoveTag(tag) {
       console.log(tag);
@@ -419,6 +476,7 @@ export default {
         spe1Id: "", // 属性1
         spe2Id: "", // 属性2
         spe3Id: "", // 属性3
+        pic: "", // 价格
         price: "", // 价格
         stock: "", // 库存
         isDisabled: false // 编辑状态
@@ -430,7 +488,6 @@ export default {
       getGoodsSkuList({ goodsId: this.goodsData.id })
         .then(res => {
           if (res.data.code === 1) {
-            console.log(res);
             this.skuData = res.data.data.map(item => {
               return {
                 ...item,
@@ -451,6 +508,10 @@ export default {
           this.$message.error("请选择关联属性");
           return false;
         }
+      }
+      if (!scope.row.pic) {
+        this.$message.error("请上传展示图片");
+        return false;
       }
       if (!scope.row.price || !(scope.row.price - 0)) {
         this.$message.error("请输入价格,必须是数字。");
@@ -644,6 +705,28 @@ export default {
 </script>
 
 <style scoped lang="less">
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 70px;
+  display: block;
+}
 .goodsForm {
   width: 100%;
   padding-top: 20px;
