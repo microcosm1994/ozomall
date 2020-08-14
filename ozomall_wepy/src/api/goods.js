@@ -27,6 +27,15 @@ export function getGoods(params) {
     })
 }
 
+// 获取商品数量
+export function getGoodsCount(params) {
+    return service({
+        url: '/mall/goods/getGoodsCount',
+        method: 'get',
+        params
+    })
+}
+
 // 获取商品图片
 export function getGoodsPic(params) {
     return service({

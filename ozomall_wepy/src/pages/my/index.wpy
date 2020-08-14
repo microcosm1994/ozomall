@@ -71,7 +71,7 @@
           <div class="title">卡券</div>
         </view>
       </van-cell>
-      <van-cell is-link>
+      <van-cell is-link @tap="toAddress">
         <view slot="title" class="van-cell-title">
           <div class="icon">
             <van-icon name="location-o" size="20" />
@@ -122,6 +122,14 @@ wepy.page({
       Toast('请先登录');
       this.toLogin();
     }
+  },
+  methods: {
+    // 跳转到地址管理
+    toAddress() {
+      wx.navigateTo({
+        url: '/pages/my/location',
+      });
+    },
   },
 });
 </script>

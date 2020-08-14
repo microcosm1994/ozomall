@@ -78,143 +78,15 @@
         </van-col>
       </van-row>
     </div>
-    <div class="home-relevant">
-      <van-cell
-        title="相关推荐"
-        is-link
-        value="全部"
-        @tap="
-          {
-            {
-              relevantShow = true;
-            }
-          }
-        "
-      />
-      <swiper
-        indicator-dots="true"
-        indicator-color="#f5f5f5"
-        indicator-active-color="#333"
-        interval="{{3000}}"
-        duration="{{500}}"
-      >
-        <swiper-item>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-        </swiper-item>
-        <swiper-item>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-        </swiper-item>
-        <swiper-item>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-        </swiper-item>
-        <swiper-item>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-          <div class="relevant-item">
-            <div class="item-img">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-title">
-              ask的骄傲了解到垃圾死了的卡了就
-            </div>
-            <div class="item-price">￥139</div>
-          </div>
-        </swiper-item>
-      </swiper>
+    <div class="home-brand">
+      <van-cell center use-label-slot is-link value="进入品牌">
+        <div class="home-brand-title" slot="title">
+          {{ goodsInfo.brand.name }}
+        </div>
+        <div class="home-brand-label" slot="label">
+          0 人关注 | {{ goodsCount }}款商品
+        </div>
+      </van-cell>
     </div>
     <div class="home-buy">
       <van-cell is-link value="全部" @tap="toBuyList">
@@ -484,11 +356,7 @@
       </div>
       <div class="detail-subTitle">参数</div>
       <div class="detail-param">
-        <div
-          class="param-item"
-          v-for="item in goodsParamList"
-          :key="item.id"
-        >
+        <div class="param-item" v-for="item in goodsParamList" :key="item.id">
           <div class="param-item-title">{{ item.name }}</div>
           <div class="param-item-content">{{ item.value }}</div>
         </div>
@@ -539,18 +407,6 @@
         立即购买
       </div>
     </div>
-    <!-- 相关推荐弹出框 -->
-    <van-popup
-      style="height: 70%;"
-      show="{{ relevantShow }}"
-      position="bottom"
-      custom-style="height: 70%;"
-      bind:close="onRelevantClose"
-      closeable
-    >
-      <div class="home-relevant-title">相关推荐</div>
-      <prod-list :data="prodList"></prod-list>
-    </van-popup>
     <!-- 尺码弹出框 -->
     <van-popup
       style="height: 70%;"
@@ -596,10 +452,15 @@
           </div>
         </div>
         <div class="home-sku-btn">
-          <div class="btn-buy">
-            <text style="font-weight: 600; font-size: 32rpx;">￥109</text>
+          <div class="btn-buy" v-if="skuInfo.stock > 0" @tap="toConfirmOrder">
+            <text style="font-weight: 600; font-size: 32rpx;"
+              >￥{{ skuInfo.price }}</text
+            >
             <text> | </text>
             <text style="font-size: 24rpx;">约5天到</text>
+          </div>
+          <div class="btn-buy" v-else>
+            <text style="font-weight: 600; font-size: 32rpx;">暂时无货</text>
           </div>
         </div>
       </div>
@@ -616,18 +477,20 @@ import {
   getGoodsAttr,
   getGoodsSkuList,
   getGoodsParams,
+  goodsList,
+  getGoodsCount,
 } from '../../api/goods.js';
 
 wepy.page({
   mixins: [jumpMixin],
   data: {
     skuShow: false,
-    relevantShow: false,
     foldShow: false,
     goodsInfo: {},
     goodsPicList: [],
     goodsSkuList: [],
     goodsParamList: [],
+    goodsCount: 0,
     skuForm: {
       spe1: {
         id: '',
@@ -643,36 +506,7 @@ wepy.page({
       },
     },
     skuInfo: {},
-    prodList: [
-      {
-        id: 0,
-        url: '/static/img/timg.jpg',
-        name: 'AJ airasd',
-        price: 199,
-        count: 6,
-      },
-      {
-        id: 1,
-        url: '/static/img/timg.jpg',
-        name: 'Yeyzy airasd',
-        price: 199,
-        count: 18,
-      },
-      {
-        id: 2,
-        url: '/static/img/timg.jpg',
-        name: 'Yasd airasd',
-        price: 399,
-        count: 336,
-      },
-      {
-        id: 3,
-        url: '/static/img/timg.jpg',
-        name: 'Nake airasd',
-        price: 200,
-        count: 14,
-      },
-    ],
+    prodList: [],
   },
   onShow() {
     const eventChannel = this.$wx.getOpenerEventChannel();
@@ -692,6 +526,8 @@ wepy.page({
         if (res.data.code === 1) {
           this.goodsInfo = res.data.data;
           this.getGoodsParamsList();
+          this.goodsList();
+          this.getGoodsCount();
         }
       });
     },
@@ -759,13 +595,50 @@ wepy.page({
         }
       });
     },
-    // 关闭推荐弹框
-    onRelevantClose() {
-      this.relevantShow = false;
+    // 获取相似商品
+    goodsList() {
+      goodsList({
+        page: 1,
+        size: 20,
+        del: 0,
+        classify3Id: this.goodsInfo.classify3Id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.prodList = res.data.data.records;
+        }
+      });
+    },
+    // 获取商品数量
+    getGoodsCount() {
+      getGoodsCount({
+        brandId: this.goodsInfo.brandId,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.goodsCount = res.data.data;
+        }
+      });
     },
     // 关闭尺码弹框
     onClose() {
       this.skuShow = false;
+    },
+    // 跳转到确认订单页面
+    toConfirmOrder() {
+      let data = {
+        goodsName: this.goodsInfo.goodsName,
+        sku1Name: this.skuForm.spe1.name,
+        sku2Name: this.skuForm.spe2.name,
+        sku3Name: this.skuForm.spe3.name,
+        price: this.skuInfo.price,
+        pic: this.skuInfo.pic,
+      };
+      wx.navigateTo({
+        url: '/pages/order/confirm',
+        success: function (routeRes) {
+          // 通过eventChannel向b页面传送数据
+          routeRes.eventChannel.emit('goodsData', data);
+        },
+      });
     },
   },
 });
@@ -822,44 +695,19 @@ wepy.page({
       }
     }
   }
-  .home-relevant {
+  .home-brand {
     width: 100%;
-    height: 420rpx;
     background: #fff;
     margin-top: 4rpx;
+    padding-top: 10rpx;
     padding-bottom: 10rpx;
-    swiper {
-      height: 340rpx;
-      .relevant-item {
-        width: 33%;
-        height: 300rpx;
-        display: inline-block;
-        vertical-align: top;
-        .item-img {
-          width: 100%;
-          height: 200rpx;
-          image {
-            width: 100%;
-            height: 100%;
-          }
-        }
-        .item-title {
-          width: 100%;
-          height: 60rpx;
-          text-align: center;
-          font-size: 24rpx;
-          color: #333;
-          line-height: 30rpx;
-          overflow: hidden;
-        }
-        .item-price {
-          width: 100%;
-          text-align: center;
-          font-size: 24rpx;
-          color: #000;
-          font-weight: 600;
-        }
-      }
+    .home-brand-title {
+      font-size: 32rpx;
+      color: #333;
+      font-weight: 600;
+    }
+    .home-brand-label {
+      font-size: 28rpx;
     }
   }
   .home-buy {
@@ -1115,7 +963,7 @@ wepy.page({
           flex-direction: row;
           flex-wrap: wrap;
           .content-item-active {
-            border: 1px solid #666;
+            border: 2px solid #666;
           }
           .content-item {
             width: 22%;

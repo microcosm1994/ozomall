@@ -16,6 +16,15 @@
           <el-form-item label="品牌名称" prop="name">
             <el-input v-model="ruleForm.name"></el-input>
           </el-form-item>
+          <el-form-item label="品牌介绍" prop="des">
+            <el-input
+              type="textarea"
+              :rows="4"
+              placeholder="品牌介绍"
+              v-model="ruleForm.des"
+            >
+            </el-input>
+          </el-form-item>
           <el-form-item label="品牌logo" prop="url">
             <el-upload
               class="avatar-uploader"
@@ -48,11 +57,13 @@ export default {
       title: "新建",
       ruleForm: {
         name: "",
-        url: ""
+        url: "",
+        des: ""
       },
       rules: {
         name: [{ required: true, message: "请输入品牌名称", trigger: "blur" }],
-        url: [{ required: true, message: "请上传品牌logo", trigger: "change" }]
+        url: [{ required: true, message: "请上传品牌logo", trigger: "change" }],
+        des: [{ required: true, message: "请输入品牌介绍", trigger: "blur" }]
       }
     };
   },
@@ -68,6 +79,7 @@ export default {
       this.title = "修改";
       this.ruleForm.name = this.row.name;
       this.ruleForm.url = this.row.url;
+      this.ruleForm.des = this.row.des;
     }
   },
   methods: {

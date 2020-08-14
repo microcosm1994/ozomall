@@ -3,7 +3,7 @@
 	"setting": {
 		"urlCheck": false,
 		"es6": true,
-		"enhance": false,
+		"enhance": true,
 		"postcss": false,
 		"preloadBackgroundData": false,
 		"minified": false,
@@ -23,6 +23,7 @@
 			"disablePlugins": [],
 			"outputPath": ""
 		},
+		"bundle": true,
 		"useIsolateContext": true,
 		"useCompilerModule": true,
 		"userConfirmedUseCompilerModuleSwitch": true
@@ -33,6 +34,6 @@
 	"miniprogramRoot": "weapp/",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"libVersion": "2.11.0",
+	"libVersion": "2.12.0",
 	"condition": {}
 }

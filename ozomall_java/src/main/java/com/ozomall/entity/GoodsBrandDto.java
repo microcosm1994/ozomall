@@ -18,4 +18,7 @@ public class GoodsBrandDto extends PageReqDto {
 
     @ApiModelProperty(value = "品牌logo")
     private String url;
+
+    @ApiModelProperty(value = "品牌介绍")
+    private String des;
 }

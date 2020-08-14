@@ -42,7 +42,9 @@
               <img :src="scope.row.url" style="width: 50px;" alt="" />
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="name" label="品牌名称">
+          <el-table-column align="center" prop="name" label="品牌名称" width="200">
+          </el-table-column>
+          <el-table-column align="center" prop="des" label="品牌介绍">
           </el-table-column>
           <el-table-column
             width="120"

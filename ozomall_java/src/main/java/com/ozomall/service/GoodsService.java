@@ -30,6 +30,11 @@ public interface GoodsService {
     Result searchGoods(GoodsDto form);
 
     /**
+     * 获取商品数量
+     */
+    Result getGoodsCount(GoodsDto form);
+
+    /**
      * 根据id查询商品信息
      */
     Result getGoods(int id);

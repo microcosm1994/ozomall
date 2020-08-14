@@ -28,6 +28,13 @@ public class MallGoodsController {
         return goodsService.mallGoodsList(form);
     }
 
+    @ApiOperation("获取商品数量")
+    @GetMapping("/getGoodsCount")
+    public Result getGoodsCount(GoodsDto form) {
+        form.setStatus(1);
+        return goodsService.getGoodsCount(form);
+    }
+
     @ApiOperation("搜索商品")
     @GetMapping("/search")
     public Result searchGoods(GoodsDto form) {

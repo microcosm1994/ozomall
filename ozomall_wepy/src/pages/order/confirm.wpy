@@ -1,0 +1,189 @@
+<config>
+{
+    navigationBarTitleText: '确认订单',
+    usingComponents: {
+      "van-button": "~@/components/vant/button",
+      "van-cell": "~@/components/vant/cell",
+      "van-icon": "~@/components/vant/icon",
+      "van-row": "~@/components/vant/row",
+      "van-col": "~@/components/vant/col",
+      "van-card": "~@/components/vant/card",
+    }
+}
+</config>
+<template>
+  <div class="home">
+    <div class="home-address">
+      <van-cell icon="location-o" use-label-slot is-link value="进入品牌">
+        <div class="home-address-title" slot="title">
+          收货人：{{ goodsInfo.brand.name }}
+        </div>
+        <div class="home-brand-label" slot="label">
+          北京市云景豪庭
+        </div>
+      </van-cell>
+    </div>
+    <div class="home-goodsInfo">
+      <van-card
+        :price="goodsInfo.price"
+        desc="{{goodsInfo.sku1Name + ' ' + goodsInfo.sku2Name + ' ' + goodsInfo.sku3Name + ' ' + '数量x1'}}"
+        :title="goodsInfo.goodsName"
+        thumb="{{ goodsInfo.pic }}"
+      />
+    </div>
+    <div class="home-logistics">
+      <van-cell use-label-slot value="￥14">
+        <div class="home-address-title" slot="title">
+          京东配送
+        </div>
+      </van-cell>
+    </div>
+    <div class="home-shoppingTips">
+      <div class="home-shoppingTips-content">
+        <div class="content-item">
+          <text
+            >1、若卖家未在36小时内发货导致交易关闭，您将获得20.00元现金及总计人民币170元的满减优惠券补偿。</text
+          >
+        </div>
+        <div class="content-item">
+          <text
+            >2、每件交易商品均由平台针对实物进行鉴别，若卖家未在36小时内发货导致交易关闭，您将获得20.00元现金及总计人民币170元的满减优惠券补偿。</text
+          >
+        </div>
+        <div class="content-item">
+          <text
+            >3、若卖家未在36小时内发货导致交易关闭，您将获得20.00元现金及总计人民币170元的满减优惠券补偿。</text
+          >
+        </div>
+        <div class="content-item">
+          <text
+            >4、若卖家未在36小时内发货导致交易关闭，您将获得20.00元现金及总计人民币170元的满减优惠券补偿。</text
+          >
+        </div>
+      </div>
+    </div>
+    <div class="home-btn">
+      <van-row>
+        <van-col span="12">
+          <div class="home-btn-price">
+            <span>实付款：￥</span>
+            <span style="font-size: 36rpx; font-weight: 600;">153</span>
+          </div>
+        </van-col>
+        <van-col span="12">
+          <div class="home-btn-buy" @tap="getGoodsAttr">
+            提交订单
+          </div>
+        </van-col>
+      </van-row>
+    </div>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import jumpMixin from '../../mixins/jump.js';
+import {
+  getGoods,
+  getGoodsPic,
+  getGoodsAttr,
+  getGoodsSkuList,
+  getGoodsParams,
+  goodsList,
+  getGoodsCount,
+} from '../../api/goods.js';
+
+wepy.page({
+  mixins: [jumpMixin],
+  data: {
+    goodsInfo: {},
+  },
+  onShow() {
+    const eventChannel = this.$wx.getOpenerEventChannel();
+    // 通过eventChannel监听a页面传过来的数据
+    eventChannel.on('goodsData', (data) => {
+      console.log(data);
+      this.goodsInfo = data
+    });
+  },
+  methods: {},
+});
+</script>
+<style lang="less">
+.home {
+  width: 100%;
+  height: 100%;
+  background: #eeeef0;
+  .home-address {
+    width: 100%;
+    background: #fff;
+    padding-top: 10rpx;
+    padding-bottom: 10rpx;
+  }
+  .home-goodsInfo {
+    padding-top: 10rpx;
+    padding-bottom: 10rpx;
+    background: #fff;
+    margin-top: 4rpx;
+    .van-card {
+      background: #fff;
+    }
+  }
+  .home-logistics {
+    width: 100%;
+    margin-top: 4rpx;
+    padding-top: 10rpx;
+    padding-bottom: 10rpx;
+  }
+  .home-shoppingTips {
+    width: 100%;
+    margin-top: 4rpx;
+    padding: 40rpx 40rpx;
+    background: #fff;
+    .home-shoppingTips-content {
+      width: 100%;
+      .content-item {
+        width: 100%;
+        margin-top: 20rpx;
+        label {
+          font-size: 28rpx;
+          font-weight: 600;
+          color: #333;
+          line-height: 30rpx;
+        }
+        text {
+          word-break: break-all;
+          font-size: 24rpx;
+          color: #555;
+          line-height: 30rpx;
+        }
+      }
+    }
+  }
+  .home-btn {
+    width: 100%;
+    background: #fff;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding-top: 20rpx;
+    padding-bottom: 20rpx;
+    .home-btn-price {
+      font-size: 28rpx;
+      color: red;
+      line-height: 80rpx;
+      padding-left: 20rpx;
+    }
+    .home-btn-buy {
+      width: 70%;
+      height: 80rpx;
+      line-height: 80rpx;
+      text-align: center;
+      background: #11cccc;
+      color: #fff;
+      float: right;
+      margin-right: 40rpx;
+    }
+  }
+}
+</style>

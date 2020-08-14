@@ -1,0 +1,248 @@
+<config>
+{
+    navigationBarTitleText: '编辑新地址',
+    usingComponents: {
+      "van-cell": "~@/components/vant/cell",
+      "van-cell-group": "~@/components/vant/cell-group",
+      "van-icon": "~@/components/vant/icon",
+      "van-field": "~@/components/vant/field",
+      "van-area": "~@/components/vant/area",
+      "van-popup": "~@/components/vant/popup",
+      "van-row": "~@/components/vant/row",
+      "van-col": "~@/components/vant/col",
+    }
+}
+</config>
+<template>
+  <div class="home">
+    <div class="home-form">
+      <van-cell-group>
+        <van-field
+          label="收货人"
+          value="{{locationData.consignee}}"
+          placeholder="收货人"
+          border="{{ false }}"
+          @input="consigneeValue"
+          :error-message="err.consignee"
+        />
+        <van-field
+          label="联系电话"
+          value="{{locationData.phone}}"
+          placeholder="联系电话"
+          border="{{ false }}"
+          type="number"
+          maxlength="11"
+          @input="phoneValue"
+          :error-message="err.phone"
+        />
+        <van-cell
+          title="所在区域"
+          is-link
+          value="{{locationData.region}}"
+          @tap="onOpen"
+          use-label-slot
+        >
+          <div style="color: red;" slot="label">{{ err.region }}</div>
+        </van-cell>
+        <van-field
+          value="{{locationData.address}}"
+          type="textarea"
+          placeholder="详细地址"
+          :autosize="{ maxHeight: 100, minHeight: 50 }"
+          border="{{ false }}"
+          @input="addressValue"
+          :error-message="err.address"
+        />
+      </van-cell-group>
+    </div>
+    <div class="home-btn">
+      <div class="home-btn-buy" @tap="save">
+        保存
+      </div>
+    </div>
+    <!-- 选择地址弹框 -->
+    <van-popup position="bottom" show="{{ areaShow }}" bind:close="onClose">
+      <van-area
+        id="area"
+        area-list="{{ areaList }}"
+        value="{{locationData.areaCode}}"
+        @confirm="selectArea"
+        @cancel="areaShow = false"
+      />
+    </van-popup>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import jumpMixin from '../../mixins/jump.js';
+import areaList from '../../common/area.js';
+import { addAddress, putAddress } from '../../api/address.js';
+
+wepy.page({
+  mixins: [jumpMixin],
+  data: {
+    areaList,
+    areaShow: false,
+    areaCode: '',
+    locationData: {
+      consignee: '',
+      region: '',
+      address: '',
+      phone: '',
+      areaCode: '',
+    },
+    err: {
+      consignee: '',
+      region: '',
+      address: '',
+      phone: '',
+    },
+  },
+  onShow() {
+    const eventChannel = this.$wx.getOpenerEventChannel();
+    // 通过eventChannel监听a页面传过来的数据
+    eventChannel.on('locationData', (data) => {
+      if (data) {
+        this.locationData.consignee = data.consignee;
+        this.locationData.region = data.region;
+        this.locationData.address = data.address;
+        this.locationData.phone = data.phone;
+        this.locationData.areaCode = data.areaCode;
+        this.locationData['id'] = data.id;
+      }
+    });
+  },
+  methods: {
+    // 输入时触发
+    consigneeValue(e) {
+      this.locationData.consignee = e.$wx.detail;
+    },
+    // 输入时触发
+    addressValue(e) {
+      this.locationData.address = e.$wx.detail;
+    },
+    // 输入时触发
+    phoneValue(e) {
+      this.locationData.phone = e.$wx.detail;
+    },
+    // 保存
+    save() {
+      if (!this.locationData.consignee) {
+        this.err.consignee = '请输入收货人';
+        return false;
+      } else {
+        this.err.consignee = '';
+      }
+      if (!this.locationData.phone) {
+        this.err.phone = '请输入联系电话';
+        return false;
+      } else {
+        this.err.phone = '';
+      }
+      if (!this.locationData.region) {
+        this.err.region = '请选择区域';
+        return false;
+      } else {
+        this.err.region = '';
+      }
+      if (!this.locationData.address) {
+        this.err.address = '请输入详细地址';
+        return false;
+      } else {
+        this.err.address = '';
+      }
+      if (this.locationData.id) {
+        this.putAddress(); // 修改地址
+      } else {
+        this.addAddress(); // 新增
+      }
+    },
+    // 添加地址
+    addAddress() {
+      let user = wx.getStorageSync('users');
+      addAddress({
+        ...this.locationData,
+        userId: user.id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          wx.navigateTo({
+            url: '/pages/my/location',
+          });
+        }
+      });
+    },
+    // 修改地址
+    putAddress() {
+      let user = wx.getStorageSync('users');
+      putAddress({
+        ...this.locationData,
+        userId: user.id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          wx.navigateTo({
+            url: '/pages/my/location',
+          });
+        }
+      });
+    },
+    // 打开弹框
+    onOpen() {
+      this.areaShow = true;
+      this.$wx.selectComponent('#area').reset(this.locationData.areaCode);
+    },
+    // 关闭弹框
+    onClose() {
+      this.areaShow = false;
+    },
+    // 选择省市
+    selectArea(e) {
+      let values = e.$wx.detail.values;
+      let area = '';
+      for (let i = 0; i < values.length; i++) {
+        area += values[i].name;
+      }
+      this.locationData.region = area;
+      this.locationData.areaCode = values[2].code;
+      this.onClose();
+    },
+  },
+});
+</script>
+<style lang="less">
+.home {
+  width: 100%;
+  height: 100%;
+  background: #eeeef0;
+  .home-form {
+    width: 100%;
+    background: #fff;
+    padding-top: 10rpx;
+    padding-bottom: 10rpx;
+  }
+  .home-btn {
+    width: 100%;
+    height: 150rpx;
+    background: #fff;
+    position: relative;
+    .home-btn-buy {
+      width: 90%;
+      height: 80rpx;
+      line-height: 80rpx;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      background: #11cccc;
+      color: #fff;
+    }
+  }
+  .popup-header {
+    width: 100%;
+    height: 80rpx;
+    line-height: 80rpx;
+    font-size: 28rpx;
+  }
+}
+</style>

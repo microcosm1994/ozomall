@@ -1,0 +1,151 @@
+<config>
+{
+    navigationBarTitleText: '收货地址',
+    usingComponents: {
+      "van-button": "~@/components/vant/button",
+      "van-cell": "~@/components/vant/cell",
+      "van-icon": "~@/components/vant/icon",
+      "van-row": "~@/components/vant/row",
+      "van-col": "~@/components/vant/col",
+      "van-radio": "~@/components/vant/radio",
+      "van-radio-group": "~@/components/vant/radio-group",
+    }
+}
+</config>
+<template>
+  <div class="home">
+    <div class="home-address" v-for="item in addressList" :key="item.id">
+      <van-cell
+        use-label-slot
+        is-link
+        :value="item.phone"
+        :border="false"
+      >
+        <div class="home-address-title" slot="title">
+          {{ item.consignee }}
+        </div>
+      </van-cell>
+      <div class="home-address-des">{{ item.region }}{{ item.address }}</div>
+      <div class="home-address-opera">
+        <van-row>
+          <van-col span="10">
+            <van-radio-group
+              value="{{ defaultAddress }}"
+              bind:change="onChange"
+            >
+              <van-radio icon-size="14px" :name="1">默认地址</van-radio>
+            </van-radio-group>
+          </van-col>
+          <van-col span="6" offset="8">
+            <span class="opera-edit" @tap="toEdit(item)">编辑</span>
+            <span class="opera-del">删除</span>
+          </van-col>
+        </van-row>
+      </div>
+    </div>
+    <div class="home-btn">
+      <div class="home-btn-buy" @tap="toEdit">
+        添加新地址
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import jumpMixin from '../../mixins/jump.js';
+import { getAddress } from '../../api/address.js';
+
+wepy.page({
+  mixins: [jumpMixin],
+  data: {
+    defaultAddress: 1,
+    addressList: [],
+  },
+  onShow() {
+    this.getAddress();
+  },
+  methods: {
+    // 获取地址列表
+    getAddress() {
+      let user = wx.getStorageSync('users');
+      getAddress({
+        userId: user.id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.addressList = res.data.data;
+        }
+      });
+    },
+    // 设置默认地址
+    onChange(e) {
+      this.defaultAddress = e.$wx.detail;
+    },
+    // 跳转到地址编辑页
+    toEdit(data) {
+      wx.navigateTo({
+        url: '/pages/my/locationEdit',
+        success: function (routeRes) {
+          // 通过eventChannel向b页面传送数据
+          routeRes.eventChannel.emit('locationData', data);
+        },
+      });
+    },
+  },
+});
+</script>
+<style lang="less">
+.home {
+  width: 100%;
+  height: 100%;
+  background: #eeeef0;
+  .home-address {
+    width: 100%;
+    background: #fff;
+    padding-top: 10rpx;
+    padding-bottom: 10rpx;
+    margin-top: 4rpx;
+    .home-address-des {
+      width: 100%;
+      height: 80rpx;
+      line-height: 80rpx;
+      padding-left: 30rpx;
+    }
+    .home-address-opera {
+      width: 100%;
+      padding-top: 20rpx;
+      padding-bottom: 20rpx;
+      padding-left: 30rpx;
+      .opera-edit {
+        color: #11cccc;
+        font-size: 28rpx;
+      }
+      .opera-del {
+        color: red;
+        margin-left: 20rpx;
+        font-size: 28rpx;
+      }
+    }
+  }
+  .home-btn {
+    width: 100%;
+    height: 150rpx;
+    background: #fff;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    .home-btn-buy {
+      width: 90%;
+      height: 80rpx;
+      line-height: 80rpx;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      background: #11cccc;
+      color: #fff;
+    }
+  }
+}
+</style>

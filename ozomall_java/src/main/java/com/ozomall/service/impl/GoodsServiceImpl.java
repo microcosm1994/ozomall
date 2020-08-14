@@ -128,6 +128,25 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     /**
+     * 获取商品数量
+     *
+     * @param form
+     */
+    @Override
+    public Result getGoodsCount(GoodsDto form) {
+        LambdaQueryWrapper<GoodsDto> wrapper = new LambdaQueryWrapper<>();
+        Map<SFunction<GoodsDto, ?>, Object> map = new HashMap<>();
+        map.put(GoodsDto::getBrandId, form.getBrandId());
+        map.put(GoodsDto::getStatus, form.getStatus());
+        map.put(GoodsDto::getClassify1Id, form.getClassify1Id());
+        map.put(GoodsDto::getClassify2Id, form.getClassify2Id());
+        map.put(GoodsDto::getClassify3Id, form.getClassify3Id());
+        wrapper.allEq(map, false);
+        int row = goodsMapper.selectCount(wrapper);
+        return ResultGenerate.genSuccessResult(row);
+    }
+
+    /**
      * 根据id获取商品信息
      *
      * @param id
@@ -371,7 +390,7 @@ public class GoodsServiceImpl implements GoodsService {
      * @param form
      */
     @Override
-        public Result delGoodsBrand(GoodsBrandDto form) {
+    public Result delGoodsBrand(GoodsBrandDto form) {
         int row = goodsBrandMapper.deleteById(form.getId());
         if (row > 0) {
             return ResultGenerate.genSuccessResult();
