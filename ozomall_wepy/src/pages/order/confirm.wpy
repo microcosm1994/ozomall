@@ -14,12 +14,18 @@
 <template>
   <div class="home">
     <div class="home-address">
-      <van-cell icon="location-o" use-label-slot is-link value="进入品牌">
+      <van-cell
+        icon="location-o"
+        use-label-slot
+        is-link
+        :value="addressInfo.phone"
+        @tap="toAddress"
+      >
         <div class="home-address-title" slot="title">
-          收货人：{{ goodsInfo.brand.name }}
+          收货人：{{ addressInfo.consignee }}
         </div>
         <div class="home-brand-label" slot="label">
-          北京市云景豪庭
+          {{ addressInfo.region }}{{ addressInfo.address }}
         </div>
       </van-cell>
     </div>
@@ -67,11 +73,13 @@
         <van-col span="12">
           <div class="home-btn-price">
             <span>实付款：￥</span>
-            <span style="font-size: 36rpx; font-weight: 600;">153</span>
+            <span style="font-size: 36rpx; font-weight: 600;">{{
+              goodsInfo.price + 14
+            }}</span>
           </div>
         </van-col>
         <van-col span="12">
-          <div class="home-btn-buy" @tap="getGoodsAttr">
+          <div class="home-btn-buy" @tap="addOrder">
             提交订单
           </div>
         </van-col>
@@ -83,30 +91,78 @@
 <script>
 import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
-import {
-  getGoods,
-  getGoodsPic,
-  getGoodsAttr,
-  getGoodsSkuList,
-  getGoodsParams,
-  goodsList,
-  getGoodsCount,
-} from '../../api/goods.js';
+import { getAddress } from '../../api/address.js';
+import { getSettings } from '../../api/user.js';
+import { addOrder } from '../../api/order.js';
 
 wepy.page({
   mixins: [jumpMixin],
   data: {
+    userInfo: {},
     goodsInfo: {},
+    addressInfo: {},
+  },
+  onLoad() {
+    this.getUser();
+    this.getSettings();
   },
   onShow() {
     const eventChannel = this.$wx.getOpenerEventChannel();
     // 通过eventChannel监听a页面传过来的数据
     eventChannel.on('goodsData', (data) => {
-      console.log(data);
-      this.goodsInfo = data
+      this.goodsInfo = data;
+    });
+    eventChannel.on('addressData', (data) => {
+      if (data) {
+        this.addressInfo = data;
+      }
     });
   },
-  methods: {},
+  methods: {
+    // 获取用户信息
+    getUser() {
+      this.userInfo = wx.getStorageSync('users');
+      if (!this.userInfo) {
+        this.toLogin();
+      }
+    },
+    // 获取用户设置
+    getSettings() {
+      getSettings({
+        userId: this.userInfo.id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.getAddress(res.data.data.addressId);
+        }
+      });
+    },
+    // 获取地址
+    getAddress(id) {
+      let user = wx.getStorageSync('users');
+      getAddress({
+        id,
+        userId: this.userInfo.id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.addressInfo = res.data.data[0];
+        }
+      });
+    },
+    // 跳转到地址列表页
+    toAddress() {
+      wx.navigateTo({
+        url: '/pages/my/location',
+      });
+    },
+    // 添加订单
+    addOrder() {
+      addOrder().then((res) => {
+        if (res.data.code === 1) {
+          console.log(res.data);
+        }
+      });
+    },
+  },
 });
 </script>
 <style lang="less">

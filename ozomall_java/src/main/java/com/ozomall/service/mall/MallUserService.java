@@ -3,6 +3,7 @@ package com.ozomall.service.mall;
 import com.aliyuncs.exceptions.ClientException;
 import com.ozomall.entity.Result;
 import com.ozomall.entity.mall.MallUserDto;
+import com.ozomall.entity.mall.MallUserSettingDto;
 
 public interface MallUserService {
 
@@ -26,4 +27,14 @@ public interface MallUserService {
      * @param user 用户信息
      */
     Result getUser(MallUserDto user);
+
+    /**
+     * 获取用户设置
+     */
+    Result getSettings(MallUserSettingDto form);
+
+    /**
+     * 设置用户设置
+     */
+    Result setSettings(MallUserSettingDto form);
 }

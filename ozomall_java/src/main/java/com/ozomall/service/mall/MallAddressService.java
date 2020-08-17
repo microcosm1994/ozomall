@@ -18,4 +18,14 @@ public interface MallAddressService {
      * 获取地址
      */
     Result getAddress(MallAddressDto phone);
+
+    /**
+     * 根据id获取地址
+     */
+    Result getAddressById(MallAddressDto phone);
+
+    /**
+     * 获取地址
+     */
+    Result delAddress(MallAddressDto phone);
 }

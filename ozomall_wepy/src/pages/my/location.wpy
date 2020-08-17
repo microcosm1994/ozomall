@@ -7,6 +7,7 @@
       "van-icon": "~@/components/vant/icon",
       "van-row": "~@/components/vant/row",
       "van-col": "~@/components/vant/col",
+      "van-dialog": "~@/components/vant/dialog",
       "van-radio": "~@/components/vant/radio",
       "van-radio-group": "~@/components/vant/radio-group",
     }
@@ -14,13 +15,8 @@
 </config>
 <template>
   <div class="home">
-    <div class="home-address" v-for="item in addressList" :key="item.id">
-      <van-cell
-        use-label-slot
-        is-link
-        :value="item.phone"
-        :border="false"
-      >
+    <div class="home-address" v-for="item in addressList" :key="item.id" @tap="selectAddress(item)">
+      <van-cell use-label-slot is-link :value="item.phone" :border="false">
         <div class="home-address-title" slot="title">
           {{ item.consignee }}
         </div>
@@ -30,15 +26,15 @@
         <van-row>
           <van-col span="10">
             <van-radio-group
-              value="{{ defaultAddress }}"
+              value="{{ defaultAddress.addressId }}"
               bind:change="onChange"
             >
-              <van-radio icon-size="14px" :name="1">默认地址</van-radio>
+              <van-radio icon-size="14px" :name="item.id">默认地址</van-radio>
             </van-radio-group>
           </van-col>
           <van-col span="6" offset="8">
             <span class="opera-edit" @tap="toEdit(item)">编辑</span>
-            <span class="opera-del">删除</span>
+            <span class="opera-del" @tap="delAddress(item)">删除</span>
           </van-col>
         </van-row>
       </div>
@@ -48,27 +44,61 @@
         添加新地址
       </div>
     </div>
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 
 <script>
 import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
-import { getAddress } from '../../api/address.js';
+import Dialog from '../../components/vant/dialog/dialog.js';
+import { getAddress, delAddress } from '../../api/address.js';
+import { getSettings, setSettings } from '../../api/user.js';
 
 wepy.page({
   mixins: [jumpMixin],
   data: {
-    defaultAddress: 1,
+    defaultAddress: {},
     addressList: [],
   },
   onShow() {
+    this.getSettings();
     this.getAddress();
   },
   methods: {
+    // 点击选择地址
+    selectAddress(row) {
+      console.log(getCurrentPages());
+      let routerInfo = getCurrentPages();
+      let prev = routerInfo[routerInfo.length - 2];
+      console.log(prev)
+      if (prev.route === 'pages/order/confirm') {
+        console.log(1)
+        wx.navigateBack({
+          delta: 1,
+          success: function () {
+            prev.setData({
+              addressInfo: row
+            })
+          },
+        });
+      }
+    },
+    // 获取用户设置
+    getSettings() {
+      let user = wx.getStorageSync('users');
+      getSettings({
+        userId: user.id,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.defaultAddress = res.data.data;
+        }
+      });
+    },
     // 获取地址列表
     getAddress() {
       let user = wx.getStorageSync('users');
+      this.addressList = [];
       getAddress({
         userId: user.id,
       }).then((res) => {
@@ -79,7 +109,15 @@ wepy.page({
     },
     // 设置默认地址
     onChange(e) {
-      this.defaultAddress = e.$wx.detail;
+      this.defaultAddress.addressId = e.$wx.detail;
+      setSettings({
+        id: this.defaultAddress.id,
+        addressId: this.defaultAddress.addressId,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.getSettings();
+        }
+      });
     },
     // 跳转到地址编辑页
     toEdit(data) {
@@ -89,6 +127,20 @@ wepy.page({
           // 通过eventChannel向b页面传送数据
           routeRes.eventChannel.emit('locationData', data);
         },
+      });
+    },
+    // 删除地址
+    delAddress(row) {
+      Dialog.confirm({
+        message: '确认删除？',
+      }).then(() => {
+        delAddress({
+          id: row.id,
+        }).then((res) => {
+          if (res.data.code === 1) {
+            this.getAddress();
+          }
+        });
       });
     },
   },

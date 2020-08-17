@@ -25,3 +25,21 @@ export function logout() {
         method: 'post'
     })
 }
+
+// 获取用户设置
+export function getSettings(params) {
+    return service({
+        url: '/mall/user/getSettings',
+        method: 'get',
+        params
+    })
+}
+
+// 设置用户设置
+export function setSettings(data) {
+    return service({
+        url: '/mall/user/setSettings',
+        method: 'post',
+        data
+    })
+}

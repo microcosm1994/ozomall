@@ -11,7 +11,7 @@ import lombok.Data;
 public class MallAddressDto {
     @ApiModelProperty(value = "地址id")
     @TableId(type = IdType.AUTO)
-    private int id;
+    private Integer id;
 
     @ApiModelProperty(value = "关联用户id")
     private Integer userId;

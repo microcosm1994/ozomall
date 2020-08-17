@@ -64,9 +64,8 @@ wepy.app({
 <config>
 {
     pages: [
-      'pages/my/location', // 地址管理
-      'pages/my/index', // 我的
       'pages/index/index', //   首页
+      'pages/my/index', // 我的
       'pages/login/index', //   登录授权
       'pages/login/login', //   登录
       'components/prod-card', // 商品卡片
@@ -81,6 +80,7 @@ wepy.app({
       'pages/search/index', // 搜索页
       'pages/classify/index', // 分类
       'pages/my/locationEdit', // 地址编辑
+      'pages/my/location', // 地址管理
     ],
     window: {
       backgroundTextStyle: 'light',

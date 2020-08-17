@@ -35,4 +35,16 @@ public class MallAddressController {
     public Result getAddress(MallAddressDto form) {
         return mallAddressService.getAddress(form);
     }
+
+    @ApiOperation("根据id获取地址")
+    @GetMapping("/getById")
+    public Result getAddressById(MallAddressDto form) {
+        return mallAddressService.getAddressById(form);
+    }
+
+    @ApiOperation("删除地址")
+    @PostMapping("/del")
+    public Result delAddress(@RequestBody MallAddressDto form) {
+        return mallAddressService.delAddress(form);
+    }
 }

@@ -3,15 +3,13 @@ package com.ozomall.controller.mall;
 import com.aliyuncs.exceptions.ClientException;
 import com.ozomall.entity.Result;
 import com.ozomall.entity.mall.MallUserDto;
+import com.ozomall.entity.mall.MallUserSettingDto;
 import com.ozomall.service.mall.MallUserService;
 import com.ozomall.utils.ResultGenerate;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -44,12 +42,24 @@ public class MallUserController {
         }
     }
 
-    @ApiOperation(value = "登陆")
+    @ApiOperation(value = "登出")
     @PostMapping(value = "/logout")
     public Result logout(HttpServletRequest request) {
         String token = request.getHeader("token");
         redisTemplate.delete(token);
         return ResultGenerate.genSuccessResult();
+    }
+
+    @ApiOperation(value = "获取用户设置")
+    @GetMapping(value = "/getSettings")
+    public Result getSettings(MallUserSettingDto form) {
+        return mallUserService.getSettings(form);
+    }
+
+    @ApiOperation(value = "设置用户设置")
+    @PostMapping(value = "/setSettings")
+    public Result setSettings(@RequestBody MallUserSettingDto form) {
+        return mallUserService.setSettings(form);
     }
 
 }

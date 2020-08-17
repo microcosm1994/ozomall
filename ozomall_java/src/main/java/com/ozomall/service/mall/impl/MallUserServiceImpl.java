@@ -3,8 +3,10 @@ package com.ozomall.service.mall.impl;
 import com.aliyuncs.exceptions.ClientException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ozomall.dao.mall.MallUserMapper;
+import com.ozomall.dao.mall.MallUserSettingMapper;
 import com.ozomall.entity.Result;
 import com.ozomall.entity.mall.MallUserDto;
+import com.ozomall.entity.mall.MallUserSettingDto;
 import com.ozomall.service.mall.MallUserService;
 import com.ozomall.utils.AuthUtils;
 import com.ozomall.utils.ResultGenerate;
@@ -14,18 +16,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class MallMallUserServiceImpl implements MallUserService {
-    @Resource
-    HttpServletRequest request;
+public class MallUserServiceImpl implements MallUserService {
 
     @Resource
     MallUserMapper mallUserMapper;
+
+    @Resource
+    MallUserSettingMapper mallUserSettingMapper;
 
     @Resource
     RedisTemplate<String, String> redisTemplate;
@@ -65,6 +67,9 @@ public class MallMallUserServiceImpl implements MallUserService {
             return ResultGenerate.genSuccessResult(data);
         } else {
             int row = mallUserMapper.insert(user);
+            MallUserSettingDto sData = new MallUserSettingDto();
+            sData.setUserId(user.getId());
+            mallUserSettingMapper.insert(sData);
             if (row > 0) {
                 data.put("users", user);
                 return ResultGenerate.genSuccessResult(data);
@@ -86,6 +91,34 @@ public class MallMallUserServiceImpl implements MallUserService {
         MallUserDto row = mallUserMapper.selectOne(wrapper);
         if (row != null) {
             return ResultGenerate.genSuccessResult(row);
+        } else {
+            return ResultGenerate.genErroResult("获取失败");
+        }
+    }
+
+    /**
+     * 获取用户设置
+     */
+    @Override
+    public Result getSettings(MallUserSettingDto form) {
+        QueryWrapper<MallUserSettingDto> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", form.getUserId());
+        MallUserSettingDto row = mallUserSettingMapper.selectOne(wrapper);
+        if (row != null) {
+            return ResultGenerate.genSuccessResult(row);
+        } else {
+            return ResultGenerate.genErroResult("获取失败");
+        }
+    }
+
+    /**
+     * 设置用户设置
+     */
+    @Override
+    public Result setSettings(MallUserSettingDto form) {
+        int row = mallUserSettingMapper.updateById(form);
+        if (row > 0) {
+            return ResultGenerate.genSuccessResult();
         } else {
             return ResultGenerate.genErroResult("获取失败");
         }

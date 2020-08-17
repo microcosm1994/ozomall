@@ -26,4 +26,21 @@ export function getAddress(params) {
         params
     })
 }
+// 根据id获取地址
+export function getAddressById(params) {
+    return service({
+        url: '/mall/address/getById',
+        method: 'get',
+        params
+    })
+}
+
+// 获取地址
+export function delAddress(data) {
+    return service({
+        url: '/mall/address/del',
+        method: 'post',
+        data
+    })
+}
 
