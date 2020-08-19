@@ -31,4 +31,18 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             return ResultGenerate.genErroResult("失败！");
         }
     }
+
+    /**
+     * 发货
+     */
+    @Override
+    public Result putOrder(OrderDto form) {
+        form.setStatus(2);
+        int row = orderMapper.updateById(form);
+        if (row > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("失败！");
+        }
+    }
 }

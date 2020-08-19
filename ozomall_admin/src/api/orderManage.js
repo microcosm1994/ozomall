@@ -8,3 +8,12 @@ export function getOrder(params) {
         params
     })
 }
+
+// 发货
+export function handle(data) {
+    return request({
+        url: '/admin/orders/handle',
+        method: 'post',
+        data
+    })
+}

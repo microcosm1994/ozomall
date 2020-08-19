@@ -97,4 +97,5 @@ public interface GoodsService {
      * 获取品牌列表
      */
     Result delGoodsBrand(GoodsBrandDto form);
+
 }

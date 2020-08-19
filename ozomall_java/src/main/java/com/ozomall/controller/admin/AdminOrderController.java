@@ -6,9 +6,7 @@ import com.ozomall.service.admin.AdminOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -24,5 +22,11 @@ public class AdminOrderController {
     @GetMapping("/get")
     public Result getOrder(OrderDto form) {
         return adminOrderService.getOrder(form);
+    }
+
+    @ApiOperation("发货处理")
+    @PostMapping("/handle")
+    public Result handle(@RequestBody OrderDto form) {
+        return adminOrderService.putOrder(form);
     }
 }

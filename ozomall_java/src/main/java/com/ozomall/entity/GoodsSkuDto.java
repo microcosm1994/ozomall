@@ -31,10 +31,10 @@ public class GoodsSkuDto {
     private BigDecimal price;
 
     @ApiModelProperty(value = "库存")
-    private int stock;
+    private Integer stock;
 
     @ApiModelProperty(value = "销量")
-    private int sales;
+    private Integer sales;
 
     @ApiModelProperty(value = "展示图片")
     private String pic;

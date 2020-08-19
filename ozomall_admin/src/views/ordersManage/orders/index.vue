@@ -58,7 +58,6 @@
           icon="el-icon-refresh"
           @click="getData"
         ></el-button>
-        <el-button type="primary" @click="openEdit">添加品牌</el-button>
       </div>
       <div class="page-container-table">
         <el-table border :data="tableData" style="width: 100%" align="center">
@@ -83,24 +82,44 @@
             width="200"
           >
           </el-table-column>
-          <el-table-column width="120" align="center" prop="des" label="订单来源">
+          <el-table-column
+            width="120"
+            align="center"
+            prop="des"
+            label="订单来源"
+          >
             <template slot-scope="scope">
               {{ scope.row.sourceType | sourceType }}
             </template>
           </el-table-column>
-          <el-table-column width="120" align="center" prop="des" label="用户账号">
+          <el-table-column
+            width="120"
+            align="center"
+            prop="des"
+            label="用户账号"
+          >
             <template slot-scope="scope">
               {{ scope.row.userInfo.phone }}
             </template>
           </el-table-column>
-          <el-table-column width="120" align="center" prop="des" label="订单状态">
+          <el-table-column
+            width="120"
+            align="center"
+            prop="des"
+            label="订单状态"
+          >
             <template slot-scope="scope">
               {{ scope.row.status | status }}
             </template>
           </el-table-column>
           <el-table-column align="center" prop="orderAmount" label="订单金额">
           </el-table-column>
-          <el-table-column width="180" align="center" prop="createTime" label="创建时间">
+          <el-table-column
+            width="180"
+            align="center"
+            prop="createTime"
+            label="创建时间"
+          >
           </el-table-column>
           <el-table-column
             width="120"
@@ -110,13 +129,13 @@
             fixed="right"
           >
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="openEdit(scope.row)"
+              <el-button type="text" size="small" @click="openDetail(scope.row)"
                 >查看</el-button
               >
-              <el-button type="text" size="small" @click="openEdit(scope.row)"
+              <el-button v-if="scope.row.status === 0" type="text" size="small" @click="openHandle(scope.row)"
                 >发货</el-button
               >
-              <el-button type="text" size="small" @click="delGoodsBrand(scope)"
+              <el-button v-if="scope.row.status === 4" type="text" size="small" @click="delGoodsBrand(scope)"
                 >删除</el-button
               >
             </template>
@@ -136,24 +155,31 @@
         </el-pagination>
       </div>
     </div>
-    <!-- 编辑弹框 -->
-    <el-dialog v-if="dialogVisible" :visible.sync="dialogVisible" width="500px">
-      <!-- <Edit :closeModal="closeModal" :row="row" /> -->
+    <!-- 订单详情 -->
+    <el-dialog v-if="dialogVisible" :visible.sync="dialogVisible" width="80%">
+      <Detail :closeModal="closeModal" :row="row" />
+    </el-dialog>
+    <!-- 发货处理弹框 -->
+    <el-dialog v-if="dialogVisible1" :visible.sync="dialogVisible1" width="400">
+      <Handle :closeModal="closeModal" :row="row" />
     </el-dialog>
   </div>
 </template>
 
 <script>
 // import Edit from "./components/edit";
+import Detail from "./components/detail";
+import Handle from "./components/handle";
 import { getOrder } from "@/api/orderManage";
-import { defaults } from "codemirror";
 export default {
   components: {
-    // Edit
+    Detail,
+    Handle
   },
   data() {
     return {
-      dialogVisible: false,
+      dialogVisible: false, // 订单详情
+      dialogVisible1: false, // 发货处理
       row: null,
       pageParams: {
         page: 1,
@@ -232,10 +258,15 @@ export default {
         })
         .catch(err => {});
     },
-    // 打开编辑弹框
-    openEdit(row) {
+    // 打开订单详情弹框
+    openDetail(row) {
       this.row = row;
       this.dialogVisible = true;
+    },
+    // 打开发货弹框
+    openHandle(row) {
+      this.row = row;
+      this.dialogVisible1 = true;
     },
     // 删除品牌
     delGoodsBrand(scope) {
@@ -254,6 +285,7 @@ export default {
     // 关闭弹框
     closeModal() {
       this.dialogVisible = false;
+      this.dialogVisible1 = false;
       this.getData();
     },
     handleSizeChange(val) {

@@ -86,4 +86,10 @@ public class OrderDto extends PageReqDto {
 
     @ApiModelProperty(value = "创建时间")
     private Timestamp createTime;
+
+    @ApiModelProperty(value = "物流公司")
+    private String deliveryCompany;
+
+    @ApiModelProperty(value = "物流单号")
+    private String deliveryNo;
 }

@@ -1,10 +1,13 @@
 package com.ozomall.service.mall.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ozomall.dao.GoodsSkuMapper;
 import com.ozomall.dao.OrderMapper;
+import com.ozomall.entity.GoodsSkuDto;
 import com.ozomall.entity.OrderDto;
 import com.ozomall.entity.Result;
 import com.ozomall.service.mall.MallOrderService;
@@ -20,6 +23,9 @@ import java.util.Map;
 public class MallOrderServiceImpl implements MallOrderService {
     @Resource
     private OrderMapper orderMapper;
+
+    @Resource
+    private GoodsSkuMapper goodsSkuMapper;
 
     /**
      * 添加订单
@@ -37,11 +43,26 @@ public class MallOrderServiceImpl implements MallOrderService {
         }
         String orderNo = form.getSourceType() + "" + new Date().getTime() + userId;
         form.setOrderNo(orderNo);
-        int row = orderMapper.insert(form);
-        if (row > 0) {
-            return ResultGenerate.genSuccessResult();
+        // 占库存
+        QueryWrapper<GoodsSkuDto> wrapper = new QueryWrapper<>();
+        wrapper.eq("id", form.getGoodsSkuId());
+        GoodsSkuDto sku = goodsSkuMapper.selectOne(wrapper);
+        int stock = sku.getStock();
+        if (stock >= 1) {
+            // 减库存
+            int count = goodsSkuMapper.reduceStock(form.getGoodsSkuId(), 1);
+            if (count > 0) {
+                int row = orderMapper.insert(form); // 添加订单
+                if (row > 0) {
+                    return ResultGenerate.genSuccessResult();
+                } else {
+                    return ResultGenerate.genErroResult("失败！");
+                }
+            } else {
+                return ResultGenerate.genErroResult("预占库存失败！");
+            }
         } else {
-            return ResultGenerate.genErroResult("失败！");
+            return ResultGenerate.genErroResult("库存不足！");
         }
     }
 

@@ -8,4 +8,9 @@ public interface AdminOrderService {
      * 获取订单
      * */
     Result getOrder(OrderDto form);
+
+    /**
+     * 发货
+     * */
+    Result putOrder(OrderDto form);
 }
