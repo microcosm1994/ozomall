@@ -124,7 +124,7 @@ export default {
           if (res.data.code === 1) {
             this.tableData = res.data.data.records;
             this.pageParams.page = res.data.data.current;
-            this.pageParams.current = res.data.data.current;
+            this.pageParams.size = res.data.data.size;
             this.pageParams.total = res.data.data.total;
           }
         })

@@ -46,12 +46,12 @@ export default {
             });
         },
         // 跳转到订单列表页
-        toOrder(active) {
+        toOrder(orderStatus) {
             wx.navigateTo({
                 url: '/pages/order/index',
                 success: function (res) {
                     // 通过eventChannel向被打开页面传送数据
-                    res.eventChannel.emit('active', { active })
+                    res.eventChannel.emit('orderStatus', { orderStatus })
                 }
             });
         },

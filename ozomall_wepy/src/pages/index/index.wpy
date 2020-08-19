@@ -204,9 +204,7 @@ wepy.page({
     // 计算scroll高度
     computedScroll() {
       let h = wx.getSystemInfoSync().windowHeight;
-      console.log(wx.getSystemInfoSync().windowHeight);
       this.scrollHeight = (h - 87) * 2;
-      console.log(this.scrollHeight)
     },
     // 获取banner
     getBanner() {
@@ -245,7 +243,6 @@ wepy.page({
     },
     // 点击搜索框下边分类
     classifyTap(type) {
-      console.log(type);
       this.page = 1
       this.prodList = []
       this.classifyType = type;

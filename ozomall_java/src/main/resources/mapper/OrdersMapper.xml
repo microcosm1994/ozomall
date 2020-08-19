@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozomall.dao.OrderMapper">
+    <resultMap id="orderMap" type="com.ozomall.vo.OrdersVo">
+        <id property="id" column="id"></id>
+        <result property="orderNo" column="order_no"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="goodsId" column="goods_id"></result>
+        <result property="goodsSkuId" column="goods_sku_id"></result>
+        <result property="addressId" column="address_id"></result>
+        <result property="goodsName" column="goods_name"></result>
+        <result property="spe1Name" column="spe1_name"></result>
+        <result property="spe2Name" column="spe2_name"></result>
+        <result property="spe3Name" column="spe3_name"></result>
+        <result property="goodsPic" column="goods_pic"></result>
+        <result property="goodsAmount" column="goods_amount"></result>
+        <result property="orderAmount" column="order_amount"></result>
+        <result property="payAmount" column="pay_amount"></result>
+        <result property="freightAmount" column="freight_amount"></result>
+        <result property="promotionAmount" column="promotion_amount"></result>
+        <result property="payType" column="pay_type"></result>
+        <result property="sourceType" column="source_type"></result>
+        <result property="status" column="status"></result>
+        <result property="del" column="del"></result>
+        <result property="deliveryTime" column="delivery_time"></result>
+        <result property="paymentTime" column="payment_time"></result>
+        <result property="receiveTime" column="receive_time"></result>
+        <result property="createTime" column="create_time"></result>
+        <association property="userInfo" javaType="Map" columnPrefix="userInfo_">
+            <id property="id" column="id"></id>
+            <result property="phone" column="phone"/>
+        </association>
+        <association property="addressInfo" javaType="Map" columnPrefix="addressInfo_">
+            <id property="id" column="id"></id>
+            <result property="consignee" column="consignee"/>
+            <result property="region" column="region"/>
+            <result property="address" column="address"/>
+            <result property="phone" column="phone"/>
+        </association>
+    </resultMap>
+    <select id="orderList" parameterType="com.ozomall.entity.OrderDto" resultMap="orderMap">
+        select orders.*,
+        userInfo.id as userInfo_id,
+        userInfo.phone as userInfo_phone,
+        addressInfo.id as addressInfo_id,
+        addressInfo.consignee as addressInfo_consignee,
+        addressInfo.region as addressInfo_region,
+        addressInfo.address as addressInfo_address,
+        addressInfo.phone as addressInfo_phone
+        from orders
+        left join mall_users as userInfo on orders.user_id=userInfo.id
+        left join address as addressInfo on orders.address_id=addressInfo.id
+        where orders.del=0
+        <if test="form.id != null">
+            and orders.id=#{form.id}
+        </if>
+        <if test="form.orderNo != null">
+            and orders.order_no=#{form.orderNo}
+        </if>
+        <if test="form.goodsName != null">
+            and orders.goods_name=#{form.goodsName}
+        </if>
+        <if test="form.payType != null">
+            and orders.pay_type=#{form.payType}
+        </if>
+        <if test="form.sourceType != null">
+            and orders.source_type=#{form.sourceType}
+        </if>
+        <if test="form.status != null">
+            and orders.status=#{form.status}
+        </if>
+        <if test="form.status != null">
+            and orders.status=#{form.status}
+        </if>
+    </select>
+
+    <select id="getGoodsById" parameterType="int" resultMap="orderMap">
+        select goods.*,
+       classify1.id as classify1_id,
+        classify1.name as classify1_name,
+        classify2.id as classify2_id,
+        classify2.name as classify2_name,
+        classify3.id as classify3_id,
+        classify3.name as classify3_name,
+        goods_brand.id as brand_id,
+        goods_brand.name as brand_name,
+        goods_brand.url as brand_url
+        from goods
+        left join classify as classify1 on goods.classify1_id=classify1.id
+        left join classify as classify2 on goods.classify2_id=classify2.id
+        left join classify as classify3 on goods.classify3_id=classify3.id
+        left join goods_brand on goods.brand_id=goods_brand.id
+        where goods.id=#{id}
+    </select>
+</mapper>

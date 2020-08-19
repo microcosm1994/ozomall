@@ -32,7 +32,7 @@
     <div class="home-goodsInfo">
       <van-card
         :price="goodsInfo.price"
-        desc="{{goodsInfo.sku1Name + ' ' + goodsInfo.sku2Name + ' ' + goodsInfo.sku3Name + ' ' + '数量x1'}}"
+        desc="{{goodsInfo.spe1Name + ' ' + goodsInfo.spe2Name + ' ' + goodsInfo.spe3Name + ' ' + '数量x1'}}"
         :title="goodsInfo.goodsName"
         thumb="{{ goodsInfo.pic }}"
       />
@@ -117,6 +117,7 @@ wepy.page({
         this.addressInfo = data;
       }
     });
+    console.log(this.goodsInfo)
   },
   methods: {
     // 获取用户信息
@@ -156,7 +157,27 @@ wepy.page({
     },
     // 添加订单
     addOrder() {
-      addOrder().then((res) => {
+      console.log(this.goodsInfo)
+      let data = {
+        userId: this.userInfo.id,
+        addressId: this.addressInfo.id,
+        goodsId: this.goodsInfo.goodsId,
+        goodsSkuId: this.goodsInfo.goodsSkuId,
+        goodsName: this.goodsInfo.goodsName,
+        spe1Name: this.goodsInfo.spe1Name,
+        spe2Name: this.goodsInfo.spe2Name,
+        spe3Name: this.goodsInfo.spe3Name,
+        goodsPic: this.goodsInfo.pic,
+        goodsAmount: this.goodsInfo.price,
+        orderAmount: this.goodsInfo.price + 14,
+        payAmount: this.goodsInfo.price + 14,
+        freightAmount: 14,
+        promotionAmount: 0,
+        payType: 2,
+        sourceType: 0,
+        status: 0,
+      };
+      addOrder(data).then((res) => {
         if (res.data.code === 1) {
           console.log(res.data);
         }

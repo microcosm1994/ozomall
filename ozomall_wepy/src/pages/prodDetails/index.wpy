@@ -625,10 +625,12 @@ wepy.page({
     // 跳转到确认订单页面
     toConfirmOrder() {
       let data = {
+        goodsId: this.goodsInfo.id,
         goodsName: this.goodsInfo.goodsName,
-        sku1Name: this.skuForm.spe1.name,
-        sku2Name: this.skuForm.spe2.name,
-        sku3Name: this.skuForm.spe3.name,
+        goodsSkuId: this.skuInfo.id,
+        spe1Name: this.skuForm.spe1.name,
+        spe2Name: this.skuForm.spe2.name,
+        spe3Name: this.skuForm.spe3.name,
         price: this.skuInfo.price,
         pic: this.skuInfo.pic,
       };

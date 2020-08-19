@@ -5,7 +5,7 @@ const service = async (config) => {
         let data = {};
         if (config.method === "get") {
             for (let key in config.params) {
-                if (config.params[key]) {
+                if (config.params[key] || config.params[key] === 0) {
                     data[key] = config.params[key]
                 }
             }

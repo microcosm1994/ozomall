@@ -8,7 +8,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.DateTimeException;
+import java.util.Date;
 
 @Data
 @TableName("orders")
@@ -16,7 +16,10 @@ public class OrderDto extends PageReqDto {
 
     @ApiModelProperty(value = "id")
     @TableId(type = IdType.AUTO)
-    private int id;
+    private Integer id;
+
+    @ApiModelProperty(value = "订单编号")
+    private String orderNo;
 
     @ApiModelProperty(value = "关联用户id")
     private Integer userId;
@@ -24,8 +27,29 @@ public class OrderDto extends PageReqDto {
     @ApiModelProperty(value = "关联商品id")
     private Integer goodsId;
 
+    @ApiModelProperty(value = "关联商品sku id")
+    private Integer goodsSkuId;
+
     @ApiModelProperty(value = "关联地址id")
     private Integer addressId;
+
+    @ApiModelProperty(value = "商品名称")
+    private String goodsName;
+
+    @ApiModelProperty(value = "商品属性名称1")
+    private String spe1Name;
+
+    @ApiModelProperty(value = "商品属性名称2")
+    private String spe2Name;
+
+    @ApiModelProperty(value = "商品属性名称3")
+    private String spe3Name;
+
+    @ApiModelProperty(value = "商品图片")
+    private String goodsPic;
+
+    @ApiModelProperty(value = "商品金额")
+    private BigDecimal goodsAmount;
 
     @ApiModelProperty(value = "订单金额")
     private BigDecimal orderAmount;
@@ -52,13 +76,13 @@ public class OrderDto extends PageReqDto {
     private Integer del;
 
     @ApiModelProperty(value = "发货时间")
-    private DateTimeException deliveryTime;
+    private Date deliveryTime;
 
     @ApiModelProperty(value = "支付时间")
-    private DateTimeException paymentTime;
+    private Date paymentTime;
 
     @ApiModelProperty(value = "确认收货时间")
-    private DateTimeException receiveTime;
+    private Date receiveTime;
 
     @ApiModelProperty(value = "创建时间")
     private Timestamp createTime;

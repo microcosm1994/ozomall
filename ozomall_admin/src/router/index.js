@@ -9,12 +9,11 @@ import Layout from '@/layout'
 /* Router Modules */
 import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested' 
 import sysManage from './modules/sysManage' // 后台系统设置
 import mallManage from './modules/mallManage' // 商城管理模块
 import goodsManage from './modules/goodsManage' // 商品管理模块
 import userManage from './modules/userManage' // 用户管理模块
+import ordersManage from './modules/ordersManage' // 订单管理模块
 export default new Router({
   routes: [
     {
@@ -87,9 +86,8 @@ export default new Router({
     },
     componentsRouter,
     chartsRouter,
-    tableRouter,
-    nestedRouter,
     goodsManage,
+    ordersManage,
     userManage,
     mallManage,
     sysManage,
