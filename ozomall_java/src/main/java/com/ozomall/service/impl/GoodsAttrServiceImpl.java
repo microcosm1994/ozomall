@@ -10,6 +10,8 @@ import com.ozomall.entity.*;
 import com.ozomall.service.GoodsAttrService;
 import com.ozomall.utils.Oss;
 import com.ozomall.utils.ResultGenerate;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +35,9 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
 
     @Resource
     GoodsParamsMapper goodsParamsMapper;
+
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 添加商品属性
@@ -124,8 +129,12 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
      */
     @Override
     public Result addGoodsSku(GoodsSkuDto form) {
+        LettuceConnectionFactory factory = (LettuceConnectionFactory) redisTemplate.getConnectionFactory();
+        factory.setDatabase(1);
+        redisTemplate.setConnectionFactory(factory);
         int rows = goodsSkuMapper.insert(form);
         if (rows > 0) {
+            redisTemplate.opsForValue().set(String.valueOf(form.getId()), String.valueOf(form.getStock()));
             return ResultGenerate.genSuccessResult("保存成功");
         } else {
             return ResultGenerate.genErroResult("保存失败！");
@@ -186,8 +195,12 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
      */
     @Override
     public Result putGoodsSku(GoodsSkuDto form) {
+        LettuceConnectionFactory factory = (LettuceConnectionFactory) redisTemplate.getConnectionFactory();
+        factory.setDatabase(2);
+        redisTemplate.setConnectionFactory(factory);
         int rows = goodsSkuMapper.updateById(form);
         if (rows > 0) {
+            redisTemplate.opsForValue().set(String.valueOf(form.getId()), String.valueOf(form.getStock()));
             return ResultGenerate.genSuccessResult();
         } else {
             return ResultGenerate.genErroResult("更新失败！");

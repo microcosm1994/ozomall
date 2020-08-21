@@ -10,6 +10,7 @@ import com.ozomall.dao.OrderMapper;
 import com.ozomall.entity.GoodsSkuDto;
 import com.ozomall.entity.OrderDto;
 import com.ozomall.entity.Result;
+import com.ozomall.process.MsgProducer;
 import com.ozomall.service.mall.MallOrderService;
 import com.ozomall.utils.ResultGenerate;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ public class MallOrderServiceImpl implements MallOrderService {
 
     @Resource
     private GoodsSkuMapper goodsSkuMapper;
+
+    @Resource
+    private MsgProducer msgProducer;
 
     /**
      * 添加订单
@@ -71,6 +75,7 @@ public class MallOrderServiceImpl implements MallOrderService {
      */
     @Override
     public Result getOrder(OrderDto form) {
+        msgProducer.sendMsg("sssss");
         LambdaQueryWrapper<OrderDto> wrapper = new LambdaQueryWrapper<>();
         Map<SFunction<OrderDto, ?>, Object> map = new HashMap<>();
         map.put(OrderDto::getId, form.getId());
