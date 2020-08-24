@@ -11,14 +11,14 @@ import com.ozomall.service.mall.MallUserService;
 import com.ozomall.utils.AuthUtils;
 import com.ozomall.utils.ResultGenerate;
 import com.ozomall.utils.Sms;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class MallUserServiceImpl implements MallUserService {
@@ -30,7 +30,7 @@ public class MallUserServiceImpl implements MallUserService {
     MallUserSettingMapper mallUserSettingMapper;
 
     @Resource
-    RedisTemplate<String, String> redisTemplate;
+    private JedisPool jedisPool;
 
     /**
      * 发送短信验证码
@@ -42,7 +42,9 @@ public class MallUserServiceImpl implements MallUserService {
         String code = Sms.sendMessage(phone);
         if (!StringUtils.isEmpty(code)) {
             // 保存用户短信验证码到redis
-            redisTemplate.opsForValue().set(phone, code, 10, TimeUnit.MINUTES);
+            Jedis jedis = jedisPool.getResource();
+            jedis.select(0);
+            jedis.setex(phone, 60 * 10, code);
             return ResultGenerate.genSuccessResult();
         } else {
             return ResultGenerate.genErroResult("发送短息失败");
@@ -60,7 +62,9 @@ public class MallUserServiceImpl implements MallUserService {
         Result result = this.getUser(user);
         Object userInfo = result.getData();
         String token = AuthUtils.genToken(user.getPhone());
-        redisTemplate.opsForValue().set(token, user.getPhone());
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(0);
+        jedis.set(token, user.getPhone());
         data.put("token", token);
         if (userInfo != null) {
             data.put("users", userInfo);

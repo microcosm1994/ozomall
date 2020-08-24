@@ -1,10 +1,11 @@
 package com.ozomall.interceptor;
 
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class AdminInterceptor implements HandlerInterceptor {
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private JedisPool jedisPool;
 
     /**
      * 在请求处理之前进行调用（Controller方法调用之前）
@@ -27,7 +28,9 @@ public class AdminInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object arg2) throws Exception {
         String token = request.getHeader("token");
         if (!StringUtils.isEmpty(token)) {
-            String tokenJsonValue = redisTemplate.opsForValue().get(token);
+            Jedis jedis = jedisPool.getResource();
+            jedis.select(0);
+            String tokenJsonValue = jedis.get(token);
             if (!StringUtils.isEmpty(tokenJsonValue)) {
                 return true;
             } else {

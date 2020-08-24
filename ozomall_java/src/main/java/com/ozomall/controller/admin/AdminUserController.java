@@ -2,18 +2,19 @@ package com.ozomall.controller.admin;
 
 import com.google.code.kaptcha.Constants;
 import com.ozomall.entity.Result;
-import com.ozomall.entity.admin.RoleDto;
 import com.ozomall.entity.admin.AdminUserDto;
+import com.ozomall.entity.admin.RoleDto;
 import com.ozomall.entity.mall.MallUserDto;
 import com.ozomall.service.admin.AdminUserService;
 import com.ozomall.utils.ResultGenerate;
 import com.ozomall.vo.admin.UsersVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class AdminUserController {
     @Resource
     HttpServletRequest request;
     @Resource
-    RedisTemplate<String, String> redisTemplate;
+    private JedisPool jedisPool;
     @Resource
     private HttpSession session;
     @Resource
@@ -53,7 +54,9 @@ public class AdminUserController {
     @PostMapping(value = "/logout")
     public Result logout() {
         String token = request.getHeader("token");
-        redisTemplate.delete(token);
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(0);
+        jedis.del(token);
         return ResultGenerate.genSuccessResult();
     }
 

@@ -14,6 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Broker:它提供一种传输服务,它的角色就是维护一条从生产者到消费者的路线，保证数据能按照指定的方式进行传输,
@@ -43,19 +46,20 @@ public class RabbitConfig {
     @Value("${spring.rabbitmq.password}")
     private String password;
 
+    // 订单超时死信队列
+    public static final String Order_EX_Delay = "order.ex.delay";
+    public static final String Order_QUEUE_Delay = "order.queue.delay";
+    public static final String Order_ROUTINGKEY_Delay = "order.routingKey.delay";
 
-    public static final String EXCHANGE_A = "my-mq-exchange_A";
-    public static final String EXCHANGE_B = "my-mq-exchange_B";
-    public static final String EXCHANGE_C = "my-mq-exchange_C";
+    // 订单超时处理队列
+    public static final String Order_EX = "order.exchange";
+    public static final String Order_QUEUE = "order.queue";
+    public static final String Order_ROUTINGKEY = "order.routingKey";
 
-
-    public static final String QUEUE_A = "Order";
-    public static final String QUEUE_B = "QUEUE_B";
-    public static final String QUEUE_C = "QUEUE_C";
-
-    public static final String ROUTINGKEY_A = "spring-boot-routingKey_A";
-    public static final String ROUTINGKEY_B = "spring-boot-routingKey_B";
-    public static final String ROUTINGKEY_C = "spring-boot-routingKey_C";
+    // 订单创建队列
+    public static final String Order_EX_Add = "order.exchange";
+    public static final String Order_QUEUE_Add = "order.queue";
+    public static final String Order_ROUTINGKEY_Add = "order.routingKey";
 
     @Bean
     public CachingConnectionFactory connectionFactory() {
@@ -84,24 +88,70 @@ public class RabbitConfig {
      * DirectExchange:按照routingkey分发到指定队列
      * TopicExchange:多关键字匹配
      */
+    /**
+     * 死信队列
+     */
     @Bean
-    public DirectExchange defaultExchange() {
-        return new DirectExchange(EXCHANGE_A);
+    public DirectExchange orderDelayEx() {
+        return new DirectExchange(Order_EX_Delay);
+    }
+
+    @Bean
+    public Queue orderDelayQueue() {
+        Map<String, Object> params = new HashMap<>();
+        // x-dead-letter-exchange 声明了队列里的死信转发到的DLX名称，
+        params.put("x-dead-letter-exchange", Order_EX);
+        // x-dead-letter-routing-key 声明了这些死信在转发时携带的 routing-key 名称。
+        params.put("x-dead-letter-routing-key", Order_ROUTINGKEY);
+        return new Queue(Order_QUEUE_Delay, true, false, false, params);
+    }
+
+    @Bean
+    public Binding orderDelayBinding() {
+        return BindingBuilder.bind(orderDelayQueue()).to(orderDelayEx()).with(RabbitConfig.Order_ROUTINGKEY_Delay);
     }
 
     /**
-     * 获取队列A
-     *
-     * @return
+     * 订单
      */
+    // 订单交换机
     @Bean
-    public Queue queueA() {
-        return new Queue(QUEUE_A, true); //队列持久
+    public DirectExchange orderExchange() {
+        return new DirectExchange(Order_EX);
     }
 
+    // 订单队列
     @Bean
-    public Binding binding() {
-        return BindingBuilder.bind(queueA()).to(defaultExchange()).with(RabbitConfig.ROUTINGKEY_A);
+    public Queue orderQueue() {
+        return new Queue(Order_QUEUE, true); //队列持久
+    }
+
+    // 订单队列绑定交换机
+    @Bean
+    public Binding orderBinding() {
+        return BindingBuilder.bind(orderQueue()).to(orderExchange()).with(RabbitConfig.Order_ROUTINGKEY);
+    }
+
+
+    /**
+     * 创建订单
+     */
+    // 订单交换机
+    @Bean
+    public DirectExchange orderAddEx() {
+        return new DirectExchange(Order_EX);
+    }
+
+    // 订单队列
+    @Bean
+    public Queue orderAddQueue() {
+        return new Queue(Order_QUEUE_Add, true); //队列持久
+    }
+
+    // 订单队列绑定交换机
+    @Bean
+    public Binding orderAddBinding() {
+        return BindingBuilder.bind(orderAddQueue()).to(orderAddEx()).with(RabbitConfig.Order_ROUTINGKEY_Add);
     }
 
 }

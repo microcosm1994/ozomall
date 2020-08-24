@@ -10,11 +10,11 @@ import com.ozomall.entity.*;
 import com.ozomall.service.GoodsAttrService;
 import com.ozomall.utils.Oss;
 import com.ozomall.utils.ResultGenerate;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
     GoodsParamsMapper goodsParamsMapper;
 
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private JedisPool jedisPool;
 
     /**
      * 添加商品属性
@@ -129,12 +129,11 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
      */
     @Override
     public Result addGoodsSku(GoodsSkuDto form) {
-        LettuceConnectionFactory factory = (LettuceConnectionFactory) redisTemplate.getConnectionFactory();
-        factory.setDatabase(1);
-        redisTemplate.setConnectionFactory(factory);
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(1);
         int rows = goodsSkuMapper.insert(form);
         if (rows > 0) {
-            redisTemplate.opsForValue().set(String.valueOf(form.getId()), String.valueOf(form.getStock()));
+            jedis.set(String.valueOf(form.getId()), String.valueOf(form.getStock()));
             return ResultGenerate.genSuccessResult("保存成功");
         } else {
             return ResultGenerate.genErroResult("保存失败！");
@@ -195,12 +194,12 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
      */
     @Override
     public Result putGoodsSku(GoodsSkuDto form) {
-        LettuceConnectionFactory factory = (LettuceConnectionFactory) redisTemplate.getConnectionFactory();
-        factory.setDatabase(2);
-        redisTemplate.setConnectionFactory(factory);
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(1);
         int rows = goodsSkuMapper.updateById(form);
         if (rows > 0) {
-            redisTemplate.opsForValue().set(String.valueOf(form.getId()), String.valueOf(form.getStock()));
+            jedis.set(String.valueOf(form.getId()), String.valueOf(form.getStock()));
+
             return ResultGenerate.genSuccessResult();
         } else {
             return ResultGenerate.genErroResult("更新失败！");

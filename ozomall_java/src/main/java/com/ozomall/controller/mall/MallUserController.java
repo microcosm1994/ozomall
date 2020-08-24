@@ -7,9 +7,10 @@ import com.ozomall.entity.mall.MallUserSettingDto;
 import com.ozomall.service.mall.MallUserService;
 import com.ozomall.utils.ResultGenerate;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,7 @@ public class MallUserController {
     MallUserService mallUserService;
 
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private JedisPool jedisPool;
 
     @ApiOperation(value = "发送短信验证码")
     @PostMapping(value = "/sendMessage")
@@ -34,7 +35,9 @@ public class MallUserController {
     @ApiOperation(value = "登陆")
     @PostMapping(value = "/login")
     public Result login(@RequestBody MallUserDto user) {
-        String code = redisTemplate.opsForValue().get(user.getPhone());
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(0);
+        String code = jedis.get(user.getPhone());
         if (user.getCode().equals(code)) {
             return mallUserService.login(user);
         } else {
@@ -45,8 +48,10 @@ public class MallUserController {
     @ApiOperation(value = "登出")
     @PostMapping(value = "/logout")
     public Result logout(HttpServletRequest request) {
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(0);
         String token = request.getHeader("token");
-        redisTemplate.delete(token);
+        jedis.del(token);
         return ResultGenerate.genSuccessResult();
     }
 

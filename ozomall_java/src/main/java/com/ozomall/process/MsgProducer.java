@@ -8,6 +8,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Component
@@ -27,10 +28,20 @@ public class MsgProducer implements RabbitTemplate.ConfirmCallback {
         rabbitTemplate.setConfirmCallback(this); //rabbitTemplate如果为单例的话，那回调就是最后设置的内容
     }
 
-    public void sendMsg(String content) {
+    // 发送消息给死信队列
+    public void sendOrderDelayMsg(String content) {
         CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
-        //把消息放入ROUTINGKEY_A对应的队列当中去，对应的是队列A
-        rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE_A, RabbitConfig.ROUTINGKEY_A, content, correlationId);
+        rabbitTemplate.convertAndSend(RabbitConfig.Order_EX_Delay, RabbitConfig.Order_ROUTINGKEY_Delay, content, message -> {
+            message.getMessageProperties().setExpiration(1000 * 60 + "");
+            return message;
+        });
+    }
+
+    // 发送消息给订单创建队列
+    public void sendOrderAddMsg(String content) {
+        CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
+        System.out.println("【订单生成时间】" + new Date().toString() + "【1分钟后检查订单是否已经支付】");
+        rabbitTemplate.convertAndSend(RabbitConfig.Order_EX_Add, RabbitConfig.Order_ROUTINGKEY_Add, content, correlationId);
     }
 
     /**

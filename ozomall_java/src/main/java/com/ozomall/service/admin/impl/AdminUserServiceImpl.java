@@ -13,15 +13,15 @@ import com.ozomall.entity.mall.MallUserDto;
 import com.ozomall.service.admin.AdminUserService;
 import com.ozomall.utils.AuthUtils;
 import com.ozomall.utils.ResultGenerate;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class AdminUserServiceImpl implements AdminUserService {
@@ -32,7 +32,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     private MallUserMapper mallUserMapper;
 
     @Resource
-    RedisTemplate<String, String> redisTemplate;
+    private JedisPool jedisPool;
 
     /**
      * 登陆
@@ -57,7 +57,9 @@ public class AdminUserServiceImpl implements AdminUserService {
             String token = AuthUtils.genToken(userName);
             resultData.put("token", token);
             String jsonTokenValue = AuthUtils.setToken(token, userResult);
-            redisTemplate.opsForValue().set(token, jsonTokenValue, 12, TimeUnit.HOURS);
+            Jedis jedis = jedisPool.getResource();
+            jedis.select(0);
+            jedis.setex(token, 3600 * 12, jsonTokenValue);
             return ResultGenerate.genSuccessResult(resultData);
         } else {
             return ResultGenerate.genErroResult("密码错误");
@@ -72,7 +74,9 @@ public class AdminUserServiceImpl implements AdminUserService {
      */
     @Override
     public Result getUserInfo(String token) {
-        String tokenValue = redisTemplate.opsForValue().get(token);
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(0);
+        String tokenValue = jedis.get(token);
         String userName = JSONObject.parseObject(tokenValue).getString("userName");
         AdminUserDto userResult = adminUserMapper.getUsers(userName);
         if (userResult != null) {
