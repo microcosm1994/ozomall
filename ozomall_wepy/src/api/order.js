@@ -9,10 +9,28 @@ export function addOrder(data) {
     })
 }
 
+// 根据订单编号获取订单
+export function getByOrderNo(params) {
+    return service({
+        url: '/mall/orders/getByOrderNo',
+        method: 'get',
+        params
+    })
+}
+
 // 获取订单
 export function getOrder(params) {
     return service({
         url: '/mall/orders/get',
+        method: 'get',
+        params
+    })
+}
+
+// 根据订单编号查询未支付订单倒计时
+export function getOrderTimer(params) {
+    return service({
+        url: '/mall/orders/getOrderTimer',
         method: 'get',
         params
     })

@@ -9,4 +9,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface OrderMapper extends BaseMapper<OrderDto> {
     IPage<OrderDto> orderList(Page page, OrderDto form);
+
+    OrderDto getOrderDetail(String orderNo);
 }

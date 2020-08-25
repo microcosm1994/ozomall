@@ -78,22 +78,18 @@
         </if>
     </select>
 
-    <select id="getGoodsById" parameterType="int" resultMap="orderMap">
-        select goods.*,
-       classify1.id as classify1_id,
-        classify1.name as classify1_name,
-        classify2.id as classify2_id,
-        classify2.name as classify2_name,
-        classify3.id as classify3_id,
-        classify3.name as classify3_name,
-        goods_brand.id as brand_id,
-        goods_brand.name as brand_name,
-        goods_brand.url as brand_url
-        from goods
-        left join classify as classify1 on goods.classify1_id=classify1.id
-        left join classify as classify2 on goods.classify2_id=classify2.id
-        left join classify as classify3 on goods.classify3_id=classify3.id
-        left join goods_brand on goods.brand_id=goods_brand.id
-        where goods.id=#{id}
+    <select id="getOrderDetail" parameterType="String" resultMap="orderMap">
+       select orders.*,
+        userInfo.id as userInfo_id,
+        userInfo.phone as userInfo_phone,
+        addressInfo.id as addressInfo_id,
+        addressInfo.consignee as addressInfo_consignee,
+        addressInfo.region as addressInfo_region,
+        addressInfo.address as addressInfo_address,
+        addressInfo.phone as addressInfo_phone
+        from orders
+        left join mall_users as userInfo on orders.user_id=userInfo.id
+        left join address as addressInfo on orders.address_id=addressInfo.id
+        where orders.del=0 and orders.order_no=#{orderNo}
     </select>
 </mapper>

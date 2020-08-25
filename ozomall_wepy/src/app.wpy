@@ -75,6 +75,7 @@ wepy.app({
       'pages/account/list', //   我的账户-账户明细
       'pages/order/index', //   订单
       'pages/order/confirm', //   确认订单
+      'pages/order/detail', //   订单详情
       'pages/buyList/index', // 最近购买
       'pages/prodDetails/index', // 商品详情
       'pages/search/index', // 搜索页

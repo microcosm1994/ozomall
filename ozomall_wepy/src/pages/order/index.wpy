@@ -26,7 +26,7 @@
         lower-threshold="50"
         bindscrolltolower="scrolltolower"
       >
-        <div class="order-item" v-for="item in orderList" :key="item.id">
+        <div class="order-item" v-for="item in orderList" :key="item.id" @tap="toOrderDetail(item)">
           <div class="item-status">{{ item.statusName }}</div>
           <div class="item-content">
             <van-card
@@ -65,7 +65,7 @@ wepy.page({
     eventChannel.on('orderStatus', (data) => {
       this.status = data.orderStatus;
       if (this.status === 4) {
-        this.getOrder()
+        this.getOrder();
       }
     });
   },
@@ -100,9 +100,9 @@ wepy.page({
     },
     // 切换订单状态
     onChange(e) {
-      this.status = e.$wx.detail.name
-      this.orderList = []
-      this.getOrder()
+      this.status = e.$wx.detail.name;
+      this.orderList = [];
+      this.getOrder();
     },
     // 获取订单
     getOrder() {
@@ -139,6 +139,16 @@ wepy.page({
       } else {
         return false;
       }
+    },
+    // 跳转订单详情
+    toOrderDetail(row) {
+      wx.navigateTo({
+        url: '/pages/order/detail',
+        success: function (res) {
+          // 通过eventChannel向被打开页面传送数据
+          res.eventChannel.emit('orderNo', { orderNo: row.orderNo });
+        },
+      });
     },
   },
 });

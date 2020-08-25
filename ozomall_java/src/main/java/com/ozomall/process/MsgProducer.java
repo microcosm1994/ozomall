@@ -8,7 +8,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Component
@@ -30,9 +29,8 @@ public class MsgProducer implements RabbitTemplate.ConfirmCallback {
 
     // 发送消息给死信队列
     public void sendOrderDelayMsg(String content) {
-        CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
         rabbitTemplate.convertAndSend(RabbitConfig.Order_EX_Delay, RabbitConfig.Order_ROUTINGKEY_Delay, content, message -> {
-            message.getMessageProperties().setExpiration(1000 * 60 + "");
+            message.getMessageProperties().setExpiration(1000 * 60 * 2 + "");
             return message;
         });
     }
@@ -40,7 +38,6 @@ public class MsgProducer implements RabbitTemplate.ConfirmCallback {
     // 发送消息给订单创建队列
     public void sendOrderAddMsg(String content) {
         CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
-        System.out.println("【订单生成时间】" + new Date().toString() + "【1分钟后检查订单是否已经支付】");
         rabbitTemplate.convertAndSend(RabbitConfig.Order_EX_Add, RabbitConfig.Order_ROUTINGKEY_Add, content, correlationId);
     }
 

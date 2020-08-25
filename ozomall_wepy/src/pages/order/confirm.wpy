@@ -117,7 +117,7 @@ wepy.page({
         this.addressInfo = data;
       }
     });
-    console.log(this.goodsInfo)
+    console.log(this.goodsInfo);
   },
   methods: {
     // 获取用户信息
@@ -157,7 +157,7 @@ wepy.page({
     },
     // 添加订单
     addOrder() {
-      console.log(this.goodsInfo)
+      console.log(this.goodsInfo);
       let data = {
         userId: this.userInfo.id,
         addressId: this.addressInfo.id,
@@ -173,13 +173,18 @@ wepy.page({
         payAmount: this.goodsInfo.price + 14,
         freightAmount: 14,
         promotionAmount: 0,
-        payType: 2,
         sourceType: 0,
         status: 0,
       };
       addOrder(data).then((res) => {
         if (res.data.code === 1) {
-          console.log(res.data);
+          wx.navigateTo({
+            url: '/pages/order/detail',
+            success: function (res1) {
+              // 通过eventChannel向被打开页面传送数据
+              res1.eventChannel.emit('orderNo', { orderNo: res.data.data.orderNo });
+            },
+          });
         }
       });
     },

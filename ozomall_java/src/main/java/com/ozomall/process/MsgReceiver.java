@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ozomall.config.RabbitConfig;
 import com.ozomall.dao.OrderMapper;
 import com.ozomall.entity.OrderDto;
+import com.ozomall.utils.OrderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -18,8 +19,12 @@ public class MsgReceiver {
     @Resource
     private OrderMapper orderMapper;
 
+    @Resource
+    private OrderUtils orderUtils;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    // 监听创建订单
     @RabbitListener(queues = RabbitConfig.Order_QUEUE_Add)
     public void orderAddQUEUE(String content) {
         JSONObject jsonValue = JSON.parseObject(content);
@@ -29,6 +34,7 @@ public class MsgReceiver {
         logger.info(form.getOrderNo() + "订单已创建");
     }
 
+    // 监听订单死信队列（订单超时未支付）
     @RabbitListener(queues = RabbitConfig.Order_QUEUE)
     public void orderQUEUE(String content) {
         JSONObject jsonValue = JSON.parseObject(content);
@@ -43,7 +49,10 @@ public class MsgReceiver {
             // 订单超时未支付，关闭订单。
             row.setStatus(4);
             orderMapper.updateById(row);
-            logger.info(row.getOrderNo() + "订单超时未支付，已关闭");
+            // 清除redis倒计时缓存
+            orderUtils.clearRedisTimer(form.getOrderNo());
+            // 归还预占库存
+            orderUtils.revertStock(form);
         }
     }
 }
