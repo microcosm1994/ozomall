@@ -3,7 +3,7 @@
     <div class="goodsForm-form">
       <div class="goodsForm-form-item">
         <div class="item-title">
-          <el-button type="text" @click="submitForm('ruleForm')" size="small">
+          <el-button type="text" @click="toStep(0)" size="small">
             修改基本信息
           </el-button>
         </div>
@@ -33,7 +33,7 @@
       </div>
       <div class="goodsForm-form-item">
         <div class="item-title">
-          <el-button type="text" @click="submitForm('ruleForm')" size="small">
+          <el-button type="text" @click="toStep(1)" size="small">
             修改商品属性
           </el-button>
         </div>
@@ -58,7 +58,7 @@
       </div>
       <div class="goodsForm-form-item">
         <div class="item-title">
-          <el-button type="text" @click="submitForm('ruleForm')" size="small">
+          <el-button type="text" @click="toStep(2)" size="small">
             修改商品详情
           </el-button>
         </div>

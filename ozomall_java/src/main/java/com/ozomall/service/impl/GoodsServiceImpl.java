@@ -52,7 +52,6 @@ public class GoodsServiceImpl implements GoodsService {
     public Result addGoods(GoodsDto form) {
         int row = goodsMapper.insert(form);
         if (row > 0) {
-            mallGoodsMapper.save(form);
             return ResultGenerate.genSuccessResult(form);
         } else {
             return ResultGenerate.genErroResult("商品信息添加失败，请重试！");
@@ -69,7 +68,16 @@ public class GoodsServiceImpl implements GoodsService {
         Page page = new Page();
         page.setCurrent(form.getPage());
         page.setSize(form.getSize());
-        IPage<Map> rows = goodsMapper.goodsList(page, form);
+        LambdaQueryWrapper<GoodsDto> wrapper = new LambdaQueryWrapper<>();
+        Map<SFunction<GoodsDto, ?>, Object> map = new HashMap<>();
+        map.put(GoodsDto::getClassify1Id, form.getClassify1Id());
+        map.put(GoodsDto::getClassify2Id, form.getClassify2Id());
+        map.put(GoodsDto::getClassify3Id, form.getClassify3Id());
+        map.put(GoodsDto::getGoodsName, form.getGoodsName());
+        map.put(GoodsDto::getDel, form.getDel());
+        map.put(GoodsDto::getStatus, form.getStatus());
+        wrapper.allEq(map, false);
+        IPage<Map> rows = goodsMapper.selectPage(page, wrapper);
         if (rows != null) {
             return ResultGenerate.genSuccessResult(rows);
         } else {
@@ -153,7 +161,7 @@ public class GoodsServiceImpl implements GoodsService {
      */
     @Override
     public Result getGoods(int id) {
-        GoodsDto rows = goodsMapper.getGoodsById(id);
+        GoodsDto rows = goodsMapper.selectById(id);
         if (rows != null) {
             return ResultGenerate.genSuccessResult(rows);
         } else {
@@ -177,17 +185,27 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     /**
+     * 上架/下架商品
+     */
+    @Override
+    public Result handleGoods(GoodsDto form) {
+        int rows = goodsMapper.updateById(form);
+        if (rows > 0) {
+            return ResultGenerate.genSuccessResult();
+        } else {
+            return ResultGenerate.genErroResult("失败");
+        }
+    }
+
+    /**
      * 删除商品信息
      *
      * @param form
      */
     @Override
     public Result delGoods(GoodsDto form) {
-        LambdaQueryWrapper<GoodsDto> wrapper = new LambdaQueryWrapper();
-        wrapper.eq(GoodsDto::getId, form.getId());
-        GoodsDto query = new GoodsDto();
-        query.setDel(1);
-        int rows = goodsMapper.update(query, wrapper);
+        form.setDel(1);
+        int rows = goodsMapper.updateById(form);
         if (rows > 0) {
             return ResultGenerate.genSuccessResult();
         } else {

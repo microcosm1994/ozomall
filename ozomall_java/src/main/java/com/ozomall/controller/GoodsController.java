@@ -51,6 +51,12 @@ public class GoodsController {
         return goodsService.putGoods(form);
     }
 
+    @ApiOperation("上架/下架商品")
+    @PostMapping("/handle")
+    public Result handleGoods(@RequestBody GoodsDto form) {
+        return goodsService.handleGoods(form);
+    }
+
     @ApiOperation("删除商品信息")
     @PostMapping("/del")
     public Result delGoods(@RequestBody GoodsDto form) {

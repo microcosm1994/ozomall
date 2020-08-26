@@ -29,6 +29,7 @@
             ref="saveTagInput"
             @keyup.enter.native="handleInputConfirm(attrInputValue)"
             @blur="handleInputConfirm(attrInputValue)"
+            :validate-event="false"
             size="mini"
           >
           </el-input>
@@ -70,6 +71,7 @@
                   handleAttrVal(item.id, goodsAttrValOpt[index])
                 "
                 @blur="handleAttrVal(item.id, goodsAttrValOpt[index])"
+                :validate-event="false"
                 size="mini"
               >
               </el-input>
@@ -106,6 +108,7 @@
                       skuData[scope.$index]['spe' + (index - 0 + 1) + 'Id']
                     "
                     :placeholder="item.name"
+                    :validate-event="false"
                   >
                     <el-option
                       v-for="opt in item.children"
@@ -127,6 +130,7 @@
                     :on-success="handleAvatarSuccess"
                     :before-upload="beforeAvatarUpload"
                     :disabled="scope.row.isDisabled"
+                    :validate-event="false"
                   >
                     <img
                       v-if="skuData[scope.$index].pic"
@@ -150,6 +154,7 @@
                     :disabled="scope.row.isDisabled"
                     v-model="skuData[scope.$index].price"
                     placeholder="请输入价格"
+                    :validate-event="false"
                   ></el-input>
                 </template>
               </el-table-column>
@@ -159,10 +164,16 @@
                     :disabled="scope.row.isDisabled"
                     v-model="skuData[scope.$index].stock"
                     placeholder="请输入库存"
+                    :validate-event="false"
                   ></el-input>
                 </template>
               </el-table-column>
-              <el-table-column align="center" fixed="right" label="操作" width="120">
+              <el-table-column
+                align="center"
+                fixed="right"
+                label="操作"
+                width="120"
+              >
                 <template slot-scope="scope">
                   <el-button
                     v-if="!scope.row.isDisabled"
@@ -216,6 +227,7 @@
                     :disabled="scope.row.isDisabled"
                     v-model="paramsData[scope.$index].name"
                     placeholder="请输入参数名称"
+                    :validate-event="false"
                   ></el-input>
                 </template>
               </el-table-column>
@@ -225,6 +237,7 @@
                     :disabled="scope.row.isDisabled"
                     v-model="paramsData[scope.$index].value"
                     placeholder="请输入参数值"
+                    :validate-event="false"
                   ></el-input>
                 </template>
               </el-table-column>
@@ -310,10 +323,12 @@ export default {
         params: ""
       },
       rules: {
-        attr: [{ required: true, message: "请添加商品属性" }],
-        attrVal: [{ required: true, message: "请添加商品属性值" }],
-        sku: [{ required: true, message: "请添加商品规格" }],
-        params: [{ required: true, message: "请添加商品参数" }]
+        attr: [{ required: true, message: "请添加商品属性", trigger: "blur" }],
+        attrVal: [
+          { required: true, message: "请添加商品属性值", trigger: "blur" }
+        ],
+        sku: [{ required: true, message: "请添加商品规格", trigger: "blur" }],
+        params: [{ required: true, message: "请添加商品参数", trigger: "blur" }]
       },
       attrDynamicTags: [],
       attrInputVisible: false,
@@ -513,11 +528,11 @@ export default {
         this.$message.error("请上传展示图片");
         return false;
       }
-      if (!scope.row.price || !(scope.row.price - 0)) {
+      if (!(scope.row.price - 0) && scope.row.price - 0 !== 0) {
         this.$message.error("请输入价格,必须是数字。");
         return false;
       }
-      if (!scope.row.stock || !(scope.row.stock - 0)) {
+      if (!(scope.row.stock - 0) && scope.row.stock - 0 !== 0) {
         this.$message.error("请输入库存，必须是数字。");
         return false;
       }
@@ -680,7 +695,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           console.log(this.goodsData);
-          if (this.goodsData.step > 1) {
+          if (this.goodsData.step >= 1) {
             this.toStep(2);
           } else {
             putGoods({

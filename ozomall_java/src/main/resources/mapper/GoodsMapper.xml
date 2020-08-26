@@ -12,6 +12,7 @@
         <result property="classify1Id" column="classify1_id"></result>
         <result property="classify2Id" column="classify2_id"></result>
         <result property="classify3Id" column="classify3_id"></result>
+        <result property="brandId" column="brand_id"></result>
         <result property="createTime" column="create_time"></result>
         <result property="status" column="status"></result>
         <result property="step" column="step"></result>

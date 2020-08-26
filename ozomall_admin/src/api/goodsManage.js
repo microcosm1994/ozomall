@@ -63,6 +63,15 @@ export function putGoods(data) {
     })
 }
 
+// 上架/下架商品
+export function handleGoods(data) {
+    return request({
+        url: '/goods/handle',
+        method: 'post',
+        data
+    })
+}
+
 // 删除商品信息
 export function delGoods(data) {
     return request({

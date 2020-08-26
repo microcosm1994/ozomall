@@ -44,8 +44,24 @@ public class GoodsDto extends PageReqDto {
     @ApiModelProperty(value = "商品3级分类id")
     private Integer classify3Id;
 
+    @ApiModelProperty(value = "商品1级分类id名称")
+    @Field(type = FieldType.Text)
+    private String classify1Name;
+
+    @ApiModelProperty(value = "商品2级分类id名称")
+    @Field(type = FieldType.Text)
+    private String classify2Name;
+
+    @ApiModelProperty(value = "商品3级分类id名称")
+    @Field(type = FieldType.Text)
+    private String classify3Name;
+
     @ApiModelProperty(value = "商品品牌id")
     private Integer brandId;
+
+    @ApiModelProperty(value = "商品品牌名称")
+    @Field(type = FieldType.Text)
+    private String brandName;
 
     @ApiModelProperty(value = "商品创建时间")
     private Timestamp createTime;

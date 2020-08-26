@@ -45,6 +45,11 @@ public interface GoodsService {
     Result putGoods(GoodsDto form);
 
     /**
+     * 上架/下架商品
+     */
+    Result handleGoods(GoodsDto form);
+
+    /**
      * 删除商品信息
      */
     Result delGoods(GoodsDto form);

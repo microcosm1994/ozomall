@@ -16,7 +16,11 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="商品品牌" prop="brandId">
-          <el-select v-model="ruleForm.brandId" placeholder="请选择">
+          <el-select
+            v-model="ruleForm.brandId"
+            placeholder="请选择"
+            @change="onBrandChange"
+          >
             <el-option
               v-for="item in brandList"
               :key="item.id"
@@ -39,7 +43,8 @@
             :props="props"
             :filterable="true"
             ref="cascader"
-            :placeholder="classifyPlaceholder"
+            placeholder="请选择"
+            @change="onClasifyChange"
           ></el-cascader>
         </el-form-item>
         <el-form-item label="商品价格" prop="goodsName">
@@ -92,13 +97,20 @@ export default {
     "cancel"
   ],
   data() {
+    let self = this;
     return {
       imageUrl: "",
-      classifyPlaceholder: "请选择分类",
+      classifyLevel1: [],
+      classifyLevel2: [],
+      classifyLevel3: [],
       ruleForm: {
         goodsName: "",
         brandId: "",
+        brandName: "",
         classifyId: "",
+        classify1Name: "",
+        classify2Name: "",
+        classify3Name: "",
         goodsPrice: "",
         cover: ""
       },
@@ -134,6 +146,7 @@ export default {
                     leaf: level >= 2
                   };
                 });
+                self.cacheClassifyList(level, nodes);
                 // 通过调用resolve将子节点数据返回，通知组件数据加载完成
                 resolve(nodes);
               } else {
@@ -158,15 +171,20 @@ export default {
   mounted() {
     this.getGoodsBrand();
     if (this.pageType) {
-      this.classifyPlaceholder = `${this.goodsData.classify1.name}/${this.goodsData.classify2.name}/${this.goodsData.classify3.name}`;
       this.ruleForm.classifyId = [
         this.goodsData.classify1Id,
         this.goodsData.classify2Id,
         this.goodsData.classify3Id
       ];
-      for (let key in this.ruleForm) {
-        this.ruleForm[key] = this.goodsData[key];
-      }
+      this.ruleForm.goodsName = this.goodsData.goodsName;
+      this.ruleForm.brandId = this.goodsData.brandId;
+      this.ruleForm.brandName = this.goodsData.brandName;
+      this.ruleForm.goodsPrice = this.goodsData.goodsPrice;
+      this.ruleForm.cover = this.goodsData.cover;
+      this.ruleForm.classify1Name = this.goodsData.classify1Name;
+      this.ruleForm.classify2Name = this.goodsData.classify2Name;
+      this.ruleForm.classify3Name = this.goodsData.classify3Name;
+      console.log(this.ruleForm);
     }
   },
   methods: {
@@ -183,9 +201,53 @@ export default {
         })
         .catch(err => {});
     },
+    // 选择品牌触发
+    onBrandChange(val) {
+      for (let i = 0; i < this.brandList.length; i++) {
+        if (this.brandList[i].id === val) {
+          this.ruleForm.brandName = this.brandList[i].name;
+        }
+      }
+    },
+    // 选择分类时触发
+    onClasifyChange(val) {
+      console.log(val);
+      // 获取一级菜单名称
+      for (let i = 0; i < this.classifyLevel1.length; i++) {
+        if (this.classifyLevel1[i].value === val[0]) {
+          this.ruleForm.classify1Name = this.classifyLevel1[i].label;
+        }
+      }
+      // 获取二级菜单名称
+      for (let i = 0; i < this.classifyLevel2.length; i++) {
+        if (this.classifyLevel2[i].value === val[1]) {
+          this.ruleForm.classify2Name = this.classifyLevel2[i].label;
+        }
+      }
+      // 获取三级菜单名称
+      for (let i = 0; i < this.classifyLevel3.length; i++) {
+        if (this.classifyLevel3[i].value === val[2]) {
+          this.ruleForm.classify3Name = this.classifyLevel3[i].label;
+        }
+      }
+    },
+    // 缓存分类列表
+    cacheClassifyList(level, list) {
+      // 一级分类
+      if (level + 1 === 1) {
+        this.classifyLevel1 = list;
+      }
+      // 二级分类
+      if (level + 1 === 2) {
+        this.classifyLevel2 = list;
+      }
+      // 三级分类
+      if (level + 1 === 3) {
+        this.classifyLevel3 = list;
+      }
+    },
     // 上传成功后调用
     handleAvatarSuccess(res, file) {
-      console.log(res);
       if (res.code === 1) {
         this.ruleForm.cover = res.data.url;
       }
@@ -247,7 +309,6 @@ export default {
       }
       putGoods({
         id: this.goodsData.id,
-        ...this.ruleForm,
         ...this.ruleForm,
         classify1Id: this.ruleForm.classifyId[0],
         classify2Id: this.ruleForm.classifyId[1],

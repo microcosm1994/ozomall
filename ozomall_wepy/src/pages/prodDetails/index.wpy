@@ -81,7 +81,7 @@
     <div class="home-brand">
       <van-cell center use-label-slot is-link value="进入品牌">
         <div class="home-brand-title" slot="title">
-          {{ goodsInfo.brand.name }}
+          {{ goodsInfo.brandName }}
         </div>
         <div class="home-brand-label" slot="label">
           0 人关注 | {{ goodsCount }}款商品
@@ -419,7 +419,8 @@
       <div class="home-sku">
         <div class="home-sku-header">
           <div class="header-left">
-            <image mode="aspectFit" :src="skuInfo.pic" />
+            <image v-if="skuInfo.stock > 0" mode="aspectFit" :src="skuInfo.pic" />
+            <image v-else mode="aspectFit" :src="goodsInfo.cover" />
           </div>
           <div class="header-right">
             <div class="header-right-price" v-if="skuInfo.stock > 0">

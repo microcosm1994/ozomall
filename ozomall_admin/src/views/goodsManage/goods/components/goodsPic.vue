@@ -177,11 +177,8 @@ export default {
       }
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this.goodsData.details === html);
-          console.log(this.goodsData.details);
-          console.log(html);
-          if (this.goodsData.details === html && this.goodsData.step > 2) {
-            this.toStep(this.goodsData.step);
+          if (this.goodsData.details === html && this.goodsData.step >= 2) {
+            this.toStep(3);
           } else {
             putGoods({
               id: this.goodsData.id,

@@ -83,11 +83,11 @@
           </el-table-column>
           <el-table-column align="center" label="所属类别" width="180">
             <template slot-scope="scope">
-              {{ scope.row.classify1.name }}
+              {{ scope.row.classify1Name }}
               <span style="color:#000;font-weight:600;">/</span>
-              {{ scope.row.classify2.name }}
+              {{ scope.row.classify2Name }}
               <span style="color:#000;font-weight:600;">/</span>
-              {{ scope.row.classify3.name }}
+              {{ scope.row.classify3Name }}
             </template>
           </el-table-column>
           <el-table-column
@@ -195,7 +195,7 @@ import {
   getClassifyList,
   getGoodsList,
   delGoods,
-  putGoods
+  handleGoods
 } from "@/api/goodsManage";
 import { defaults } from "codemirror";
 export default {
@@ -359,7 +359,7 @@ export default {
     },
     // 处理弹框提交
     handleSubmit() {
-      putGoods({
+      handleGoods({
         id: this.row.id,
         ...this.handleForm
       }).then(res => {
