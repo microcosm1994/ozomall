@@ -32,7 +32,6 @@ public class GoodsDto extends PageReqDto {
     private Integer commentCount;
 
     @ApiModelProperty(value = "商品销量")
-    @Field(type = FieldType.Integer, value = "0")
     private Integer sales;
 
     @ApiModelProperty(value = "商品1级分类id")
@@ -67,11 +66,9 @@ public class GoodsDto extends PageReqDto {
     private Timestamp createTime;
 
     @ApiModelProperty(value = "删除标记")
-    @Field(type = FieldType.Integer)
     private Integer del;
 
     @ApiModelProperty(value = "商品状态:0下架；1上架；")
-    @Field(type = FieldType.Integer, value = "0")
     private Integer status;
 
     @ApiModelProperty(value = "填写商品步骤")

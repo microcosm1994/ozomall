@@ -203,15 +203,19 @@ export default {
     },
     // 选择品牌触发
     onBrandChange(val) {
+      console.log(this.brandList)
+      console.log(val)
       for (let i = 0; i < this.brandList.length; i++) {
         if (this.brandList[i].id === val) {
           this.ruleForm.brandName = this.brandList[i].name;
         }
       }
+      console.log(this.ruleForm.brandName)
     },
     // 选择分类时触发
     onClasifyChange(val) {
       console.log(val);
+      console.log(this.classifyLevel3);
       // 获取一级菜单名称
       for (let i = 0; i < this.classifyLevel1.length; i++) {
         if (this.classifyLevel1[i].value === val[0]) {
@@ -230,6 +234,7 @@ export default {
           this.ruleForm.classify3Name = this.classifyLevel3[i].label;
         }
       }
+      console.log(this.ruleForm)
     },
     // 缓存分类列表
     cacheClassifyList(level, list) {

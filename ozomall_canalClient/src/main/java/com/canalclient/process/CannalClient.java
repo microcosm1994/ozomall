@@ -1,17 +1,27 @@
-package com.ozomall.process;
+package com.canalclient.process;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
 import com.alibaba.otter.canal.protocol.CanalEntry.*;
 import com.alibaba.otter.canal.protocol.Message;
+import com.canalclient.dao.GoodsDao;
+import com.canalclient.dto.GoodsDto;
+import com.sun.deploy.security.CertStore;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class CannalClient implements InitializingBean {
+    @Resource
+    GoodsDao goodsDao;
 
     private final static int BATCH_SIZE = 1000;
 
@@ -23,7 +33,7 @@ public class CannalClient implements InitializingBean {
             //打开连接
             connector.connect();
             //订阅数据库表,全部表
-            connector.subscribe(".*\\..*");
+            connector.subscribe("ozomall.goods");
             //回滚到未进行ack的地方，下次fetch的时候，可以从最后一个没有ack的地方开始拿
             connector.rollback();
             while (true) {
@@ -59,7 +69,7 @@ public class CannalClient implements InitializingBean {
     /**
      * 打印canal server解析binlog获得的实体类信息
      */
-    private static void printEntry(List<Entry> entrys) {
+    private void printEntry(List<Entry> entrys) {
         for (Entry entry : entrys) {
             if (entry.getEntryType() == EntryType.TRANSACTIONBEGIN || entry.getEntryType() == EntryType.TRANSACTIONEND) {
                 //开启/关闭事务的实体类型，跳过
@@ -81,7 +91,8 @@ public class CannalClient implements InitializingBean {
                     entry.getHeader().getSchemaName(), entry.getHeader().getTableName(),
                     eventType));
             //判断是否是DDL语句
-            if (rowChage.getIsDdl()) {}
+            if (rowChage.getIsDdl()) {
+            }
             //获取RowChange对象里的每一行数据，打印出来
             for (RowData rowData : rowChage.getRowDatasList()) {
                 //如果是删除语句
@@ -92,8 +103,8 @@ public class CannalClient implements InitializingBean {
                     printColumn(rowData.getAfterColumnsList());
                     //如果是更新的语句
                 } else {
-                    //变更前的数据
-                    System.out.println(rowData.getAfterColumnsList());
+                    // 处理数据并同步到es
+                    updateData(rowData.getAfterColumnsList());
                 }
             }
         }
@@ -103,5 +114,18 @@ public class CannalClient implements InitializingBean {
         for (Column column : columns) {
             System.out.println(column.getName() + " : " + column.getValue() + "    update=" + column.getUpdated());
         }
+    }
+
+    private void updateData(List<Column> columns) {
+        Map data = new HashMap();
+        for (Column column : columns) {
+            data.put(column.getName(), column.getValue());
+        }
+        String jsonData = JSON.toJSONString(data);
+        JSONObject jsonObject = JSON.parseObject(jsonData);
+        // 转实体对象
+        GoodsDto goods = JSON.toJavaObject(jsonObject, GoodsDto.class);
+        System.out.println(goods.toString());
+        goodsDao.save(goods);
     }
 }

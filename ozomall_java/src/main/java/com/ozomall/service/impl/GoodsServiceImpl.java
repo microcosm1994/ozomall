@@ -16,6 +16,7 @@ import com.ozomall.entity.Result;
 import com.ozomall.service.GoodsService;
 import com.ozomall.utils.Oss;
 import com.ozomall.utils.ResultGenerate;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -92,8 +93,15 @@ public class GoodsServiceImpl implements GoodsService {
      */
     @Override
     public Result searchGoods(GoodsDto form) {
+        // 构建布尔查询
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder();
-        searchQueryBuilder.withQuery(QueryBuilders.matchQuery("goodsName", form.getGoodsName()));
+        boolQueryBuilder.should(QueryBuilders.matchQuery("goodsName", form.getGoodsName()));
+        boolQueryBuilder.should(QueryBuilders.matchQuery("classify1Name", form.getGoodsName()));
+        boolQueryBuilder.should(QueryBuilders.matchQuery("classify2Name", form.getGoodsName()));
+        boolQueryBuilder.should(QueryBuilders.matchQuery("classify3Name", form.getGoodsName()));
+        boolQueryBuilder.should(QueryBuilders.matchQuery("details", form.getGoodsName()));
+        searchQueryBuilder.withQuery(boolQueryBuilder);
         searchQueryBuilder.withPageable(PageRequest.of(form.getPage(), form.getSize()));
         org.springframework.data.domain.Page<GoodsDto> rows = mallGoodsMapper.search(searchQueryBuilder.build());
         if (rows != null) {
