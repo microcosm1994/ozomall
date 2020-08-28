@@ -48,33 +48,25 @@
           <div class="home-ensure-icon">
             <van-icon size="60rpx" name="/static/icon/goods.png" />
           </div>
-          <div class="home-ensure-text">
-            正品保障
-          </div>
+          <div class="home-ensure-text">正品保障</div>
         </van-col>
         <van-col span="6">
           <div class="home-ensure-icon">
             <van-icon size="60rpx" name="/static/icon/identify.png" />
           </div>
-          <div class="home-ensure-text">
-            多重鉴别
-          </div>
+          <div class="home-ensure-text">多重鉴别</div>
         </van-col>
         <van-col span="6">
           <div class="home-ensure-icon">
             <van-icon size="60rpx" name="/static/icon/Inspection.png" />
           </div>
-          <div class="home-ensure-text">
-            逐件查验
-          </div>
+          <div class="home-ensure-text">逐件查验</div>
         </van-col>
         <van-col span="6">
           <div class="home-ensure-icon">
             <van-icon size="60rpx" name="/static/icon/Inspection.png" />
           </div>
-          <div class="home-ensure-text">
-            售后无忧
-          </div>
+          <div class="home-ensure-text">售后无忧</div>
         </van-col>
       </van-row>
     </div>
@@ -103,24 +95,24 @@
                 <image mode="aspectFit" :src="item.goodsPic" />
               </div>
               <div class="item-text">
-                {{item.userInfo.nickName}}
+                {{ item.userInfo.nickName }}
               </div>
             </van-col>
             <van-col span="6">
               <div class="item-text">
-                {{item.spe1Name + ' / ' + item.spe2Name + ' / ' + item.spe3Name}}
+                {{
+                  item.spe1Name + ' / ' + item.spe2Name + ' / ' + item.spe3Name
+                }}
               </div>
             </van-col>
             <van-col span="6">
-              <div class="item-text">
-                ￥{{item.payAmount}}
-              </div>
+              <div class="item-text">￥{{ item.payAmount }}</div>
             </van-col>
             <van-col span="6">
               <span
                 class="item-text"
-                style="color: #666; width: 80%; text-align: right;"
-                >{{item.createTime}}</span
+                style="color: #666; width: 80%; text-align: right"
+                >{{ item.diffTime }}</span
               >
             </van-col>
           </van-row>
@@ -130,12 +122,8 @@
     <div class="home-comment">
       <van-cell center use-label-slot>
         <view slot="title" class="van-cell-title">
-          <div class="title">
-            商品评论
-          </div>
-          <div class="count">
-            (2517)
-          </div>
+          <div class="title">商品评论</div>
+          <div class="count">(2517)</div>
         </view>
         <div slot="label" class="comment-content">
           <div class="content-item">偏小 231</div>
@@ -147,12 +135,8 @@
     <div class="home-wearCollection">
       <van-cell center use-label-slot>
         <view slot="title" class="van-cell-title">
-          <div class="title">
-            穿搭精选
-          </div>
-          <div class="count">
-            (797)
-          </div>
+          <div class="title">穿搭精选</div>
+          <div class="count">(797)</div>
         </view>
         <div slot="label" class="wearCollection-content">
           <div class="content-item">
@@ -229,13 +213,11 @@
       <prod-list :data="prodList"></prod-list>
     </div>
     <div class="home-btn">
-      <div class="home-btn-buy" @tap="getGoodsAttr">
-        立即购买
-      </div>
+      <div class="home-btn-buy" @tap="getGoodsAttr">立即购买</div>
     </div>
     <!-- 尺码弹出框 -->
     <van-popup
-      style="height: 70%;"
+      style="height: 70%"
       show="{{ skuShow }}"
       position="bottom"
       custom-style="height: 70%;"
@@ -245,7 +227,11 @@
       <div class="home-sku">
         <div class="home-sku-header">
           <div class="header-left">
-            <image v-if="skuInfo.stock > 0" mode="aspectFit" :src="skuInfo.pic" />
+            <image
+              v-if="skuInfo.stock > 0"
+              mode="aspectFit"
+              :src="skuInfo.pic"
+            />
             <image v-else mode="aspectFit" :src="goodsInfo.cover" />
           </div>
           <div class="header-right">
@@ -280,14 +266,14 @@
         </div>
         <div class="home-sku-btn">
           <div class="btn-buy" v-if="skuInfo.stock > 0" @tap="toConfirmOrder">
-            <text style="font-weight: 600; font-size: 32rpx;"
+            <text style="font-weight: 600; font-size: 32rpx"
               >￥{{ skuInfo.price }}</text
             >
             <text> | </text>
-            <text style="font-size: 24rpx;">约5天到</text>
+            <text style="font-size: 24rpx">约5天到</text>
           </div>
           <div class="btn-buy" v-else>
-            <text style="font-weight: 600; font-size: 32rpx;">暂时无货</text>
+            <text style="font-weight: 600; font-size: 32rpx">暂时无货</text>
           </div>
         </div>
       </div>
@@ -298,6 +284,7 @@
 <script>
 import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
+import timeMixin from '../../mixins/time.js';
 import {
   getGoods,
   getGoodsPic,
@@ -307,7 +294,7 @@ import {
   goodsList,
   getGoodsCount,
 } from '../../api/goods.js';
-import {getBuyList} from '../../api/order.js';
+import { getBuyList } from '../../api/order.js';
 
 wepy.page({
   mixins: [jumpMixin],
@@ -452,10 +439,15 @@ wepy.page({
       getBuyList({
         goodsId: this.goodsInfo.id,
         page: 1,
-        size: 5
+        size: 5,
       }).then((res) => {
         if (res.data.code === 1) {
-          this.buyList = res.data.data.records;
+          this.buyList = res.data.data.records.map((item) => {
+            return {
+              ...item,
+              diffTime: timeMixin.diffTime(item.createTime),
+            };
+          });
         }
       });
     },

@@ -124,7 +124,7 @@ wepy.page({
         message: '清空历史记录？',
       })
         .then(() => {
-          wx.clearStorageSync();
+          wx.setStorageSync('historySearch', []);
           this.getHistoryList();
         })
         .catch(() => {

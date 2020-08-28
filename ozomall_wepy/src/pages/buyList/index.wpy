@@ -36,7 +36,7 @@
             <span
               class="item-text"
               style="color: #666; width: 80%; text-align: right"
-              >{{ item.createTime }}</span
+              >{{ item.diffTime }}</span
             >
           </van-col>
         </van-row>
@@ -47,6 +47,7 @@
 
 <script>
 import wepy from '@wepy/core';
+import timeMixin from '../../mixins/time.js';
 import { getBuyList } from '../../api/order.js';
 
 wepy.page({
@@ -59,7 +60,7 @@ wepy.page({
     const eventChannel = this.$wx.getOpenerEventChannel();
     // 通过eventChannel监听a页面传过来的数据
     eventChannel.on('BuyList', (data) => {
-      this.prodInfo = data
+      this.prodInfo = data;
       this.getBuyList(data.id);
     });
   },
@@ -72,7 +73,14 @@ wepy.page({
         size: 10,
       }).then((res) => {
         if (res.data.code === 1) {
-          this.buyList = [...this.buyList, ...res.data.data.records];
+          this.buyList = [...this.buyList, ...res.data.data.records].map(
+            (item) => {
+              return {
+                ...item,
+                diffTime: timeMixin.diffTime(item.createTime),
+              };
+            }
+          );
         }
       });
     },
@@ -88,10 +96,10 @@ wepy.page({
     padding: 8rpx 16rpx;
     .list-item {
       width: 100%;
-      line-height: 60rpx;
+      line-height: 80rpx;
       .item-avator {
-        width: 40rpx;
-        height: 40rpx;
+        width: 60rpx;
+        height: 60rpx;
         overflow: hidden;
         border-radius: 50%;
         display: inline-block;
@@ -104,11 +112,10 @@ wepy.page({
       .item-text {
         display: inline-block;
         vertical-align: middle;
-        width: 100rpx;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        font-size: 24rpx;
+        font-size: 28rpx;
         color: #333;
         margin-left: 12rpx;
         text-align: center;

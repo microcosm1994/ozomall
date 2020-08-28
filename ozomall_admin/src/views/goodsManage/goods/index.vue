@@ -135,7 +135,7 @@
                 size="small"
                 >查看</el-button
               >
-              <el-button type="text" size="small" @click="openHandle(scope.row)"
+              <el-button v-if="scope.row.step === 3" type="text" size="small" @click="openHandle(scope.row)"
                 >处理</el-button
               >
               <el-button type="text" size="small" @click="openEdit(scope.row)"
