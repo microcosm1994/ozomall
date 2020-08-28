@@ -11,4 +11,6 @@ public interface OrderMapper extends BaseMapper<OrderDto> {
     IPage<OrderDto> orderList(Page page, OrderDto form);
 
     OrderDto getOrderDetail(String orderNo);
+
+    IPage<OrderDto> getBuyList(Page page, OrderDto form);
 }

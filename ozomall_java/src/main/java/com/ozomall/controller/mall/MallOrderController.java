@@ -59,4 +59,10 @@ public class MallOrderController {
             return ResultGenerate.genErroResult("失败");
         }
     }
+
+    @ApiOperation("获取最近购买订单")
+    @GetMapping("/getBuyList")
+    public Result getBuyList(OrderDto form) {
+        return mallOrderService.getBuyList(form);
+    }
 }

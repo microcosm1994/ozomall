@@ -28,9 +28,13 @@ export default {
             });
         },
         // 跳转到最近购买页
-        toBuyList() {
+        toBuyList(data) {
             wx.navigateTo({
                 url: '/pages/buyList/index',
+                success: function (res) {
+                    // 通过eventChannel向被打开页面传送数据
+                    res.eventChannel.emit('BuyList', data)
+                }
             });
         },
         // 跳转到我的账户页

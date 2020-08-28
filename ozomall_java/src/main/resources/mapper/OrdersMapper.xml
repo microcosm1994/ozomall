@@ -33,6 +33,7 @@
         <association property="userInfo" javaType="Map" columnPrefix="userInfo_">
             <id property="id" column="id"></id>
             <result property="phone" column="phone"/>
+            <result property="nickName" column="nick_name"/>
         </association>
         <association property="addressInfo" javaType="Map" columnPrefix="addressInfo_">
             <id property="id" column="id"></id>
@@ -46,6 +47,7 @@
         select orders.*,
         userInfo.id as userInfo_id,
         userInfo.phone as userInfo_phone,
+        userInfo.nick_name as userInfo_nick_name,
         addressInfo.id as addressInfo_id,
         addressInfo.consignee as addressInfo_consignee,
         addressInfo.region as addressInfo_region,
@@ -73,9 +75,10 @@
         <if test="form.status != null">
             and orders.status=#{form.status}
         </if>
-        <if test="form.status != null">
-            and orders.status=#{form.status}
+        <if test="form.goodsId != null">
+            and orders.goods_id=#{form.goodsId}
         </if>
+        order by orders.create_time desc
     </select>
 
     <select id="getOrderDetail" parameterType="String" resultMap="orderMap">
@@ -91,5 +94,19 @@
         left join mall_users as userInfo on orders.user_id=userInfo.id
         left join address as addressInfo on orders.address_id=addressInfo.id
         where orders.del=0 and orders.order_no=#{orderNo}
+    </select>
+
+    <select id="getBuyList" parameterType="com.ozomall.entity.OrderDto" resultMap="orderMap">
+        select orders.*,
+        userInfo.id as userInfo_id,
+        userInfo.phone as userInfo_phone,
+        userInfo.nick_name as userInfo_nick_name
+        from orders
+        left join mall_users as userInfo on orders.user_id=userInfo.id
+        where orders.del=0
+        and orders.pay_type &lt;&gt; 0
+        and orders.status &lt;&gt; 0
+        and orders.goods_id=#{form.goodsId}
+        order by orders.create_time desc
     </select>
 </mapper>

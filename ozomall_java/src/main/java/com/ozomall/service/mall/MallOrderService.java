@@ -18,4 +18,9 @@ public interface MallOrderService {
      * 获取订单
      * */
     Result getOrder(OrderDto form);
+
+    /**
+     * 获取最近购买订单
+     * */
+    Result getBuyList(OrderDto form);
 }

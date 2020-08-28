@@ -12,205 +12,31 @@
   <div class="home">
     <prod-card :prodInfo="prodInfo"></prod-card>
     <div class="buy-list">
-      <div class="list-item">
+      <div class="list-item" v-for="item in buyList" :key="item.id">
         <van-row>
           <van-col span="6">
             <div class="item-avator">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
+              <image mode="aspectFit" :src="item.goodsPic" />
             </div>
             <div class="item-text">
-              是*伦
+              {{ item.userInfo.nickName }}
             </div>
           </van-col>
           <van-col span="6">
             <div class="item-text">
-              XL
+              {{
+                item.spe1Name + ' / ' + item.spe2Name + ' / ' + item.spe3Name
+              }}
             </div>
           </van-col>
           <van-col span="6">
-            <div class="item-text">
-              ￥109
-            </div>
+            <div class="item-text">￥{{ item.payAmount }}</div>
           </van-col>
           <van-col span="6">
             <span
               class="item-text"
-              style="color: #666; width: 80%; text-align: right;"
-              >刚刚</span
-            >
-          </van-col>
-        </van-row>
-      </div>
-      <div class="list-item">
-        <van-row>
-          <van-col span="6">
-            <div class="item-avator">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-text">
-              是*伦
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              XL
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              ￥109
-            </div>
-          </van-col>
-          <van-col span="6">
-            <span
-              class="item-text"
-              style="color: #666; width: 80%; text-align: right;"
-              >刚刚</span
-            >
-          </van-col>
-        </van-row>
-      </div>
-      <div class="list-item">
-        <van-row>
-          <van-col span="6">
-            <div class="item-avator">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-text">
-              是*伦
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              XL
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              ￥109
-            </div>
-          </van-col>
-          <van-col span="6">
-            <span
-              class="item-text"
-              style="color: #666; width: 80%; text-align: right;"
-              >刚刚</span
-            >
-          </van-col>
-        </van-row>
-      </div>
-      <div class="list-item">
-        <van-row>
-          <van-col span="6">
-            <div class="item-avator">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-text">
-              是*伦
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              XL
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              ￥109
-            </div>
-          </van-col>
-          <van-col span="6">
-            <span
-              class="item-text"
-              style="color: #666; width: 80%; text-align: right;"
-              >刚刚</span
-            >
-          </van-col>
-        </van-row>
-      </div>
-      <div class="list-item">
-        <van-row>
-          <van-col span="6">
-            <div class="item-avator">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-text">
-              是*伦
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              XL
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              ￥109
-            </div>
-          </van-col>
-          <van-col span="6">
-            <span
-              class="item-text"
-              style="color: #666; width: 80%; text-align: right;"
-              >刚刚</span
-            >
-          </van-col>
-        </van-row>
-      </div>
-      <div class="list-item">
-        <van-row>
-          <van-col span="6">
-            <div class="item-avator">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-text">
-              是*伦
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              XL
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              ￥109
-            </div>
-          </van-col>
-          <van-col span="6">
-            <span
-              class="item-text"
-              style="color: #666; width: 80%; text-align: right;"
-              >刚刚</span
-            >
-          </van-col>
-        </van-row>
-      </div>
-      <div class="list-item">
-        <van-row>
-          <van-col span="6">
-            <div class="item-avator">
-              <image mode="aspectFit" src="/static/img/timg.jpg" />
-            </div>
-            <div class="item-text">
-              是*伦
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              XL
-            </div>
-          </van-col>
-          <van-col span="6">
-            <div class="item-text">
-              ￥109
-            </div>
-          </van-col>
-          <van-col span="6">
-            <span
-              class="item-text"
-              style="color: #666; width: 80%; text-align: right;"
-              >刚刚</span
+              style="color: #666; width: 80%; text-align: right"
+              >{{ item.createTime }}</span
             >
           </van-col>
         </van-row>
@@ -221,14 +47,34 @@
 
 <script>
 import wepy from '@wepy/core';
+import { getBuyList } from '../../api/order.js';
 
 wepy.page({
   data: {
-    prodInfo: {
-      id: 0,
-      url: '/static/img/timg.jpg',
-      title: 'AJ airasd',
-      des: 199,
+    page: 1,
+    buyList: [],
+    prodInfo: {},
+  },
+  onShow() {
+    const eventChannel = this.$wx.getOpenerEventChannel();
+    // 通过eventChannel监听a页面传过来的数据
+    eventChannel.on('BuyList', (data) => {
+      this.prodInfo = data
+      this.getBuyList(data.id);
+    });
+  },
+  methods: {
+    // 获取最近购买
+    getBuyList(id) {
+      getBuyList({
+        goodsId: id,
+        page: this.page,
+        size: 10,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          this.buyList = [...this.buyList, ...res.data.data.records];
+        }
+      });
     },
   },
 });

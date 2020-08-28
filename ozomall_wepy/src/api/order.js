@@ -26,6 +26,14 @@ export function getOrder(params) {
         params
     })
 }
+// 获取最近购买订单
+export function getBuyList(params) {
+    return service({
+        url: '/mall/orders/getBuyList',
+        method: 'get',
+        params
+    })
+}
 
 // 根据订单编号查询未支付订单倒计时
 export function getOrderTimer(params) {

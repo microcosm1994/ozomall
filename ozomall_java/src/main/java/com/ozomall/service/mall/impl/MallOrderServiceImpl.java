@@ -95,12 +95,29 @@ public class MallOrderServiceImpl implements MallOrderService {
         map.put(OrderDto::getStatus, form.getStatus());
         map.put(OrderDto::getDel, form.getDel());
         wrapper.allEq(map, false);
+        wrapper.orderByDesc(OrderDto::getId);
         Page page = new Page();
         page.setSize(form.getSize());
         page.setCurrent(form.getPage());
         IPage<OrderDto> rows = orderMapper.selectPage(page, wrapper);
         if (rows != null) {
             return ResultGenerate.genSuccessResult(rows);
+        } else {
+            return ResultGenerate.genErroResult("失败！");
+        }
+    }
+
+    /**
+     * 获取最近购买订单
+     */
+    @Override
+    public Result getBuyList(OrderDto form) {
+        Page page = new Page<>();
+        page.setCurrent(form.getPage());
+        page.setSize(form.getSize());
+        IPage<OrderDto> row = orderMapper.getBuyList(page, form);
+        if (row != null) {
+            return ResultGenerate.genSuccessResult(row);
         } else {
             return ResultGenerate.genErroResult("失败！");
         }

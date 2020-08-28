@@ -30,7 +30,7 @@ public class MsgProducer implements RabbitTemplate.ConfirmCallback {
     // 发送消息给死信队列
     public void sendOrderDelayMsg(String content) {
         rabbitTemplate.convertAndSend(RabbitConfig.Order_EX_Delay, RabbitConfig.Order_ROUTINGKEY_Delay, content, message -> {
-            message.getMessageProperties().setExpiration(1000 * 60 * 2 + "");
+            message.getMessageProperties().setExpiration(1000 * 60 * 15 + "");
             return message;
         });
     }

@@ -36,7 +36,7 @@
         </div>
       </van-cell>
     </div>
-    <div class="home-goodsInfo">
+    <div class="home-goodsInfo" @tap="toGoodsDetail(orderInfo.goodsId)">
       <van-card
         :price="orderInfo.goodsAmount"
         desc="{{orderInfo.spe1Name + ' ' + orderInfo.spe2Name + ' ' + orderInfo.spe3Name + ' ' + '数量x1'}}"
@@ -46,15 +46,11 @@
     </div>
     <div class="home-logistics">
       <van-cell use-label-slot :value="'￥' + orderInfo.freightAmount">
-        <div class="home-address-title" slot="title">
-          京东配送
-        </div>
+        <div class="home-address-title" slot="title">京东配送</div>
       </van-cell>
       <van-cell use-label-slot :value="'￥' + orderInfo.orderAmount">
         <div class="home-address-title" slot="title">
-          <span v-if="orderInfo.payType === 0">
-            待支付
-          </span>
+          <span v-if="orderInfo.payType === 0"> 待支付 </span>
           <span v-else>
             {{ orderInfo.payType === 1 ? '支付宝' : '微信' }}支付
           </span>
@@ -65,51 +61,33 @@
         use-label-slot
         :value="'￥' + orderInfo.promotionAmount"
       >
-        <div class="home-address-title" slot="title">
-          优惠金额
-        </div>
+        <div class="home-address-title" slot="title">优惠金额</div>
       </van-cell>
       <van-cell use-label-slot :value="'￥' + orderInfo.payAmount">
-        <div class="home-address-title" slot="title">
-          合计支付
-        </div>
+        <div class="home-address-title" slot="title">合计支付</div>
       </van-cell>
     </div>
     <div class="home-logistics">
       <van-cell use-label-slot :value="orderInfo.orderNo">
-        <div class="home-address-title" slot="title">
-          订单编号
-        </div>
+        <div class="home-address-title" slot="title">订单编号</div>
       </van-cell>
       <van-cell use-label-slot :value="orderInfo.createTime">
-        <div class="home-address-title" slot="title">
-          创建时间
-        </div>
+        <div class="home-address-title" slot="title">创建时间</div>
       </van-cell>
     </div>
     <div class="home-btn" v-if="orderInfo.status === 0">
-      <div class="home-btn-ff">
-        取消订单
-      </div>
-      <div class="home-btn-buy" @tap="addOrder">
-        立即付款
-      </div>
+      <div class="home-btn-ff">取消订单</div>
+      <div class="home-btn-buy" @tap="addOrder">立即付款</div>
     </div>
     <div
       class="home-btn"
       v-else-if="orderInfo.status === 1 || orderInfo.status === 2"
     >
-      <div class="home-btn-ff">
-        取消订单
-      </div>
-      <div class="home-btn-buy" @tap="addOrder">
-        确认收货
-      </div>
+      <div class="home-btn-ff">取消订单</div>
+      <div class="home-btn-buy" @tap="addOrder">确认收货</div>
     </div>
     <div class="home-btn" v-else>
-      <div class="home-btn-ff">
-        删除订单
-      </div>
+      <div class="home-btn-ff">删除订单</div>
     </div>
   </div>
 </template>
@@ -181,12 +159,22 @@ wepy.page({
         orderNo,
       }).then((res) => {
         if (res.data.code === 1) {
-          let countDown = 2 * 60 * 1000; // 倒计时15分钟
+          let countDown = 15 * 60 * 1000; // 倒计时15分钟
           let countDownStart = res.data.data.countDown - 0; // 倒计时开始时间
           let countDownNow = new Date().getTime();
           this.countDownTime =
             3000 + countDown - (countDownNow - countDownStart);
         }
+      });
+    },
+    // 跳转商品详情页
+    toGoodsDetail(id) {
+      wx.navigateTo({
+        url: '/pages/prodDetails/index',
+        success: function (routeRes) {
+          // 通过eventChannel向b页面传送数据
+          routeRes.eventChannel.emit('goodsData', {id});
+        },
       });
     },
   },
