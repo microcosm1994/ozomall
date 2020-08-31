@@ -43,3 +43,12 @@ export function getOrderTimer(params) {
         params
     })
 }
+
+// 获取小程序ip
+export function getIp(params) {
+    return service({
+        url: '/mall/orders/getIp',
+        method: 'get',
+        params
+    })
+}

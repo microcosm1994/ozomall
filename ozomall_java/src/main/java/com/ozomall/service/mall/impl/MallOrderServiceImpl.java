@@ -2,6 +2,7 @@ package com.ozomall.service.mall.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,12 +14,12 @@ import com.ozomall.service.mall.MallOrderService;
 import com.ozomall.utils.OrderUtils;
 import com.ozomall.utils.ResultGenerate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MallOrderServiceImpl implements MallOrderService {
@@ -121,6 +122,63 @@ public class MallOrderServiceImpl implements MallOrderService {
         } else {
             return ResultGenerate.genErroResult("失败！");
         }
+    }
+
+    /**
+     * 获取最近购买订单
+     */
+    @Override
+    public String getSign(SortedMap<String, String> form) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Set<Map.Entry<String, String>> entries = form.entrySet();
+        Iterator<Map.Entry<String, String>> iterator = entries.iterator();
+
+        //生成stringA="appid=wxd930ea5d5a258f4f&body=test&device_info=1000&mch_id=10000100&nonce_str=ibuaiVcKdpRxkhJA";
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> entry = iterator.next();
+            String k = entry.getKey();
+            String v = entry.getValue();
+            //如果参数的值为空则不参与签名
+            if (null != v && !"".equals(v) && !"sign".equals(k) && !"key".equals(k)) {
+                stringBuilder.append(k + "=" + v + "&");
+
+            }
+        }
+        //拼接API密钥：
+        stringBuilder.append("key=").append("key");
+        String sign = DigestUtils.md5DigestAsHex(stringBuilder.toString().getBytes()).toUpperCase();
+        return sign;
+    }
+
+    /**
+     * 支付成功处理订单
+     */
+    @Override
+    public Map handleOrders(Map form) {
+        Map result = new HashMap();
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("order_no", form.get("out_trade_no"));
+        OrderDto row = orderMapper.selectOne(wrapper);
+        if (row != null) {
+            if (row.getStatus() != 0 && row.getPayType() == 0) {
+                row.setStatus(1); // 设置订单状态
+                row.setPayType(2); // 设置支付方式
+                row.setPaymentTime(new Date()); // 设置支付时间
+                row.setPaymentNo((String) form.get("transaction_id")); // 设置支付流水号
+                int n = orderMapper.updateById(row);
+                if (n > 0) {
+                    result.put("return_code", "SUCCESS");
+                    result.put("return_msg", "OK");
+                }
+            } else {
+                result.put("return_code", "SUCCESS");
+                result.put("return_msg", "OK");
+            }
+        } else {
+            result.put("return_code", "FAIL");
+            result.put("return_msg", "订单错误");
+        }
+        return result;
     }
 
 }

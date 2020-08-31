@@ -92,4 +92,7 @@ public class OrderDto extends PageReqDto {
 
     @ApiModelProperty(value = "物流单号")
     private String deliveryNo;
+
+    @ApiModelProperty(value = "支付流水号")
+    private String paymentNo;
 }

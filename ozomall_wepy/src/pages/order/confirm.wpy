@@ -39,9 +39,7 @@
     </div>
     <div class="home-logistics">
       <van-cell use-label-slot value="￥14">
-        <div class="home-address-title" slot="title">
-          京东配送
-        </div>
+        <div class="home-address-title" slot="title">京东配送</div>
       </van-cell>
     </div>
     <div class="home-shoppingTips">
@@ -73,15 +71,13 @@
         <van-col span="12">
           <div class="home-btn-price">
             <span>实付款：￥</span>
-            <span style="font-size: 36rpx; font-weight: 600;">{{
+            <span style="font-size: 36rpx; font-weight: 600">{{
               goodsInfo.price + 14
             }}</span>
           </div>
         </van-col>
         <van-col span="12">
-          <div class="home-btn-buy" @tap="addOrder">
-            提交订单
-          </div>
+          <div class="home-btn-buy" @tap="addOrder">提交订单</div>
         </van-col>
       </van-row>
     </div>
@@ -93,7 +89,9 @@ import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
 import { getAddress } from '../../api/address.js';
 import { getSettings } from '../../api/user.js';
-import { addOrder } from '../../api/order.js';
+import { addOrder, getIp } from '../../api/order.js';
+import { placeOrder } from '../../api/pay.js';
+import { getRandomStr } from '../../utils/sgin.js';
 
 wepy.page({
   mixins: [jumpMixin],
@@ -101,10 +99,12 @@ wepy.page({
     userInfo: {},
     goodsInfo: {},
     addressInfo: {},
+    ipAddress: '',
   },
   onLoad() {
     this.getUser();
     this.getSettings();
+    this.getIp();
   },
   onShow() {
     const eventChannel = this.$wx.getOpenerEventChannel();
@@ -117,7 +117,6 @@ wepy.page({
         this.addressInfo = data;
       }
     });
-    console.log(this.goodsInfo);
   },
   methods: {
     // 获取用户信息
@@ -155,9 +154,16 @@ wepy.page({
         url: '/pages/my/location',
       });
     },
+    // 获取小程序ip
+    getIp() {
+      getIp().then((res) => {
+        if (res.data.code === 1) {
+          this.ipAddress = res.data.data.ip;
+        }
+      });
+    },
     // 添加订单
     addOrder() {
-      console.log(this.goodsInfo);
       let data = {
         userId: this.userInfo.id,
         addressId: this.addressInfo.id,
@@ -178,11 +184,29 @@ wepy.page({
       };
       addOrder(data).then((res) => {
         if (res.data.code === 1) {
+          if (!this.ipAddress) {
+            this.getIp();
+          }
+          this.placeOrder({
+            out_trade_no: res.data.data.orderNo, // 商户订单号
+            total_fee: data.payAmount, // 标价金额
+            spbill_create_ip: this.ipAddress, // 终端IP
+          });
+        }
+      });
+    },
+    // 微信支付统一下单
+    placeOrder(data) {
+      placeOrder(data).then((res) => {
+        console.log(res);
+        if (0) {
           wx.navigateTo({
             url: '/pages/order/detail',
             success: function (res1) {
               // 通过eventChannel向被打开页面传送数据
-              res1.eventChannel.emit('orderNo', { orderNo: res.data.data.orderNo });
+              res1.eventChannel.emit('orderNo', {
+                orderNo: res.data.data.orderNo,
+              });
             },
           });
         }

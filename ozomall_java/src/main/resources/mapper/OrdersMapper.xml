@@ -30,6 +30,7 @@
         <result property="createTime" column="create_time"></result>
         <result property="deliveryCompany" column="delivery_company"></result>
         <result property="deliveryNo" column="delivery_no"></result>
+        <result property="paymentNo" column="payment_no"></result>
         <association property="userInfo" javaType="Map" columnPrefix="userInfo_">
             <id property="id" column="id"></id>
             <result property="phone" column="phone"/>

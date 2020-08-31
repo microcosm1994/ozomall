@@ -19,6 +19,7 @@
     "@vant/weapp": "^1.3.2",
     "@wepy/core": "2.0.0-alpha.14",
     "@wepy/x": "^2.0.2",
+    "crypto-js": "^4.0.0",
     "miniprogram-slide-view": "0.0.3"
   },
   "devDependencies": {
