@@ -21,9 +21,7 @@ public class SignUtils {
                 sign += key + "=" + value + "&";
             }
         }
-        System.out.println(sign);
         sign = sign + "key=" + secretKey;
-        System.out.println(sign);
         String signMd5 = DigestUtils.md5DigestAsHex(sign.getBytes());
         return signMd5;
     }

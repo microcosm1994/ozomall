@@ -8,3 +8,12 @@ export function unifiedorder(data) {
         data
     })
 }
+
+// 查询微信订单状态
+export function orderquery(params) {
+    return service({
+        url: '/pay/orderquery',
+        method: 'get',
+        params
+    })
+}

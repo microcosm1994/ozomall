@@ -78,7 +78,7 @@ wepy.page({
   },
   created() {},
   onLoad() {
-    const eventChannel = this.$wx.getOpenerEventChannel();
+    let eventChannel = this.$wx.getOpenerEventChannel();
     // 通过eventChannel监听a页面传过来的数据
     eventChannel.on('userInfo', (data) => {
       console.log(data);

@@ -5,10 +5,7 @@ import com.ozomall.service.PayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -24,6 +21,12 @@ public class PayController {
     @ApiOperation("调用微信下单接口")
     @PostMapping("/unifiedorder")
     public Result unifiedorder(@RequestBody Map form) {
-        return payService.unifiedCreateOrder(form);
+        return payService.unifiedorder(form);
+    }
+
+    @ApiOperation("查询微信支付订单")
+    @GetMapping("/orderquery")
+    public Result orderquery(String orderNo) {
+        return payService.orderquery(orderNo);
     }
 }

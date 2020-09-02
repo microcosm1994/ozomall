@@ -61,7 +61,7 @@ wepy.page({
   },
   onShow(option) {
     this.computedScroll();
-    const eventChannel = this.$wx.getOpenerEventChannel();
+    let eventChannel = this.$wx.getOpenerEventChannel();
     eventChannel.on('orderStatus', (data) => {
       this.status = data.orderStatus;
       if (this.status === 4) {
@@ -96,7 +96,7 @@ wepy.page({
     // 计算scroll高度
     computedScroll() {
       let h = wx.getSystemInfoSync().windowHeight;
-      this.scrollHeight = (h - 87) * 2;
+      this.scrollHeight = (h - 54) * 2;
     },
     // 切换订单状态
     onChange(e) {

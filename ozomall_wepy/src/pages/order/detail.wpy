@@ -5,6 +5,7 @@
       "van-button": "~@/components/vant/button",
       "van-cell": "~@/components/vant/cell",
       "van-icon": "~@/components/vant/icon",
+      "van-toast": "~@/components/vant/toast",
       "van-card": "~@/components/vant/card",
       "van-count-down": "~@/components/vant/count-down",
     }
@@ -77,7 +78,7 @@
     </div>
     <div class="home-btn" v-if="orderInfo.status === 0">
       <div class="home-btn-ff">取消订单</div>
-      <div class="home-btn-buy" @tap="addOrder">立即付款</div>
+      <div class="home-btn-buy" @tap="placeOrder">立即付款</div>
     </div>
     <div
       class="home-btn"
@@ -89,13 +90,17 @@
     <div class="home-btn" v-else>
       <div class="home-btn-ff">删除订单</div>
     </div>
+    <van-toast id="van-toast" />
   </div>
 </template>
 
 <script>
 import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
+import Toast from '../../components/vant/toast/toast.js';
 import { getByOrderNo, getOrderTimer } from '../../api/order.js';
+import { unifiedorder, orderquery } from '../../api/pay.js';
+import pay from '../../utils/pay.js';
 
 wepy.page({
   mixins: [jumpMixin],
@@ -106,7 +111,7 @@ wepy.page({
   },
   onLoad() {},
   onShow() {
-    const eventChannel = this.$wx.getOpenerEventChannel();
+    let eventChannel = this.$wx.getOpenerEventChannel();
     // 通过eventChannel监听a页面传过来的数据
     eventChannel.on('orderNo', (data) => {
       this.getOrderInfo(data.orderNo);
@@ -114,8 +119,8 @@ wepy.page({
   },
   // 监听页面卸载
   onUnload: function () {
-    const pages = getCurrentPages();
-    const prev = pages[pages.length - 2];
+    let pages = getCurrentPages();
+    let prev = pages[pages.length - 2];
     if (prev.route.includes('confirm')) {
       wx.navigateBack({ delta: 1 });
     }
@@ -146,6 +151,7 @@ wepy.page({
     },
     // 获取订单详情
     getOrderInfo(orderNo) {
+      this.orderInfo = {};
       getByOrderNo({
         orderNo,
       }).then((res) => {
@@ -166,7 +172,7 @@ wepy.page({
         orderNo,
       }).then((res) => {
         if (res.data.code === 1) {
-          let countDown = 15 * 60 * 1000; // 倒计时15分钟
+          let countDown = 3 * 60 * 1000; // 倒计时15分钟
           let countDownStart = res.data.data.countDown - 0; // 倒计时开始时间
           let countDownNow = new Date().getTime();
           this.countDownTime =
@@ -182,6 +188,30 @@ wepy.page({
           // 通过eventChannel向b页面传送数据
           routeRes.eventChannel.emit('goodsData', { id });
         },
+      });
+    },
+    // 微信支付统一下单
+    placeOrder() {
+      let user = wx.getStorageSync('users');
+      Toast.loading({
+        message: '正在进行支付',
+        forbidClick: true,
+      });
+      unifiedorder({
+        orderNo: this.orderInfo.orderNo,
+        openid: user.openId,
+      }).then((res) => {
+        if (res.data.code === 1) {
+          pay.pay(res.data.data).then((res) => {
+            // 支付完成查询微信订单
+            orderquery({
+              orderNo: this.orderInfo.orderNo,
+            }).then((res) => {
+              this.getOrderInfo(this.orderInfo.orderNo);
+            });
+          });
+        }
+        Toast.clear();
       });
     },
   },

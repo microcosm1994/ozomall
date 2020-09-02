@@ -89,10 +89,11 @@
 <script>
 import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
+import Toast from '../../components/vant/toast/toast.js';
 import { getAddress } from '../../api/address.js';
 import { getSettings } from '../../api/user.js';
 import { addOrder } from '../../api/order.js';
-import { unifiedorder } from '../../api/pay.js';
+import { unifiedorder, orderquery } from '../../api/pay.js';
 import pay from '../../utils/pay.js';
 
 wepy.page({
@@ -107,7 +108,7 @@ wepy.page({
     this.getSettings();
   },
   onShow() {
-    const eventChannel = this.$wx.getOpenerEventChannel();
+    let eventChannel = this.$wx.getOpenerEventChannel();
     // 通过eventChannel监听a页面传过来的数据
     eventChannel.on('goodsData', (data) => {
       this.goodsInfo = data;
@@ -177,27 +178,53 @@ wepy.page({
         sourceType: 0,
         status: 0,
       };
+      Toast.loading({
+        message: '正在生成订单',
+        forbidClick: true,
+      });
       addOrder(data).then((res) => {
         if (res.data.code === 1) {
           setTimeout(() => {
+            Toast.clear();
             this.placeOrder({
               orderNo: res.data.data.orderNo, // 商户订单号
             });
           }, 1000);
+        } else {
+          Toast.fail(res.data.msg);
         }
       });
     },
     // 微信支付统一下单
     placeOrder(data) {
       let user = wx.getStorageSync('users');
+      Toast.loading({
+        message: '正在进行支付',
+        forbidClick: true,
+      });
       unifiedorder({
         orderNo: data.orderNo,
         openid: user.openId,
       }).then((res) => {
-        console.log(res);
         if (res.data.code === 1) {
-          pay.pay(res.data.data, data.orderNo);
+          pay.pay(res.data.data).then((res) => {
+            // 支付完成查询微信订单
+            orderquery({
+              orderNo: data.orderNo,
+            }).then((res) => {
+              wx.navigateTo({
+                url: '/pages/order/detail',
+                success: function (res1) {
+                  // 通过eventChannel向被打开页面传送数据
+                  res1.eventChannel.emit('orderNo', {
+                    orderNo: data.orderNo,
+                  });
+                },
+              });
+            });
+          });
         }
+        Toast.clear();
       });
     },
   },
