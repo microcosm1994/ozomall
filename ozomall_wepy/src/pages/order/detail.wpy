@@ -112,6 +112,14 @@ wepy.page({
       this.getOrderInfo(data.orderNo);
     });
   },
+  // 监听页面卸载
+  onUnload: function () {
+    const pages = getCurrentPages();
+    const prev = pages[pages.length - 2];
+    if (prev.route.includes('confirm')) {
+      wx.navigateBack({ delta: 1 });
+    }
+  },
   methods: {
     // 订单状态过滤器
     statusFilter(val) {
@@ -138,7 +146,6 @@ wepy.page({
     },
     // 获取订单详情
     getOrderInfo(orderNo) {
-      console.log(this.countDownTime);
       getByOrderNo({
         orderNo,
       }).then((res) => {
@@ -173,7 +180,7 @@ wepy.page({
         url: '/pages/prodDetails/index',
         success: function (routeRes) {
           // 通过eventChannel向b页面传送数据
-          routeRes.eventChannel.emit('goodsData', {id});
+          routeRes.eventChannel.emit('goodsData', { id });
         },
       });
     },

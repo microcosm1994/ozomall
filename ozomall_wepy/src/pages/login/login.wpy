@@ -43,16 +43,14 @@
           type="number"
           @input="codeChange"
         >
-          <van-button slot="button" size="small" type="text" @tap="sendMsage">{{
+          <van-button :disabled="timerNum < 60" slot="button" size="small" @tap="sendMsage">{{
             timerNum === 60 ? '发送验证码' : '重新发送 ' + timerNum + ' s'
           }}</van-button>
         </van-field>
       </div>
     </div>
     <div class="login-btn">
-      <div class="login-btn-submit" @tap="login">
-        登录
-      </div>
+      <div class="login-btn-submit" @tap="login">登录</div>
     </div>
     <van-toast id="van-toast" />
   </div>
@@ -133,6 +131,7 @@ wepy.page({
     },
     // 登录
     login() {
+      let self = this
       if (!this.form.phone) {
         Toast.fail('请输入手机号');
         return false;
@@ -141,20 +140,29 @@ wepy.page({
         Toast.fail('请输入验证码');
         return false;
       }
-      login({
-        ...this.form,
-      }).then((res) => {
-        if (res.data.code === 1) {
-          wx.setStorageSync('token', res.data.data.token);
-          wx.setStorageSync('users', res.data.data.users);
-          wx.switchTab({
-            url: '/pages/my/index',
-          });
-        } else {
-          Toast.fail(res.data.msg);
-        }
+      wx.login({
+        success(res) {
+          if (res.code) {
+            //发起网络请求
+            login({
+              ...self.form,
+              wxCode: res.code
+            }).then((res) => {
+              if (res.data.code === 1) {
+                wx.setStorageSync('token', res.data.data.token);
+                wx.setStorageSync('users', res.data.data.users);
+                wx.switchTab({
+                  url: '/pages/my/index',
+                });
+              } else {
+                Toast.fail(res.data.msg);
+              }
+            });
+          } else {
+            console.log('登录失败！' + res.errMsg);
+          }
+        },
       });
-      console.log(this.form);
     },
   },
 });

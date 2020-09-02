@@ -24,14 +24,26 @@ const service = async (config) => {
                 'Content-Type': 'application/json'
             },
             success: function (res) {
-                relove(res)
+                resInterceptor(res, relove)
             },
             fail: function (error) {
                 reject(error)
-            }
+            } 
         });
     })
 };
 
-
+const resInterceptor = function (res, relove) {
+    let statusCode = res.statusCode
+    switch (statusCode) {
+        case 401:
+            wx.navigateTo({
+                url: '/pages/login/index',
+            });
+            break;
+        default:
+            relove(res)
+            break;
+    }
+}
 export default service

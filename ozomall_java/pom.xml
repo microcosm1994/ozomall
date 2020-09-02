@@ -127,6 +127,12 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
         </dependency>
+        <!-- pay Sdk-->
+        <dependency>
+            <groupId>cn.springboot</groupId>
+            <artifactId>best-pay-sdk</artifactId>
+            <version>1.3.0</version>
+        </dependency>
     </dependencies>
 
     <build>

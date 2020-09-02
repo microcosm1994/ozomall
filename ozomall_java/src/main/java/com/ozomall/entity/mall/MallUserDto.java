@@ -17,6 +17,9 @@ public class MallUserDto extends PageReqDto {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
+    @ApiModelProperty(value = "openId")
+    private String openId;
+
     @ApiModelProperty(value = "用户昵称")
     private String nickName;
 
@@ -35,6 +38,11 @@ public class MallUserDto extends PageReqDto {
     @ApiModelProperty(value = "用户签名")
     private String sign;
 
+    @ApiModelProperty(value = "短信验证码")
     @TableField(exist = false)
     private String code;
+
+    @ApiModelProperty(value = "wx.login中的code")
+    @TableField(exist = false)
+    private String wxCode;
 }

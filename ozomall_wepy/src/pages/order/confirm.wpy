@@ -8,6 +8,7 @@
       "van-row": "~@/components/vant/row",
       "van-col": "~@/components/vant/col",
       "van-card": "~@/components/vant/card",
+      "van-toast": "~@/components/vant/toast",
     }
 }
 </config>
@@ -81,6 +82,7 @@
         </van-col>
       </van-row>
     </div>
+    <van-toast id="van-toast" />
   </div>
 </template>
 
@@ -89,9 +91,9 @@ import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
 import { getAddress } from '../../api/address.js';
 import { getSettings } from '../../api/user.js';
-import { addOrder, getIp } from '../../api/order.js';
-import { placeOrder } from '../../api/pay.js';
-import { getRandomStr } from '../../utils/sgin.js';
+import { addOrder } from '../../api/order.js';
+import { unifiedorder } from '../../api/pay.js';
+import pay from '../../utils/pay.js';
 
 wepy.page({
   mixins: [jumpMixin],
@@ -99,12 +101,10 @@ wepy.page({
     userInfo: {},
     goodsInfo: {},
     addressInfo: {},
-    ipAddress: '',
   },
   onLoad() {
     this.getUser();
     this.getSettings();
-    this.getIp();
   },
   onShow() {
     const eventChannel = this.$wx.getOpenerEventChannel();
@@ -145,6 +145,9 @@ wepy.page({
       }).then((res) => {
         if (res.data.code === 1) {
           this.addressInfo = res.data.data[0];
+          if (res.data.data.length === 0) {
+            this.toAddress();
+          }
         }
       });
     },
@@ -152,14 +155,6 @@ wepy.page({
     toAddress() {
       wx.navigateTo({
         url: '/pages/my/location',
-      });
-    },
-    // 获取小程序ip
-    getIp() {
-      getIp().then((res) => {
-        if (res.data.code === 1) {
-          this.ipAddress = res.data.data.ip;
-        }
       });
     },
     // 添加订单
@@ -184,31 +179,24 @@ wepy.page({
       };
       addOrder(data).then((res) => {
         if (res.data.code === 1) {
-          if (!this.ipAddress) {
-            this.getIp();
-          }
-          this.placeOrder({
-            out_trade_no: res.data.data.orderNo, // 商户订单号
-            total_fee: data.payAmount, // 标价金额
-            spbill_create_ip: this.ipAddress, // 终端IP
-          });
+          setTimeout(() => {
+            this.placeOrder({
+              orderNo: res.data.data.orderNo, // 商户订单号
+            });
+          }, 1000);
         }
       });
     },
     // 微信支付统一下单
     placeOrder(data) {
-      placeOrder(data).then((res) => {
+      let user = wx.getStorageSync('users');
+      unifiedorder({
+        orderNo: data.orderNo,
+        openid: user.openId,
+      }).then((res) => {
         console.log(res);
-        if (0) {
-          wx.navigateTo({
-            url: '/pages/order/detail',
-            success: function (res1) {
-              // 通过eventChannel向被打开页面传送数据
-              res1.eventChannel.emit('orderNo', {
-                orderNo: res.data.data.orderNo,
-              });
-            },
-          });
+        if (res.data.code === 1) {
+          pay.pay(res.data.data, data.orderNo);
         }
       });
     },

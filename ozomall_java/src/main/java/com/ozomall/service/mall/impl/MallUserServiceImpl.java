@@ -1,5 +1,7 @@
 package com.ozomall.service.mall.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.exceptions.ClientException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ozomall.dao.mall.MallUserMapper;
@@ -11,8 +13,10 @@ import com.ozomall.service.mall.MallUserService;
 import com.ozomall.utils.AuthUtils;
 import com.ozomall.utils.ResultGenerate;
 import com.ozomall.utils.Sms;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -31,6 +35,8 @@ public class MallUserServiceImpl implements MallUserService {
 
     @Resource
     private JedisPool jedisPool;
+
+    private String code2SessionUrl = "https://api.weixin.qq.com/sns/jscode2session?appid=wxd2c7f2caf86e4478&secret=501f67083890471d14634c3196ba75d9&grant_type=authorization_code&js_code=";
 
     /**
      * 发送短信验证码
@@ -70,6 +76,11 @@ public class MallUserServiceImpl implements MallUserService {
             data.put("users", userInfo);
             return ResultGenerate.genSuccessResult(data);
         } else {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.getForEntity(code2SessionUrl + user.getWxCode(), String.class);
+            JSONObject body = JSON.parseObject(response.getBody());
+            System.out.println(body);
+            user.setOpenId((String) body.get("openid"));
             int row = mallUserMapper.insert(user);
             MallUserSettingDto sData = new MallUserSettingDto();
             sData.setUserId(user.getId());
