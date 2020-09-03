@@ -101,6 +101,8 @@ public class GoodsServiceImpl implements GoodsService {
         boolQueryBuilder.should(QueryBuilders.matchQuery("classify2Name", form.getGoodsName()));
         boolQueryBuilder.should(QueryBuilders.matchQuery("classify3Name", form.getGoodsName()));
         boolQueryBuilder.should(QueryBuilders.matchQuery("details", form.getGoodsName()));
+        boolQueryBuilder.mustNot(QueryBuilders.matchQuery("status", 0));
+        boolQueryBuilder.mustNot(QueryBuilders.matchQuery("del", 1));
         searchQueryBuilder.withQuery(boolQueryBuilder);
         searchQueryBuilder.withPageable(PageRequest.of(form.getPage(), form.getSize()));
         org.springframework.data.domain.Page<GoodsDto> rows = mallGoodsMapper.search(searchQueryBuilder.build());

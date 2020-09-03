@@ -1,7 +1,7 @@
 <template>
   <div class="modal">
     <div class="modal-header">
-      <div class="modal-header-title">查看订单</div>
+      <div class="modal-header-title">发货处理</div>
     </div>
     <div class="modal-container">
       <div class="modal-container-form">
@@ -11,6 +11,15 @@
           :rules="rules"
           label-width="80px"
         >
+          <el-form-item label="收货人">
+            {{ row.addressInfo.consignee }}
+          </el-form-item>
+          <el-form-item label="联系方式">
+            {{ row.addressInfo.phone }}
+          </el-form-item>
+          <el-form-item label="收货地址">
+            {{ row.addressInfo.region + row.addressInfo.address }}
+          </el-form-item>
           <el-form-item label="订单编号">
             {{ row.orderNo }}
           </el-form-item>
@@ -50,7 +59,9 @@ export default {
       }
     };
   },
-  mounted() {},
+  mounted() {
+    console.log(this.row);
+  },
   methods: {
     // 提交请求
     onSubmit(formName) {

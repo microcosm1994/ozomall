@@ -8,6 +8,7 @@
       "van-toast": "~@/components/vant/toast",
       "van-card": "~@/components/vant/card",
       "van-count-down": "~@/components/vant/count-down",
+      "van-dialog": "~@/components/vant/dialog",
     }
 }
 </config>
@@ -75,30 +76,35 @@
       <van-cell use-label-slot :value="orderInfo.createTime">
         <div class="home-address-title" slot="title">创建时间</div>
       </van-cell>
+      <van-cell v-if="orderInfo.status !== 0" use-label-slot :value="orderInfo.createTime">
+        <div class="home-address-title" slot="title">交易编号</div>
+      </van-cell>
     </div>
     <div class="home-btn" v-if="orderInfo.status === 0">
-      <div class="home-btn-ff">取消订单</div>
+      <div class="home-btn-ff" @tap="closeOrder">取消订单</div>
       <div class="home-btn-buy" @tap="placeOrder">立即付款</div>
     </div>
     <div
       class="home-btn"
       v-else-if="orderInfo.status === 1 || orderInfo.status === 2"
     >
-      <div class="home-btn-ff">取消订单</div>
       <div class="home-btn-buy" @tap="addOrder">确认收货</div>
     </div>
     <div class="home-btn" v-else>
       <div class="home-btn-ff">删除订单</div>
     </div>
     <van-toast id="van-toast" />
+    <!-- 消息确认 -->
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 
 <script>
 import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
+import Dialog from '../../components/vant/dialog/dialog.js';
 import Toast from '../../components/vant/toast/toast.js';
-import { getByOrderNo, getOrderTimer } from '../../api/order.js';
+import { getByOrderNo, getOrderTimer, closeOrder } from '../../api/order.js';
 import { unifiedorder, orderquery } from '../../api/pay.js';
 import pay from '../../utils/pay.js';
 
@@ -189,6 +195,24 @@ wepy.page({
           routeRes.eventChannel.emit('goodsData', { id });
         },
       });
+    },
+    // 关闭订单
+    closeOrder() {
+      Dialog.confirm({
+        message: '确认取消订单？',
+      })
+        .then(() => {
+          closeOrder({
+            orderNo: this.orderInfo.orderNo,
+          }).then((res) => {
+            if (res.data.code === 1) {
+              this.getOrderInfo(this.orderInfo.orderNo);
+            }
+          });
+        })
+        .catch(() => {
+          // on cancel
+        });
     },
     // 微信支付统一下单
     placeOrder() {

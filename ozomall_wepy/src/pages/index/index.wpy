@@ -1,6 +1,9 @@
 <config>
 {
     navigationBarTitleText: 'OZO',
+    enablePullDownRefresh: true,
+    backgroundColor: '#242424',
+    backgroundTextStyle: 'light',
     usingComponents: {
       "prod-list": '~@/components/prod-list',
       "van-button": "~@/components/vant/button",
@@ -50,7 +53,7 @@
           duration="{{500}}"
         >
           <swiper-item v-for="item in bannerList" :key="item.id">
-            <image mode="aspectFill" style="width: 100%;" :src="item.url" />
+            <image mode="aspectFill" style="width: 100%" :src="item.url" />
           </swiper-item>
         </swiper>
       </div>
@@ -60,25 +63,19 @@
             <div class="home-ensure-icon">
               <van-icon size="40rpx" name="/static/icon/goods.png" />
             </div>
-            <div class="home-ensure-text">
-              正品保障
-            </div>
+            <div class="home-ensure-text">正品保障</div>
           </van-col>
           <van-col span="8">
             <div class="home-ensure-icon">
               <van-icon size="40rpx" name="/static/icon/Inspection.png" />
             </div>
-            <div class="home-ensure-text">
-              逐件查验
-            </div>
+            <div class="home-ensure-text">逐件查验</div>
           </van-col>
           <van-col span="8">
             <div class="home-ensure-icon">
               <van-icon size="40rpx" name="/static/icon/identify.png" />
             </div>
-            <div class="home-ensure-text">
-              多重鉴别
-            </div>
+            <div class="home-ensure-text">多重鉴别</div>
           </van-col>
         </van-row>
       </div>
@@ -200,6 +197,11 @@ wepy.page({
     this.getBanner();
     this.goodsList();
   },
+  onPullDownRefresh() {
+    this.page = 1;
+    this.prodList = [];
+    this.goodsList();
+  },
   methods: {
     // 计算scroll高度
     computedScroll() {
@@ -243,8 +245,8 @@ wepy.page({
     },
     // 点击搜索框下边分类
     classifyTap(type) {
-      this.page = 1
-      this.prodList = []
+      this.page = 1;
+      this.prodList = [];
       this.classifyType = type;
       this.goodsList();
     },

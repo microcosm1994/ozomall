@@ -61,7 +61,20 @@
       </div>
       <div class="page-container-table">
         <el-table border :data="tableData" style="width: 100%" align="center">
-          <el-table-column align="center" prop="id" label="编号" width="55">
+          <el-table-column
+            width="120"
+            align="center"
+            prop="des"
+            label="订单状态"
+          >
+            <template slot-scope="scope">
+              <el-tag
+                :type="['warning', 'danger', '', 'success', 'info'][scope.row.status]"
+                effect="plain"
+                disable-transitions
+                >{{ scope.row.status | status }}</el-tag
+              >
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
@@ -69,11 +82,6 @@
             label="订单编号"
             width="200"
           >
-          </el-table-column>
-          <el-table-column align="center" label="商品图片" width="100">
-            <template slot-scope="scope">
-              <img :src="scope.row.goodsPic" style="width: 70px;" alt="" />
-            </template>
           </el-table-column>
           <el-table-column
             align="center"
@@ -102,16 +110,6 @@
               {{ scope.row.userInfo.phone }}
             </template>
           </el-table-column>
-          <el-table-column
-            width="120"
-            align="center"
-            prop="des"
-            label="订单状态"
-          >
-            <template slot-scope="scope">
-              {{ scope.row.status | status }}
-            </template>
-          </el-table-column>
           <el-table-column align="center" prop="orderAmount" label="订单金额">
           </el-table-column>
           <el-table-column
@@ -132,10 +130,18 @@
               <el-button type="text" size="small" @click="openDetail(scope.row)"
                 >查看</el-button
               >
-              <el-button v-if="scope.row.status === 0" type="text" size="small" @click="openHandle(scope.row)"
+              <el-button
+                v-if="scope.row.status === 1"
+                type="primary"
+                size="mini"
+                @click="openHandle(scope.row)"
                 >发货</el-button
               >
-              <el-button v-if="scope.row.status === 4" type="text" size="small" @click="delGoodsBrand(scope)"
+              <el-button
+                v-if="scope.row.status === 4"
+                type="danger"
+                size="mini"
+                @click="delGoodsBrand(scope)"
                 >删除</el-button
               >
             </template>
@@ -238,7 +244,7 @@ export default {
     this.getData();
   },
   methods: {
-    // 获取商品列表
+    // 获取订单列表
     getData() {
       let data = {
         ...this.ruleForm,
@@ -246,7 +252,6 @@ export default {
         size: this.pageParams.size,
         del: 0
       };
-      this.tableData = [];
       getOrder(data)
         .then(res => {
           if (res.data.code === 1) {

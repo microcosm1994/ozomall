@@ -10,6 +10,7 @@ import com.ozomall.utils.ResultGenerate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 @Service
 public class AdminOrderServiceImpl implements AdminOrderService {
@@ -38,6 +39,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     public Result putOrder(OrderDto form) {
         form.setStatus(2);
+        form.setDeliveryTime(new Date());
         int row = orderMapper.updateById(form);
         if (row > 0) {
             return ResultGenerate.genSuccessResult();

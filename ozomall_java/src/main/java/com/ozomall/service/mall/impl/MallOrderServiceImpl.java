@@ -10,16 +10,17 @@ import com.ozomall.dao.OrderMapper;
 import com.ozomall.entity.OrderDto;
 import com.ozomall.entity.Result;
 import com.ozomall.process.MsgProducer;
+import com.ozomall.service.PayService;
 import com.ozomall.service.mall.MallOrderService;
 import com.ozomall.utils.OrderUtils;
 import com.ozomall.utils.ResultGenerate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class MallOrderServiceImpl implements MallOrderService {
@@ -34,6 +35,9 @@ public class MallOrderServiceImpl implements MallOrderService {
 
     @Resource
     private OrderUtils orderUtils;
+
+    @Resource
+    private PayService payService;
 
     /**
      * 添加订单
@@ -54,7 +58,6 @@ public class MallOrderServiceImpl implements MallOrderService {
             jedis.set(String.valueOf(form.getGoodsSkuId()), String.valueOf(stock));
             // 创建订单步骤放到mq中处理
             String formJson = JSON.toJSONString(form);
-            msgProducer.sendOrderDelayMsg(formJson); // 发送到死信队列
             msgProducer.sendOrderAddMsg(formJson); // 发送到创建订单队列
             // 设置redis倒计时
             orderUtils.setRedisTimer(orderNo);
@@ -125,60 +128,30 @@ public class MallOrderServiceImpl implements MallOrderService {
     }
 
     /**
-     * 获取最近购买订单
+     * 关闭订单
      */
     @Override
-    public String getSign(SortedMap<String, String> form) {
-        StringBuilder stringBuilder = new StringBuilder();
-        Set<Map.Entry<String, String>> entries = form.entrySet();
-        Iterator<Map.Entry<String, String>> iterator = entries.iterator();
-
-        //生成stringA="appid=wxd930ea5d5a258f4f&body=test&device_info=1000&mch_id=10000100&nonce_str=ibuaiVcKdpRxkhJA";
-        while (iterator.hasNext()) {
-            Map.Entry<String, String> entry = iterator.next();
-            String k = entry.getKey();
-            String v = entry.getValue();
-            //如果参数的值为空则不参与签名
-            if (null != v && !"".equals(v) && !"sign".equals(k) && !"key".equals(k)) {
-                stringBuilder.append(k + "=" + v + "&");
-
-            }
-        }
-        //拼接API密钥：
-        stringBuilder.append("key=").append("key");
-        String sign = DigestUtils.md5DigestAsHex(stringBuilder.toString().getBytes()).toUpperCase();
-        return sign;
-    }
-
-    /**
-     * 支付成功处理订单
-     */
-    @Override
-    public Map handleOrders(Map form) {
-        Map result = new HashMap();
+    public Result closeOrder(String orderNo) {
         QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("order_no", form.get("out_trade_no"));
+        wrapper.eq("order_no", orderNo);
         OrderDto row = orderMapper.selectOne(wrapper);
-        if (row != null) {
-            if (row.getStatus() != 0 && row.getPayType() == 0) {
-                row.setStatus(1); // 设置订单状态
-                row.setPayType(2); // 设置支付方式
-                row.setPaymentTime(new Date()); // 设置支付时间
-                row.setPaymentNo((String) form.get("transaction_id")); // 设置支付流水号
-                int n = orderMapper.updateById(row);
-                if (n > 0) {
-                    result.put("return_code", "SUCCESS");
-                    result.put("return_msg", "OK");
-                }
+        if (row != null && row.getStatus() == 0) {
+            row.setStatus(4); // 订单状态改为关闭状态
+            int n = orderMapper.updateById(row);
+            if (n > 0) {
+                // 清除redis倒计时缓存
+                orderUtils.clearRedisTimer(orderNo);
+                // 归还预占库存
+                orderUtils.revertStock(row);
+                // 关闭微信支付订单
+                payService.closeorder(row.getOrderNo());
+                return ResultGenerate.genSuccessResult();
             } else {
-                result.put("return_code", "SUCCESS");
-                result.put("return_msg", "OK");
+                return ResultGenerate.genErroResult("失败！");
             }
         } else {
-            result.put("return_code", "FAIL");
-            result.put("return_msg", "订单错误");
+            return ResultGenerate.genErroResult("失败！");
         }
-        return result;
     }
 
 }

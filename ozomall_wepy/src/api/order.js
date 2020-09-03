@@ -43,3 +43,12 @@ export function getOrderTimer(params) {
         params
     })
 }
+
+// 关闭订单
+export function closeOrder(params) {
+    return service({
+        url: '/mall/orders/closeOrder',
+        method: 'get',
+        params
+    })
+}

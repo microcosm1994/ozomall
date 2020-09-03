@@ -1,6 +1,9 @@
 <config>
 {
     navigationBarTitleText: '我的购买',
+    enablePullDownRefresh: true,
+    backgroundColor: '#242424',
+    backgroundTextStyle: 'light',
      usingComponents: {
       "van-tab": "~@/components/vant/tab",
       "van-tabs": "~@/components/vant/tabs",
@@ -26,7 +29,12 @@
         lower-threshold="50"
         bindscrolltolower="scrolltolower"
       >
-        <div class="order-item" v-for="item in orderList" :key="item.id" @tap="toOrderDetail(item)">
+        <div
+          class="order-item"
+          v-for="item in orderList"
+          :key="item.id"
+          @tap="toOrderDetail(item)"
+        >
           <div class="item-status">{{ item.statusName }}</div>
           <div class="item-content">
             <van-card
@@ -69,6 +77,11 @@ wepy.page({
       }
     });
   },
+  onPullDownRefresh() {
+    this.page = 1;
+    this.orderList = [];
+    this.getOrder();
+  },
   methods: {
     // 订单状态过滤器
     statusFilter(val) {
@@ -101,6 +114,7 @@ wepy.page({
     // 切换订单状态
     onChange(e) {
       this.status = e.$wx.detail.name;
+      this.page = 1;
       this.orderList = [];
       this.getOrder();
     },

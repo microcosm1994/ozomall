@@ -147,7 +147,6 @@ wepy.page({
     searchGoods() {
       searchGoods({
         goodsName: this.searchText,
-        del: 0,
         page: this.page,
         size: this.size,
       }).then((res) => {

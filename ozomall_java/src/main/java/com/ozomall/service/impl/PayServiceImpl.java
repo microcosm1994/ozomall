@@ -124,7 +124,7 @@ public class PayServiceImpl implements PayService {
             if (res.get("err_code").equals("ORDERPAID")) {
                 // 订单已支付，修改订单
                 return this.orderquery(wxData.getOut_trade_no());
-            }else {
+            } else {
                 return ResultGenerate.genErroResult((String) res.get("err_code_des"));
             }
         } else {
@@ -205,6 +205,44 @@ public class PayServiceImpl implements PayService {
             }
         } else {
             return ResultGenerate.genSuccessResult();
+        }
+    }
+
+    /**
+     * 关闭微信支付订单
+     */
+    @Override
+    public Result closeorder(String orderNo) {
+        WxPayDto wxData = new WxPayDto();
+        String nonce_str = RandomUtil.getRandomStr(); // 32位随机字符串
+        wxData.setAppid(appid);
+        wxData.setMch_id(mch_id);
+        wxData.setOut_trade_no(orderNo);
+        wxData.setNonce_str(nonce_str);
+        String sign = SignUtils.genSignStr(wxData, key); // 签名
+        wxData.setSign(sign);
+        //设置请求头
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_XML);
+        StringBuffer xmlString = new StringBuffer();
+        xmlString.append("<xml>")
+                .append("<appid>" + wxData.getAppid() + "</appid>")
+                .append("<mch_id>" + wxData.getMch_id() + "</mch_id>")
+                .append("<nonce_str>" + wxData.getNonce_str() + "</nonce_str>")
+                .append("<out_trade_no>" + wxData.getOut_trade_no() + "</out_trade_no>")
+                .append("<sign>" + wxData.getSign() + "</sign>")
+                .append("</xml>");
+
+//请求体
+        HttpEntity<String> formEntity = new HttpEntity<>(xmlString.toString(), headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("https://api.mch.weixin.qq.com/pay/closeorder", formEntity, String.class);
+        String body = response.getBody();
+        Map res = XmlUtils.xmlToMap(body);
+        System.out.println(res.toString());
+        if (res.get("result_code").equals("SUCCESS")) {
+            return ResultGenerate.genSuccessResult(res);
+        } else {
+            return ResultGenerate.genErroResult((String) res.get("err_code_des"));
         }
     }
 }

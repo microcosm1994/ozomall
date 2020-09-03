@@ -79,7 +79,11 @@
         <if test="form.goodsId != null">
             and orders.goods_id=#{form.goodsId}
         </if>
-        order by orders.create_time desc
+        order by
+        case when orders.status=1 then 0 else 4 end,
+        orders.status asc,
+        case when orders.status=1 then orders.create_time end asc,
+        case when orders.status!=1 then orders.create_time end desc
     </select>
 
     <select id="getOrderDetail" parameterType="String" resultMap="orderMap">

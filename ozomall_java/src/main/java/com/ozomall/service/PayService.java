@@ -25,4 +25,9 @@ public interface PayService {
      * 支付成功，修改订单
      */
     Result tradeSuccess(Map res);
+
+    /**
+     * 关闭微信支付订单
+     */
+    Result closeorder(String orderNo);
 }

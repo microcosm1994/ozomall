@@ -19,7 +19,12 @@
         <div class="item-title">基本信息</div>
         <div class="item-content">
           <el-table border :data="[row]" align="center">
-            <el-table-column align="center" prop="orderNo" label="订单编号">
+            <el-table-column
+              width="240"
+              align="center"
+              prop="orderNo"
+              label="订单编号"
+            >
             </el-table-column>
             <el-table-column align="center" prop="des" label="订单来源">
               <template slot-scope="scope">
@@ -33,7 +38,16 @@
             </el-table-column>
             <el-table-column align="center" prop="des" label="订单状态">
               <template slot-scope="scope">
-                {{ scope.row.status | status }}
+                <el-tag
+                  :type="
+                    ['warning', 'danger', '', 'success', 'info'][
+                      scope.row.status
+                    ]
+                  "
+                  effect="plain"
+                  disable-transitions
+                  >{{ scope.row.status | status }}</el-tag
+                >
               </template>
             </el-table-column>
             <el-table-column align="center" prop="orderAmount" label="支付方式">
@@ -44,14 +58,19 @@
           </el-table>
           <el-table border :data="[row]" align="center">
             <el-table-column
+              width="240"
+              align="center"
+              prop="paymentNo"
+              label="支付订单流水号"
+            >
+            </el-table-column>
+            <el-table-column
               align="center"
               prop="deliveryCompany"
               label="物流公司"
             >
             </el-table-column>
             <el-table-column align="center" prop="deliveryNo" label="物流单号">
-            </el-table-column>
-            <el-table-column align="center" prop="orderAmount" label="订单金额">
             </el-table-column>
             <el-table-column align="center" prop="createTime" label="创建时间">
             </el-table-column>
@@ -140,7 +159,7 @@
         <div class="item-title">费用信息</div>
         <div class="item-content">
           <el-table border :data="[row]" align="center">
-            <el-table-column align="center" label="商品合计">
+            <el-table-column align="center" label="商品金额">
               <template slot-scope="scope">
                 ￥{{ scope.row.goodsAmount }}
               </template>
