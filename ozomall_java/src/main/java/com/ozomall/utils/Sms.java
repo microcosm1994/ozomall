@@ -8,13 +8,29 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+@Component
+@PropertySource(value = "classpath:config.properties")
 public class Sms {
+    /**
+     * accessKey访问秘钥
+     * 访问用户
+     */
+    @Value("${oss.accessKeyId}")
+    private String accessKeyId;
+    /**
+     * 密钥
+     */
+    @Value("${oss.accessKeySecret}")
+    private String accessKeySecret;
 
 
-    public static String GenValidateCode(int len) {
+    public String GenValidateCode(int len) {
         String code = "";
         Random random = new Random();
         for (int i = 0; i < len; i++) {
@@ -25,11 +41,9 @@ public class Sms {
 
     ;
 
-    public static String sendMessage(String phone) throws ClientException {
+    public String sendMessage(String phone) throws ClientException {
         final String product = "Dysmsapi";//短信API产品名称（短信产品名固定，无需修改）
         final String domain = "dysmsapi.aliyuncs.com";//短信API产品域名（接口地址固定，无需修改）
-        final String accessKeyId = "LTAIXx905tkhWOmO";//accessKeyId
-        final String accessKeySecret = "3UgvOW1islp4IVrvXiVk6JfL9eQp4n";//accessKeySecret
         //初始化ascClient
         IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId,
                 accessKeySecret);
@@ -49,7 +63,7 @@ public class Sms {
         //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
         //友情提示:如果JSON中需要带换行符,请参照标准的JSON协议对换行符的要求,比如短信内容中包含\r\n的情况在JSON中需要表示成\\r\\n,否则会导致JSON在服务端解析失败
 //参考：request.setTemplateParam("{\"变量1\":\"值1\",\"变量2\":\"值2\",\"变量3\":\"值3\"}")
-        String code = GenValidateCode(6);
+        String code = this.GenValidateCode(6);
         smsRequest.setTemplateParam("{\"code\":\"" + code + "\"}");
 
 //请求失败这里会抛ClientException异常

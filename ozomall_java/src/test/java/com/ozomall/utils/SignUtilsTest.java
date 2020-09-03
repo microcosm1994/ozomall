@@ -1,23 +1,21 @@
 package com.ozomall.utils;
 
-import com.ozomall.entity.WxPayDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@PropertySource(value = "classpath:config.properties")
 public class SignUtilsTest {
+    @Value("${wechat.appid}")
+    private String appid; // 微信分配的小程序ID
     // 测试
     @Test
     public void test() throws Exception {
-        WxPayDto wxDto = new WxPayDto();
-        System.out.println(wxDto.toString());
-        String nonce_str = RandomUtil.getRandomStr(); // 随机字符串
-        wxDto.setNonce_str(nonce_str);
-        String sign = SignUtils.genSignStr(wxDto, "ss"); // 签名
-        System.out.printf(sign);
-        wxDto.setSign(sign);
+        System.out.println(appid);
     }
 }

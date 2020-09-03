@@ -34,6 +34,9 @@ public class MallUserServiceImpl implements MallUserService {
     MallUserSettingMapper mallUserSettingMapper;
 
     @Resource
+    private Sms sms;
+
+    @Resource
     private JedisPool jedisPool;
 
     private String code2SessionUrl = "https://api.weixin.qq.com/sns/jscode2session?appid=wxd2c7f2caf86e4478&secret=501f67083890471d14634c3196ba75d9&grant_type=authorization_code&js_code=";
@@ -45,7 +48,7 @@ public class MallUserServiceImpl implements MallUserService {
      */
     @Override
     public Result sendMessage(String phone) throws ClientException {
-        String code = Sms.sendMessage(phone);
+        String code = sms.sendMessage(phone);
         if (!StringUtils.isEmpty(code)) {
             // 保存用户短信验证码到redis
             Jedis jedis = jedisPool.getResource();

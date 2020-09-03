@@ -5,6 +5,9 @@ import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +16,8 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Random;
 
+@Component
+@PropertySource(value = "classpath:config.properties")
 public class Oss {
     /**
      * log日志
@@ -26,11 +31,13 @@ public class Oss {
      * accessKey访问秘钥
      * 访问用户
      */
-    private String accessKeyId = "LTAIXx905tkhWOmO";
+    @Value("${oss.accessKeyId}")
+    private String accessKeyId;
     /**
      * 密钥
      */
-    private String accessKeySecret = "3UgvOW1islp4IVrvXiVk6JfL9eQp4n";
+    @Value("${oss.accessKeySecret}")
+    private String accessKeySecret;
     /**
      * 空间  名称
      */

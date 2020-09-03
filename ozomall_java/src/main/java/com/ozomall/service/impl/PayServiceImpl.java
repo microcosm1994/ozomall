@@ -8,6 +8,8 @@ import com.ozomall.entity.Result;
 import com.ozomall.entity.WxPayDto;
 import com.ozomall.service.PayService;
 import com.ozomall.utils.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,6 +21,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 @Service
+@PropertySource(value = "classpath:config.properties")
 public class PayServiceImpl implements PayService {
     @Resource
     private OrderMapper orderMapper;
@@ -32,12 +35,23 @@ public class PayServiceImpl implements PayService {
     @Resource
     private RestTemplate restTemplate;
 
-    private String appid = "wxd2c7f2caf86e4478"; // 微信分配的小程序ID
-    private String mch_id = "1602379149"; // 微信支付分配的商户号
-    private String body = "门门板板-商城购物支付"; // 商品简单描述
-    private String notify_url = "https://www.dubo.world/mall/orders/notify"; // 异步接收微信支付结果通知的回调地址
-    private String trade_type = "JSAPI"; // 小程序取值如下：JSAPI
-    private String key = "BvhMe8dJkziJu1EUFbMLhq3deOcHsQhp"; // key为商户平台设置的密钥key
+    @Value("${wechat.appid}")
+    private String appid; // 微信分配的小程序ID
+
+    @Value("${wechat.mch_id}")
+    private String mch_id; // 微信支付分配的商户号
+
+    @Value("${wechat.body}")
+    private String body; // 商品简单描述
+
+    @Value("${wechat.notify_url}")
+    private String notify_url; // 异步接收微信支付结果通知的回调地址
+
+    @Value("${wechat.trade_type}")
+    private String trade_type; // 小程序取值如下：JSAPI
+
+    @Value("${wechat.key}")
+    private String key; // key为商户平台设置的密钥key
 
     /**
      * 创建微信支付订单
