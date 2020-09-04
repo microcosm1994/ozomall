@@ -14,4 +14,6 @@ public interface GoodsMapper extends BaseMapper<GoodsDto> {
     IPage<Map> goodsList(Page page,GoodsDto form);
 
     GoodsVo getGoodsById(int id);
+
+    int increaseSales(int id);
 }

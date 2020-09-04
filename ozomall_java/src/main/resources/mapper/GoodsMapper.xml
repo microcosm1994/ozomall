@@ -89,4 +89,10 @@
         left join goods_brand on goods.brand_id=goods_brand.id
         where goods.id=#{id}
     </select>
+
+    <update id="increaseSales" parameterType="int" flushCache="true">
+        update goods set
+            sales = goods.sales + 1
+          where id = #{id}
+    </update>
 </mapper>

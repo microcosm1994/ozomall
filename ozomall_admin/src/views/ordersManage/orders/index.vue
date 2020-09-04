@@ -111,6 +111,9 @@
             </template>
           </el-table-column>
           <el-table-column align="center" prop="orderAmount" label="订单金额">
+             <template slot-scope="scope">
+              ￥{{ scope.row.orderAmount }}
+            </template>
           </el-table-column>
           <el-table-column
             width="180"

@@ -29,4 +29,9 @@ public interface MallOrderService {
      * 关闭订单
      * */
     Result closeOrder(String orderNo);
+
+    /**
+     * 确认收货
+     * */
+    Result confirmReceipt(String orderNo);
 }

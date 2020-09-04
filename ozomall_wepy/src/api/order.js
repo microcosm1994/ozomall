@@ -52,3 +52,12 @@ export function closeOrder(params) {
         params
     })
 }
+
+// 关闭订单
+export function confirmReceipt(params) {
+    return service({
+        url: '/mall/orders/confirmReceipt',
+        method: 'get',
+        params
+    })
+}

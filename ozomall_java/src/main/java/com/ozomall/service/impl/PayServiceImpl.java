@@ -1,6 +1,7 @@
 package com.ozomall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ozomall.dao.GoodsMapper;
 import com.ozomall.dao.GoodsSkuMapper;
 import com.ozomall.dao.OrderMapper;
 import com.ozomall.entity.OrderDto;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.Map;
 
 @Service
@@ -28,6 +30,9 @@ public class PayServiceImpl implements PayService {
 
     @Resource
     private GoodsSkuMapper goodsSkuMapper;
+
+    @Resource
+    private GoodsMapper goodsMapper;
 
     @Resource
     private OrderUtils orderUtils;
@@ -191,12 +196,14 @@ public class PayServiceImpl implements PayService {
         if (row != null && row.getStatus() == 0) {
             row.setPayType(2);
             row.setStatus(1);
-//            row.setPaymentTime((Date) res.get("time_end"));
+            row.setPaymentTime(new Date());
             row.setPaymentNo((String) res.get("transaction_id"));
             int rowNum = orderMapper.updateById(row);
             if (rowNum > 0) {
                 // 支付成功减去真实库存
                 goodsSkuMapper.reduceStock(row.getGoodsSkuId(), 1);
+                // 支付成功增加商品销量
+                goodsMapper.increaseSales(row.getGoodsId());
                 // 清除redis倒计时缓存
                 orderUtils.clearRedisTimer(row.getOrderNo());
                 return ResultGenerate.genSuccessResult();

@@ -19,6 +19,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -145,6 +146,28 @@ public class MallOrderServiceImpl implements MallOrderService {
                 orderUtils.revertStock(row);
                 // 关闭微信支付订单
                 payService.closeorder(row.getOrderNo());
+                return ResultGenerate.genSuccessResult();
+            } else {
+                return ResultGenerate.genErroResult("失败！");
+            }
+        } else {
+            return ResultGenerate.genErroResult("失败！");
+        }
+    }
+
+    /**
+     * 确认收货
+     */
+    @Override
+    public Result confirmReceipt(String orderNo) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("order_no", orderNo);
+        OrderDto row = orderMapper.selectOne(wrapper);
+        if (row != null) {
+            row.setStatus(3); // 订单状态改为交易成功状态
+            row.setReceiveTime(new Date()); // 设置确认收货时间
+            int n = orderMapper.updateById(row);
+            if (n > 0) {
                 return ResultGenerate.genSuccessResult();
             } else {
                 return ResultGenerate.genErroResult("失败！");

@@ -71,4 +71,10 @@ public class MallOrderController {
     public Result closeOrder(String orderNo) {
         return mallOrderService.closeOrder(orderNo);
     }
+
+    @ApiOperation("确认收货")
+    @GetMapping("/confirmReceipt")
+    public Result confirmReceipt(String orderNo) {
+        return mallOrderService.confirmReceipt(orderNo);
+    }
 }

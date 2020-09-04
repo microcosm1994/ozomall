@@ -201,6 +201,7 @@ wepy.page({
     this.page = 1;
     this.prodList = [];
     this.goodsList();
+    this.getBanner();
   },
   methods: {
     // 计算scroll高度
@@ -210,6 +211,7 @@ wepy.page({
     },
     // 获取banner
     getBanner() {
+      this.bannerList = []
       getBanner().then((res) => {
         if (res.data.code === 1) {
           this.bannerList = res.data.data;

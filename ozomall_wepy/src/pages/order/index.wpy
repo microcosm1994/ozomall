@@ -38,7 +38,7 @@
           <div class="item-status">{{ item.statusName }}</div>
           <div class="item-content">
             <van-card
-              :price="item.goodsPrice"
+              :price="item.goodsAmount"
               desc="{{item.spe1Name + ' ' + item.spe2Name + ' ' + item.spe3Name + ' ' + '数量x1'}}"
               :title="item.goodsName"
               thumb="{{ item.goodsPic }}"

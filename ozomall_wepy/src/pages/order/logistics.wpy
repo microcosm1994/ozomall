@@ -1,0 +1,132 @@
+<config>
+{
+    navigationBarTitleText: '确认订单',
+    usingComponents: {
+      "van-button": "~@/components/vant/button",
+      "van-cell": "~@/components/vant/cell",
+      "van-icon": "~@/components/vant/icon",
+      "van-steps": "~@/components/vant/steps",
+    }
+}
+</config>
+<template>
+  <div class="home">
+    <div class="home-orderStatus">
+      {{ logisticsInfo.statusStr }}
+    </div>
+    <div class="home-address">
+      <van-cell use-label-slot value="复制">
+        <div class="home-address-title" slot="title">
+          {{ logisticsInfo.deliveryCompany }}物流跟踪：{{
+            logisticsInfo.deliveryNo
+          }}
+        </div>
+      </van-cell>
+    </div>
+    <div>
+      <van-steps
+        :steps="logisticsSteps"
+        :active="5"
+        direction="vertical"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+
+wepy.page({
+  data: {
+    logisticsInfo: {},
+    steps: [
+      {
+        text: '卖家发货',
+      },
+      {
+        text: '平台鉴别',
+      },
+      {
+        text: '平台发货',
+      },
+    ],
+    logisticsSteps: [
+      {
+        text: '京东快递已收取快件',
+      },
+      {
+        text: '平台已发货',
+      },
+      {
+        text: '平台鉴别',
+      },
+      {
+        text: '平台已收货',
+      },
+      {
+        text: '卖家发货',
+      },
+    ],
+  },
+  onShow() {
+    let eventChannel = this.$wx.getOpenerEventChannel();
+    // 通过eventChannel监听a页面传过来的数据
+    eventChannel.on('logisticsInfo', (data) => {
+      this.logisticsInfo = {
+        ...data,
+        statusStr: this.statusFilter(data.status),
+      };
+    });
+  },
+  methods: {
+    // 订单状态过滤器
+    statusFilter(val) {
+      switch (val - 0) {
+        case 0:
+          return '您有待付款订单';
+          break;
+        case 1:
+          return '您有待发货订单';
+          break;
+        case 2:
+          return '您有待收货订单';
+          break;
+        case 3:
+          return '交易成功';
+          break;
+        case 4:
+          return '交易关闭';
+          break;
+        default:
+          return '---';
+          break;
+      }
+    },
+  },
+});
+</script>
+<style lang="less">
+.home {
+  width: 100%;
+  height: 100%;
+  background: #eeeef0;
+  .home-orderStatus {
+    width: 100%;
+    height: 200rpx;
+    line-height: 200rpx;
+    background: #2c2b3b;
+    padding-top: 10rpx;
+    padding-bottom: 10rpx;
+    padding-left: 40rpx;
+    color: #fff;
+    font-size: 40rpx;
+    font-weight: 600;
+    position: relative;
+  }
+  .home-address {
+    width: 100%;
+    background: #fff;
+    margin-top: 4rpx;
+  }
+}
+</style>
