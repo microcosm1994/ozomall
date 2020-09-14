@@ -8,7 +8,6 @@ import com.alibaba.otter.canal.protocol.CanalEntry.*;
 import com.alibaba.otter.canal.protocol.Message;
 import com.canalclient.dao.GoodsDao;
 import com.canalclient.dto.GoodsDto;
-import com.sun.deploy.security.CertStore;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +27,7 @@ public class CannalClient implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         // 创建链接
+//        CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress("81.68.211.165", 11111), "example", "canal", "canal");
         CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress("127.0.0.1", 11111), "example", "canal", "canal");
         try {
             //打开连接
