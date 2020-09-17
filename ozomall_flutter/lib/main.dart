@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:ozomall_flutter/pages/buy/index.dart';
 import 'package:ozomall_flutter/pages/home/index.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+import 'model/sys.dart';
+
+void main() => runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SysProvider(),
+        )
+      ],
+      child: MyApp(),
+    ));
 
 class MyApp extends StatefulWidget {
   MyApp({Key key}) : super(key: key);
@@ -13,9 +24,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp (
-      routes: <String, WidgetBuilder> {
+    return MaterialApp(
+      title: "ozo",
+      routes: <String, WidgetBuilder>{
         "/": (BuildContext context) => Home(),
+        "/buy": (BuildContext context) => Buy(),
       },
     );
   }

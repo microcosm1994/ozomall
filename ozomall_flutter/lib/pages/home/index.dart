@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ozomall_flutter/model/sys.dart';
+import 'package:ozomall_flutter/pages/buy/index.dart';
+import 'package:ozomall_flutter/pages/indexPage/indexPage.dart';
 import 'package:ozomall_flutter/widget/navigationBar/index.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -9,11 +13,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  // 页面列表
+  List viewList = [IndexPage(), Buy()];
   @override
   Widget build(BuildContext context) {
+    //获取CounterProvider
+    SysProvider sysProvider = Provider.of<SysProvider>(context);
     return Scaffold(
-      backgroundColor: Color(0xe2e2e2e2),
-      bottomNavigationBar: new NavigationBar(),
+      bottomNavigationBar: new NavigationBar(), // 底部选项卡
+      body: viewList[sysProvider.currentIndex], // 页面
     );
   }
 }
