@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:ozomall_flutter/widget/staggeredListView/index.dart';
 
 class Recommend extends StatefulWidget {
   Recommend({Key key}) : super(key: key);
@@ -41,14 +41,11 @@ class _RecommendState extends State<Recommend>
   Widget build(BuildContext context) {
     List<Widget> tabbarViewList = [];
     for (var i = 0; i < titles.length; i++) {
-      Widget view = buildListView();
+      Widget view = StaggeredListView(index: i);
       tabbarViewList.add(view);
     }
     return Column(children: [
-      Container(
-        color: Colors.white,
-        child: buildTabbar()
-      ),
+      Container(color: Colors.white, child: buildTabbar()),
       Expanded(
           child:
               TabBarView(controller: _tabController, children: tabbarViewList))
@@ -65,33 +62,12 @@ class _RecommendState extends State<Recommend>
       tabs.add(tab);
     }
     return TabBar(
-            labelColor: Colors.black87, // 选中颜色
-            unselectedLabelColor: Colors.black54, // 未选中颜色
-            controller: _tabController,
-            tabs: tabs,
-            isScrollable: true,
-            indicatorWeight: 0.1);
-  }
-
-  // listView
-  Widget buildListView() {
-    return new StaggeredGridView.countBuilder(
-      crossAxisCount: 4,
-      itemCount: 8,
-      padding: EdgeInsets.symmetric(vertical: 4.0),
-      itemBuilder: (BuildContext context, int index) => new Container(
-          color: Colors.white,
-          child: new Center(
-            child: new CircleAvatar(
-              backgroundColor: Colors.white,
-              child: new Text(index.toString()),
-            ),
-          )),
-      staggeredTileBuilder: (int index) =>
-          new StaggeredTile.count(2, index.isEven ? 2 : 1),
-      mainAxisSpacing: 4.0,
-      crossAxisSpacing: 4.0,
-    );
+        labelColor: Colors.black87, // 选中颜色
+        unselectedLabelColor: Colors.black54, // 未选中颜色
+        controller: _tabController,
+        tabs: tabs,
+        isScrollable: true,
+        indicatorWeight: 0.1);
   }
 
   // 点击文字触发

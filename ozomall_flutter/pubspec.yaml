@@ -19,3 +19,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets: 
+    - lib/assets/u=1691093550,1795227220&fm=26&gp=0.jpg

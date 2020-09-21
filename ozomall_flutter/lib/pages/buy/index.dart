@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:ozomall_flutter/widget/ensureBox/index.dart';
+import 'package:ozomall_flutter/widget/staggeredListView/index.dart';
 import 'package:ozomall_flutter/widget/swiper/index.dart';
 
 class Buy extends StatefulWidget {
@@ -145,35 +145,52 @@ class _BuyState extends State<Buy> with SingleTickerProviderStateMixin {
       Widget view;
       // 购买首页布局
       if (i == 0) {
-        view = Column(
-          children: [SwiperCustom(), Expanded(child: buildListView())],
+        view = ListView(
+          children: <Widget>[
+            SwiperCustom(), // 轮播图
+            EnsureBox(), // 正品保障、逐件查验、多重鉴别
+            buildGridView(), // 九宫格菜单
+            StaggeredListView() // 列表
+          ],
         );
       } else {
-        view = buildListView();
+        // 其他页面
+        view = StaggeredListView();
       }
       tabbarViewList.add(view);
     }
     return TabBarView(controller: _tabController, children: tabbarViewList);
   }
 
-  // listView
-  Widget buildListView() {
-    return new StaggeredGridView.countBuilder(
-      crossAxisCount: 4,
-      itemCount: 8,
-      padding: EdgeInsets.symmetric(vertical: 4.0),
-      itemBuilder: (BuildContext context, int index) => new Container(
-          color: Colors.white,
-          child: new Center(
-            child: new CircleAvatar(
-              backgroundColor: Colors.white,
-              child: new Text(index.toString()),
-            ),
-          )),
-      staggeredTileBuilder: (int index) =>
-          new StaggeredTile.count(2, index.isEven ? 2 : 1),
-      mainAxisSpacing: 4.0,
-      crossAxisSpacing: 4.0,
+  // GridView
+  Widget buildGridView() {
+    List arr = ["新品速递", "热销榜单", "男款羽绒服", "李宁外套", "人气潮服", "人气热卖", "Y-3", "MORE"];
+    var gridView = GridView.builder(
+        shrinkWrap: true,
+        physics: new NeverScrollableScrollPhysics(), //禁用滑动事件
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4, childAspectRatio: 2.0),
+        itemCount: 8, // 元素数量
+        itemBuilder: (BuildContext context, int index) {
+          return Column(children: [
+            Container(
+                height: 30.0,
+                child: Image.asset(
+                  "lib/assets/u=1691093550,1795227220&fm=26&gp=0.jpg",
+                  fit: BoxFit.cover,
+                )),
+            Expanded(
+                child: Text(
+              arr[index],
+              style: TextStyle(fontSize: 12.0, color: Colors.black54),
+            ))
+          ]);
+        });
+    return Container(
+      height: 110,
+      child: gridView,
+      color: Colors.white,
+      margin: EdgeInsets.only(top: 4),
     );
   }
 }

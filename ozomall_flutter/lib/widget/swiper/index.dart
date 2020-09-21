@@ -8,7 +8,11 @@ class SwiperCustom extends StatefulWidget {
 }
 
 class _SwiperCustomState extends State<SwiperCustom> {
-  List swiperList = ["http://ozomall-goods-pic.oss-cn-beijing.aliyuncs.com/banner/1596705552540.jpg?Expires=1912065546&OSSAccessKeyId=LTAIXx905tkhWOmO&Signature=CzqDnzlIli%2BMEfD35zNIfywYc4I%3D", "http://ozomall-goods-pic.oss-cn-beijing.aliyuncs.com/banner/1596705591861.jpg?Expires=1912065585&OSSAccessKeyId=LTAIXx905tkhWOmO&Signature=X4NGBywGCrgIe6LCPq8aOnQj3Ds%3D", "http://ozomall-goods-pic.oss-cn-beijing.aliyuncs.com/banner/1596705606801.jpg?Expires=1912065602&OSSAccessKeyId=LTAIXx905tkhWOmO&Signature=Das%2BqA%2BIyRHqw96s9qAcf10Xev0%3D"];
+  List swiperList = [
+    "http://ozomall-goods-pic.oss-cn-beijing.aliyuncs.com/banner/1596705552540.jpg?Expires=1912065546&OSSAccessKeyId=LTAIXx905tkhWOmO&Signature=CzqDnzlIli%2BMEfD35zNIfywYc4I%3D",
+    "http://ozomall-goods-pic.oss-cn-beijing.aliyuncs.com/banner/1596705591861.jpg?Expires=1912065585&OSSAccessKeyId=LTAIXx905tkhWOmO&Signature=X4NGBywGCrgIe6LCPq8aOnQj3Ds%3D",
+    "http://ozomall-goods-pic.oss-cn-beijing.aliyuncs.com/banner/1596705606801.jpg?Expires=1912065602&OSSAccessKeyId=LTAIXx905tkhWOmO&Signature=Das%2BqA%2BIyRHqw96s9qAcf10Xev0%3D"
+  ];
   void getData() {
     // // 取排行榜前三作为轮播图
     // List arr = List();
@@ -25,17 +29,16 @@ class _SwiperCustomState extends State<SwiperCustom> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     // this.getData();
-    print(this.swiperList);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 200.0,
+        height: 150.0,
         child: Swiper(
-          itemBuilder: _swiperBuilder,
+          itemBuilder: buildImage,
           itemCount: 3,
           pagination: new SwiperPagination(
               builder: DotSwiperPaginationBuilder(
@@ -48,11 +51,12 @@ class _SwiperCustomState extends State<SwiperCustom> {
         ));
   }
 
-  Widget _swiperBuilder(BuildContext context, int index) {
+  // buildImage
+  Widget buildImage(BuildContext context, int index) {
     return (Image.network(
       swiperList[index],
       scale: 8.5,
-      fit: BoxFit.contain,
+      fit: BoxFit.cover,
     ));
   }
 }
