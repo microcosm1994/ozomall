@@ -57,7 +57,7 @@ class _CellState extends State<Cell> {
                 WidgetSpan(
                     child: Text(
                   widget.describe,
-                  style: TextStyle(color: Colors.black54, fontSize: 12),
+                  style: TextStyle(color: Colors.black38, fontSize: 12),
                   
                 )), // 描述
                 WidgetSpan(child: arrow) // 结束后的组件

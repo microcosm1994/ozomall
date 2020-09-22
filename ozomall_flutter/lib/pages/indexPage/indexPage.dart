@@ -54,7 +54,7 @@ class _IndexPageState extends State<IndexPage> {
             color: Colors.black54,
           ),
           onPressed: () {
-            print(1);
+            Navigator.pushNamed(context, "/search");
           },
         ));
   }

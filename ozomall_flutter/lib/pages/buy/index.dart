@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ozomall_flutter/api/buyApi.dart';
+import 'package:ozomall_flutter/utils/server.dart';
 import 'package:ozomall_flutter/widget/ensureBox/index.dart';
 import 'package:ozomall_flutter/widget/staggeredListView/index.dart';
 import 'package:ozomall_flutter/widget/swiper/index.dart';
@@ -13,6 +15,7 @@ class Buy extends StatefulWidget {
 class _BuyState extends State<Buy> with SingleTickerProviderStateMixin {
   TabController _tabController; // tabbar控制器
   int currentIndex = 0;
+  List bannerList = [];
   List titles = [
     "推荐",
     "数码",
@@ -29,6 +32,18 @@ class _BuyState extends State<Buy> with SingleTickerProviderStateMixin {
     "家电"
   ];
   String searchValue = "";
+  // 获取banner
+  void getBanner() {
+    BuyApi.getBanner().then((res) {
+      if (res["code"] == 1) {
+        this.setState(() {
+          bannerList = res["data"];
+          print(bannerList);
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     // tabbar控制器
@@ -37,6 +52,7 @@ class _BuyState extends State<Buy> with SingleTickerProviderStateMixin {
         vsync: this, //固定写法
         length: titles.length //指定tab长度
         );
+    getBanner(); // 获取banner
     super.initState();
   }
 
@@ -85,6 +101,7 @@ class _BuyState extends State<Buy> with SingleTickerProviderStateMixin {
     final controller = TextEditingController(); // 输入框控制器
     controller.text = searchValue;
     return TextField(
+      readOnly: true, // 设置只读
       maxLines: 1, //最大行数
       autocorrect: false, //是否自动更正
       style: TextStyle(fontSize: 14.0, color: Colors.black87), //输入文本的样式
@@ -109,11 +126,9 @@ class _BuyState extends State<Buy> with SingleTickerProviderStateMixin {
               onPressed: () {
                 print("camera_alt");
               })),
-      onSubmitted: (text) {
-        //内容提交(按回车)的回调
-        // this.getSearch(text);
-        this.searchValue = text;
-        debugPrint('submit $text');
+      // 点击跳转到搜索页
+      onTap: () {
+        Navigator.pushNamed(context, "/search");
       },
       controller: controller,
     );
@@ -147,7 +162,7 @@ class _BuyState extends State<Buy> with SingleTickerProviderStateMixin {
       if (i == 0) {
         view = ListView(
           children: <Widget>[
-            SwiperCustom(), // 轮播图
+            SwiperCustom(swiperList: bannerList), // 轮播图
             EnsureBox(), // 正品保障、逐件查验、多重鉴别
             buildGridView(), // 九宫格菜单
             StaggeredListView() // 列表
