@@ -41,7 +41,7 @@ class _RecommendState extends State<Recommend>
   Widget build(BuildContext context) {
     List<Widget> tabbarViewList = [];
     for (var i = 0; i < titles.length; i++) {
-      Widget view = StaggeredListView(index: i);
+      Widget view = StaggeredListView();
       tabbarViewList.add(view);
     }
     return Column(children: [

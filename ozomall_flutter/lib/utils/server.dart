@@ -17,8 +17,8 @@ BaseOptions baseOptions = BaseOptions(
 class Server {
   static Dio _dio = Dio(baseOptions);
 
-  static get(path) async {
-    Response response = await _dio.get(path);
+  static get(path, params) async {
+    Response response = await _dio.get(path, queryParameters: params);
     return response.data;
   }
 }
