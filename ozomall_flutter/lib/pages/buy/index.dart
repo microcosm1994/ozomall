@@ -48,7 +48,7 @@ class _BuyState extends State<Buy>
     form["size"] = 10;
     form["status"] = 1;
     form["del"] = 0;
-    if (classifyId != null) {
+    if (classifyId != 0) {
       form["classify1Id"] = classifyId;
     }
     BuyApi.getGoodsList(form).then((res) {
@@ -69,6 +69,7 @@ class _BuyState extends State<Buy>
         vsync: this, //固定写法
         length: titles.length //指定tab长度
         )
+        // 添加监听器
       ..addListener(() {
         if (_tabController.index.toDouble() == _tabController.animation.value) {
           classifyId = titles[_tabController.index]["id"];
@@ -77,7 +78,7 @@ class _BuyState extends State<Buy>
         }
       });
     getBanner(); // 获取banner
-    getGoodsList(null); // 获取商品列表
+    getGoodsList(0); // 获取商品列表
     super.initState();
   }
 
