@@ -3,7 +3,8 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 
 class SwiperCustom extends StatefulWidget {
   final List swiperList;
-  SwiperCustom({Key key, this.swiperList}) : super(key: key);
+  final double height;
+  SwiperCustom({Key key, this.swiperList, this.height}) : super(key: key);
   @override
   _SwiperCustomState createState() => _SwiperCustomState();
 }
@@ -12,7 +13,8 @@ class _SwiperCustomState extends State<SwiperCustom> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 150.0,
+        height: widget.height,
+        width: double.infinity,
         child: Swiper(
           itemBuilder: buildImage,
           itemCount: widget.swiperList.length,

@@ -188,7 +188,7 @@ class _BuyState extends State<Buy>
       if (i == 0) {
         view = ListView(
           children: <Widget>[
-            SwiperCustom(swiperList: bannerList), // 轮播图
+            SwiperCustom(swiperList: bannerList, height: 150.0), // 轮播图
             EnsureBox(), // 正品保障、逐件查验、多重鉴别
             buildGridView(), // 九宫格菜单
             StaggeredListView(list: goodsList) // 列表

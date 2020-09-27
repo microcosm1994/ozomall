@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ozomall_flutter/pages/buy/index.dart';
+import 'package:ozomall_flutter/pages/goodsDetail/index.dart';
 import 'package:ozomall_flutter/pages/home/index.dart';
 import 'package:ozomall_flutter/pages/my/index.dart';
 import 'package:ozomall_flutter/pages/search/index.dart';
