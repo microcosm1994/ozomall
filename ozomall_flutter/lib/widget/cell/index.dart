@@ -7,6 +7,7 @@ class Cell extends StatefulWidget {
   final Icon beforeIcon; // 开始前的组件
   final bool isArrow; // 是否显示小箭头
   final Widget child; // cell下方内容区
+  final double childHeight; // cell下方内容区高度
   const Cell(
       {Key key,
       this.beforeIcon,
@@ -14,7 +15,8 @@ class Cell extends StatefulWidget {
       this.title,
       this.describe = "",
       this.route,
-      this.child})
+      this.child,
+      this.childHeight})
       : super(key: key);
 
   get buildBeforeIcon => null; // cell下方的盒子
@@ -39,9 +41,9 @@ class _CellState extends State<Cell> {
     return Column(children: [
       Container(
           padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          height: 50.0,
+          height: 40.0,
           color: Colors.white,
-          margin: EdgeInsets.only(top: 4),
+          margin: EdgeInsets.only(top: 2),
           child: Row(children: [
             Expanded(
                 child: Text.rich(TextSpan(children: [
@@ -55,19 +57,23 @@ class _CellState extends State<Cell> {
                 child: Text.rich(
               TextSpan(children: [
                 WidgetSpan(
-                    child: Text(
-                  widget.describe,
-                  style: TextStyle(color: Colors.black38, fontSize: 12),
-                  
-                )), // 描述
-                WidgetSpan(child: arrow) // 结束后的组件
-              ]),
+                    child: Container(
+                        height: 40,
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          widget.describe,
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        ))),
+                WidgetSpan(child: Container(
+                  height: 40,
+                  child: arrow)) // 结束后的组件
+              ], style: TextStyle(color: Colors.black38, fontSize: 12)),
               textAlign: TextAlign.end,
             ))
           ])),
       Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          height: widget.child == null ? 0 : 50,
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          height: widget.childHeight == null ? 0 : widget.childHeight + 10,
           width: double.infinity,
           child: widget.child,
           color: Colors.white),
