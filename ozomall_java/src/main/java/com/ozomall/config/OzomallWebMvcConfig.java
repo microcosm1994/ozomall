@@ -27,6 +27,7 @@ public class OzomallWebMvcConfig extends WebMvcConfigurerAdapter {
         excludePathList.add("/goods/getGoodsAttr");
         excludePathList.add("/goods/getGoodsSkuList");
         excludePathList.add("/goods/getGoodsParams");
+        excludePathList.add("/goods/getGoodsBrandInfo");
         excludePathList.add("/mall/orders/getBuyList");
         excludePathList.add("/mall/goods/**");
         excludePathList.add("/mall/user/sendMessage");

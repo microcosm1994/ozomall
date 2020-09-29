@@ -95,6 +95,11 @@ public interface GoodsService {
     Result getGoodsBrand(GoodsBrandDto form);
 
     /**
+     * 获取品牌详情
+     */
+    Result getGoodsBrandInfo(GoodsBrandDto form);
+
+    /**
      * 修改品牌
      */
     Result putGoodsBrand(GoodsBrandDto form);

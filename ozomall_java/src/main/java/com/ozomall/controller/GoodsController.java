@@ -221,6 +221,12 @@ public class GoodsController {
         return goodsService.getGoodsBrand(form);
     }
 
+    @ApiOperation("获取品牌详情")
+    @GetMapping("/getGoodsBrandInfo")
+    public Result getGoodsBrandInfo(GoodsBrandDto form) {
+        return goodsService.getGoodsBrandInfo(form);
+    }
+
     @ApiOperation("修改品牌")
     @PostMapping("/putGoodsBrand")
     public Result putGoodsBrand(@RequestBody GoodsBrandDto form) {

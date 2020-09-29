@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:ozomall_flutter/api/goodsDetail.dart';
+import 'package:ozomall_flutter/pages/goodsDetail/brand.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/wear.dart';
 import 'package:ozomall_flutter/widget/cell/index.dart';
 import 'package:ozomall_flutter/widget/swiper/index.dart';
@@ -16,6 +17,7 @@ class GoodsDetail extends StatefulWidget {
 class _GoodsDetailState extends State<GoodsDetail> {
   Map goodsInfo;
   List goodsPics = [];
+  List goodsParams = [];
   // 获取商品详情
   void getGoodsDetail() {
     GoodsDetailApi.getGoodsDetail({"id": widget.id}).then((res) {
@@ -23,7 +25,6 @@ class _GoodsDetailState extends State<GoodsDetail> {
         this.setState(() {
           goodsInfo = res["data"];
         });
-        print(goodsInfo);
       }
     });
   }
@@ -39,10 +40,23 @@ class _GoodsDetailState extends State<GoodsDetail> {
     });
   }
 
+  // 获取商品参数
+  void getGoodsParams() {
+    GoodsDetailApi.getGoodsParams({"goodsId": widget.id}).then((res) {
+      if (res["code"] == 1) {
+        this.setState(() {
+          goodsParams = res["data"];
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
+    print(goodsInfo);
     getGoodsDetail();
     getGoodsPic();
+    getGoodsParams();
     // TODO: implement initState
     super.initState();
   }
@@ -121,9 +135,16 @@ class _GoodsDetailState extends State<GoodsDetail> {
       ),
       // 商品品牌
       Cell(
-        title: goodsInfo["brandName"],
+        title: goodsInfo == null ? "" : goodsInfo["brandName"],
         describe: "进入品牌",
         isArrow: true,
+        onTap: () {
+          Navigator.push(context, new MaterialPageRoute(builder: (_) {
+            return new BrandPage(
+              brandId: goodsInfo == null ? "" : goodsInfo["brandId"],
+            );
+          }));
+        },
       ),
       // 商品相关推荐
       buildRecommend(),
@@ -366,20 +387,20 @@ class _GoodsDetailState extends State<GoodsDetail> {
   // 商品参数
   Widget buildGoodsParams() {
     List<Widget> paramsList = [];
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < goodsParams.length; i++) {
       Widget param = Container(
           height: 30,
           child: Row(children: [
             Expanded(
                 child: Text(
-              "品牌",
+              goodsParams[i]["name"],
               style: TextStyle(color: Colors.black54, fontSize: 12),
             )),
             Expanded(
                 child: Text(
-              "nike",
+              goodsParams[i]["value"],
               style: TextStyle(color: Colors.black54, fontSize: 12),
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.end,
             ))
           ]));
       paramsList.add(param);
@@ -408,7 +429,6 @@ class _GoodsDetailState extends State<GoodsDetail> {
   Widget buildGoodsDetail() {
     return Container(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-        margin: EdgeInsets.only(top: 2),
         color: Colors.white,
         child: Column(children: [
           Container(
@@ -419,7 +439,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
                 style: TextStyle(color: Colors.black87, fontSize: 16),
                 textAlign: TextAlign.left,
               )),
-          Html(data: goodsInfo["details"])
+          Html(data: goodsInfo == null ? "" : goodsInfo["details"])
         ]));
   }
 }

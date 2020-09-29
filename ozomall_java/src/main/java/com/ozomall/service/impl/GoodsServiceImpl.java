@@ -396,6 +396,22 @@ public class GoodsServiceImpl implements GoodsService {
         }
     }
 
+    /**
+     * 获取品牌详情
+     *
+     * @param form
+     */
+    @Override
+    public Result getGoodsBrandInfo(GoodsBrandDto form) {
+        System.out.print(form.toString());
+        GoodsBrandDto row = goodsBrandMapper.selectById(form.getId());
+        if (row != null) {
+            return ResultGenerate.genSuccessResult(row);
+        } else {
+            return ResultGenerate.genErroResult("品牌添加失败，请重试！");
+        }
+    }
+
 
     /**
      * 修改品牌

@@ -9,7 +9,8 @@ getToken() async {
 
 // 创建实例
 BaseOptions baseOptions = BaseOptions(
-    baseUrl: "http://81.68.211.165:8090",
+    // baseUrl: "http://81.68.211.165:8090", // 生产环境
+    baseUrl: "http://192.168.12.5:8090", // 开发环境(局域网ip)
     connectTimeout: 5000,
     receiveTimeout: 3000,
     headers: {"token": "getToken()"});
