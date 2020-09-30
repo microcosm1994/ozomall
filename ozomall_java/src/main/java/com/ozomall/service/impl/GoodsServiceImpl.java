@@ -75,6 +75,7 @@ public class GoodsServiceImpl implements GoodsService {
         map.put(GoodsDto::getClassify2Id, form.getClassify2Id());
         map.put(GoodsDto::getClassify3Id, form.getClassify3Id());
         map.put(GoodsDto::getGoodsName, form.getGoodsName());
+        map.put(GoodsDto::getBrandName, form.getBrandName());
         map.put(GoodsDto::getDel, form.getDel());
         map.put(GoodsDto::getStatus, form.getStatus());
         wrapper.allEq(map, false);
@@ -100,6 +101,7 @@ public class GoodsServiceImpl implements GoodsService {
         boolQueryBuilder.should(QueryBuilders.matchQuery("classify1Name", form.getGoodsName()));
         boolQueryBuilder.should(QueryBuilders.matchQuery("classify2Name", form.getGoodsName()));
         boolQueryBuilder.should(QueryBuilders.matchQuery("classify3Name", form.getGoodsName()));
+        boolQueryBuilder.should(QueryBuilders.matchQuery("brandName", form.getGoodsName()));
         boolQueryBuilder.should(QueryBuilders.matchQuery("details", form.getGoodsName()));
         boolQueryBuilder.mustNot(QueryBuilders.matchQuery("status", 0));
         boolQueryBuilder.mustNot(QueryBuilders.matchQuery("del", 1));
@@ -134,8 +136,9 @@ public class GoodsServiceImpl implements GoodsService {
         map.put(GoodsDto::getClassify2Id, form.getClassify2Id());
         map.put(GoodsDto::getClassify3Id, form.getClassify3Id());
         map.put(GoodsDto::getGoodsName, form.getGoodsName());
-        map.put(GoodsDto::getDel, form.getDel());
-        map.put(GoodsDto::getStatus, form.getStatus());
+        map.put(GoodsDto::getBrandId, form.getBrandId());
+        map.put(GoodsDto::getDel, 0);
+        map.put(GoodsDto::getStatus, 1);
         wrapper.allEq(map, false);
         IPage<Map> rows = goodsMapper.selectPage(page, wrapper);
         if (rows != null) {

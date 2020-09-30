@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:ozomall_flutter/api/goodsDetail.dart';
+import 'package:ozomall_flutter/api/goods.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/brand.dart';
+import 'package:ozomall_flutter/pages/goodsDetail/recentBuy.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/wear.dart';
 import 'package:ozomall_flutter/widget/cell/index.dart';
 import 'package:ozomall_flutter/widget/swiper/index.dart';
@@ -20,7 +21,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
   List goodsParams = [];
   // 获取商品详情
   void getGoodsDetail() {
-    GoodsDetailApi.getGoodsDetail({"id": widget.id}).then((res) {
+    GoodsApi.getGoodsDetail({"id": widget.id}).then((res) {
       if (res["code"] == 1) {
         this.setState(() {
           goodsInfo = res["data"];
@@ -31,7 +32,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
 
   // 获取商品图片
   void getGoodsPic() {
-    GoodsDetailApi.getGoodsPic({"goodsId": widget.id}).then((res) {
+    GoodsApi.getGoodsPic({"goodsId": widget.id}).then((res) {
       if (res["code"] == 1) {
         this.setState(() {
           goodsPics = res["data"];
@@ -42,7 +43,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
 
   // 获取商品参数
   void getGoodsParams() {
-    GoodsDetailApi.getGoodsParams({"goodsId": widget.id}).then((res) {
+    GoodsApi.getGoodsParams({"goodsId": widget.id}).then((res) {
       if (res["code"] == 1) {
         this.setState(() {
           goodsParams = res["data"];
@@ -53,7 +54,6 @@ class _GoodsDetailState extends State<GoodsDetail> {
 
   @override
   void initState() {
-    print(goodsInfo);
     getGoodsDetail();
     getGoodsPic();
     getGoodsParams();
@@ -149,7 +149,11 @@ class _GoodsDetailState extends State<GoodsDetail> {
       // 商品相关推荐
       buildRecommend(),
       // 最近购买
-      buildRecentBuy(),
+      goodsInfo == null
+          ? Text("")
+          : RecentBuy(
+              goodsInfo: goodsInfo,
+            ),
       // 商品评价
       buildEvaluate(),
       // 穿搭精选

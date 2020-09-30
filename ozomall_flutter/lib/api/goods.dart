@@ -1,6 +1,11 @@
 import 'package:ozomall_flutter/utils/server.dart';
 
-class GoodsDetailApi {
+class GoodsApi {
+  // 获取商品列表
+  static Future getGoodsList(params) {
+    return Server.get("/mall/goods/list", params);
+  }
+
   // 获取商品详情
   static Future getGoodsDetail(params) {
     return Server.get("/goods/get", params);

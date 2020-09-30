@@ -25,8 +25,8 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        // target: 'http://127.0.0.1:8090', //对应自己的接口
-        target: 'http://81.68.211.165:8090/', //对应自己的接口
+        target: 'http://127.0.0.1:8090', //对应自己的接口
+        // target: 'http://81.68.211.165:8090/', //对应自己的接口
         changeOrigin: true,
         ws: true,
         pathRewrite: {

@@ -24,7 +24,6 @@ public class MallGoodsController {
     @ApiOperation("获取商品列表")
     @GetMapping("/list")
     public Result goodsList(GoodsDto form) {
-        form.setStatus(1);
         return goodsService.mallGoodsList(form);
     }
 

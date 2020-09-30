@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ozomall_flutter/api/goodsDetail.dart';
+import 'package:ozomall_flutter/api/goods.dart';
+import 'package:ozomall_flutter/widget/staggeredListView/index.dart';
 
 class BrandPage extends StatefulWidget {
   BrandPage({Key key, this.brandId}) : super(key: key);
@@ -9,16 +10,18 @@ class BrandPage extends StatefulWidget {
 }
 
 class _BrandPageState extends State<BrandPage> {
+  ScrollController controller = new ScrollController(); // 滚动控制器
   int toolBarIndex = 0; // 排序工具栏
   int iconIndex = 0; // 价格排序图标箭头高亮
   int goodsCount = 0; // 商品数量
+  List goodsList = []; // 商品列表
   Map brandInfo; // 品牌信息
+  String brandName = ""; // 品牌名称
 
   // 获取商品品牌信息
   void getGoodsBrandInfo() {
-    GoodsDetailApi.getGoodsBrandInfo({"id": widget.brandId}).then((res) {
+    GoodsApi.getGoodsBrandInfo({"id": widget.brandId}).then((res) {
       if (res["code"] == 1) {
-        print(res);
         this.setState(() {
           brandInfo = res["data"];
         });
@@ -28,11 +31,23 @@ class _BrandPageState extends State<BrandPage> {
 
   // 获取商品数量
   void getGoodsCount() {
-    GoodsDetailApi.getGoodsCount({"brandId": widget.brandId}).then((res) {
+    GoodsApi.getGoodsCount({"brandId": widget.brandId}).then((res) {
+      if (res["code"] == 1) {
+        this.setState(() {
+          goodsCount = res["data"];
+        });
+      }
+    });
+  }
+
+  // 获取商品列表
+  void getGoodsList() {
+    GoodsApi.getGoodsList({"brandId": widget.brandId, "page": 1, "size": 10})
+        .then((res) {
       if (res["code"] == 1) {
         print(res);
         this.setState(() {
-          goodsCount = res["data"];
+          goodsList = res["data"]["records"];
         });
       }
     });
@@ -42,44 +57,41 @@ class _BrandPageState extends State<BrandPage> {
   void initState() {
     getGoodsBrandInfo();
     getGoodsCount();
+    getGoodsList();
     // TODO: implement initState
     super.initState();
+    // 监听滚动位置
+    controller.addListener(() {
+      if (controller.offset > 50) {
+        this.setState(() {
+          brandName = brandInfo == null ? "" : brandInfo["name"];
+        });
+      } else {
+        this.setState(() {
+          brandName = "";
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(slivers: [
-      buildAppBar(),
-      // 品牌信息
-      SliverPersistentHeader(
-        delegate: SliverPersistentHeaderDelegate.build(BuildContext context, double shrinkOffset, bool overlapsContent){
-          return Text("");
-        },
-        pinned: true,
-      ),
-      SliverPersistentHeader(
-        delegate: SortToolBar(child: buildSortTooBar()),
-        pinned: true,
-      ),
-      SliverGrid(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200.0,
-          mainAxisSpacing: 10.0,
-          crossAxisSpacing: 10.0,
-          childAspectRatio: 4.0,
+    return Scaffold(
+      backgroundColor: Color(0xf5f5f5f5),
+      body: CustomScrollView(controller: controller, slivers: [
+        // AppBar
+        buildAppBar(),
+        // 品牌信息
+        SliverToBoxAdapter(child: buildBrandInfo()),
+        // 排序工具栏
+        SliverPersistentHeader(
+          delegate: SortToolBar(child: buildSortTooBar()),
+          pinned: true,
         ),
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return Container(
-              alignment: Alignment.center,
-              color: Colors.teal[100 * (index % 9)],
-              child: Text('Grid Item $index'),
-            );
-          },
-          childCount: 40,
-        ),
-      ),
-    ]);
+        // 商品列表
+        SliverToBoxAdapter(child: StaggeredListView(list: goodsList))
+      ]),
+    );
   }
 
   // Appbar
@@ -87,7 +99,7 @@ class _BrandPageState extends State<BrandPage> {
     return SliverAppBar(
       backgroundColor: Colors.white,
       pinned: true,
-      expandedHeight: 100.0,
+      expandedHeight: 50.0,
       elevation: 0.1,
       leading: FlatButton(
           onPressed: () {
@@ -110,7 +122,7 @@ class _BrandPageState extends State<BrandPage> {
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(
-          brandInfo == null ? "" : brandInfo["name"],
+          brandName,
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.black87),
         ),
@@ -121,6 +133,7 @@ class _BrandPageState extends State<BrandPage> {
   // 品牌信息
   Widget buildBrandInfo() {
     return Container(
+        padding: EdgeInsets.symmetric(horizontal: 10),
         color: Colors.white,
         child: Column(
           children: [

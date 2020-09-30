@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ozomall_flutter/api/buyApi.dart';
+import 'package:ozomall_flutter/api/goods.dart';
 import 'package:ozomall_flutter/widget/ensureBox/index.dart';
 import 'package:ozomall_flutter/widget/staggeredListView/index.dart';
 import 'package:ozomall_flutter/widget/swiper/index.dart';
@@ -51,7 +52,7 @@ class _BuyState extends State<Buy>
     if (classifyId != 0) {
       form["classify1Id"] = classifyId;
     }
-    BuyApi.getGoodsList(form).then((res) {
+    GoodsApi.getGoodsList(form).then((res) {
       if (res["code"] == 1) {
         this.setState(() {
           goodsList = res["data"]["records"];

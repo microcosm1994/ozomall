@@ -33,6 +33,7 @@ public class GoodsDto extends PageReqDto {
     private Integer commentCount;
 
     @ApiModelProperty(value = "商品销量")
+    @Field(type = FieldType.Long)
     private Integer sales;
 
     @ApiModelProperty(value = "商品1级分类id")
