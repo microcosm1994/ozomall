@@ -1,5 +1,5 @@
 // const domain = "http://localhost:8090"
-const domain = "http://81.68.211.165:8090"
+const domain = "https://www.dubo1994.com/api"
 const service = async (config) => {
     config['baseUrl'] = ''
     return new Promise((relove, reject) => {

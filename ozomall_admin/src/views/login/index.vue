@@ -75,6 +75,9 @@
         >登录</el-button
       >
     </el-form>
+    <div class="footer">
+      闽ICP备2020018533号-1
+    </div>
   </div>
 </template>
 
@@ -275,6 +278,18 @@ $light_gray: #eee;
     position: absolute;
     right: 0;
     bottom: 6px;
+  }
+
+  .footer{
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    font-size: 12px;
+    color: #5f6975;
+    border-top: 1px solid #5f6975;
   }
 
   @media only screen and (max-width: 470px) {
