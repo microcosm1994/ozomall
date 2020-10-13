@@ -6,6 +6,7 @@ import 'package:ozomall_flutter/pages/goodsDetail/brand.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/recentBuy.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/wear.dart';
 import 'package:ozomall_flutter/widget/cell/index.dart';
+import 'package:ozomall_flutter/widget/goodsTitleCard/index.dart';
 import 'package:ozomall_flutter/widget/swiper/index.dart';
 
 class GoodsDetail extends StatefulWidget {
@@ -19,6 +20,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
   Map goodsInfo;
   List goodsPics = [];
   List goodsParams = [];
+  List goodsSku = [];
   // 获取商品详情
   void getGoodsDetail() {
     GoodsApi.getGoodsDetail({"id": widget.id}).then((res) {
@@ -52,11 +54,24 @@ class _GoodsDetailState extends State<GoodsDetail> {
     });
   }
 
+  // 获取商品规格
+  void getGoodsAttr() {
+    GoodsApi.getGoodsAttr({"goodsId": widget.id}).then((res) {
+      if (res["code"] == 1) {
+        this.setState(() {
+          goodsSku = res["data"];
+        });
+        print(goodsSku);
+      }
+    });
+  }
+
   @override
   void initState() {
     getGoodsDetail();
     getGoodsPic();
     getGoodsParams();
+    getGoodsAttr();
     // TODO: implement initState
     super.initState();
   }
@@ -66,7 +81,8 @@ class _GoodsDetailState extends State<GoodsDetail> {
     return Scaffold(
         backgroundColor: Color(0xf5f5f5f5),
         appBar: buildAppBar(),
-        body: buildBody());
+        body: buildBody(context),
+        bottomNavigationBar: buildNavigationBar(context));
   }
 
   // AppBar
@@ -117,7 +133,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
   }
 
   // body
-  Widget buildBody() {
+  Widget buildBody(BuildContext context) {
     return ListView(children: [
       new SwiperCustom(
         swiperList: goodsPics,
@@ -132,6 +148,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
         title: "规格",
         describe: "已选 m",
         isArrow: true,
+        onTap: () => buildGoodsSku(context),
       ),
       // 商品品牌
       Cell(
@@ -166,8 +183,49 @@ class _GoodsDetailState extends State<GoodsDetail> {
             buildGoodsParams(),
             // 商品介绍
             buildGoodsDetail()
-          ]))
+          ])),
     ]);
+  }
+
+  // bottomNavigationBar
+  Widget buildNavigationBar(BuildContext context) {
+    // TODO: implement build
+    return Container(
+        height: 60,
+        padding: EdgeInsets.symmetric(vertical: 5),
+        color: Colors.white,
+        child: Row(children: [
+          Container(
+              height: 40,
+              child: FlatButton(
+                onPressed: () {},
+                child: Text.rich(TextSpan(children: [
+                  WidgetSpan(child: Icon(Icons.star_border)),
+                  WidgetSpan(child: Text("收藏"))
+                ])),
+              )),
+          Container(
+              width: 100,
+              height: 40,
+              decoration: new BoxDecoration(
+                  border: new Border.all(color: Colors.black45, width: 0.5),
+                  color: Colors.white,
+                  borderRadius: new BorderRadius.circular((4.0))),
+              child: FlatButton(
+                onPressed: () {},
+                child: Text("出售"),
+              )),
+          Expanded(
+            child: Container(
+                height: 40,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: RaisedButton(
+                    color: Color(0xff56C0C1),
+                    textColor: Colors.white,
+                    child: Text("立即购买"),
+                    onPressed: () => buildGoodsSku(context))),
+          )
+        ]));
   }
 
   // 商品标题
@@ -268,55 +326,6 @@ class _GoodsDetailState extends State<GoodsDetail> {
         )),
       ]),
     ));
-  }
-
-  // 最近购买
-  Widget buildRecentBuy() {
-    List<Widget> recentBuyList = [];
-    for (var i = 0; i < 4; i++) {
-      Widget item = Container(
-          width: double.infinity,
-          height: 20,
-          child: Row(children: [
-            Expanded(
-                child: Row(children: [
-              Container(
-                  width: 20,
-                  height: 20,
-                  child: Image.network(
-                    "http://ozomall-goods-pic.oss-cn-beijing.aliyuncs.com/goods/pics/1598433380615.jpg?Expires=1913793379&OSSAccessKeyId=LTAIXx905tkhWOmO&Signature=QNzoa6q3yQ6vzyHxEwA1wG6ODmw%3D",
-                    scale: 1.0,
-                    fit: BoxFit.fitWidth,
-                  )),
-              Container(
-                  padding: EdgeInsets.all(4),
-                  height: 20,
-                  child: Text(
-                    "asdas",
-                    style: TextStyle(color: Colors.black87, fontSize: 12),
-                  ))
-            ])),
-            Expanded(
-                child: Text("XL",
-                    style: TextStyle(color: Colors.black87, fontSize: 12))),
-            Expanded(
-                child: Text("￥499",
-                    style: TextStyle(color: Colors.black87, fontSize: 12))),
-            Expanded(
-                child: Text(
-              "9月26日",
-              style: TextStyle(color: Colors.black54, fontSize: 12),
-            )),
-          ]));
-      recentBuyList.add(item);
-    }
-    return Cell(
-      title: "最近购买",
-      describe: "全部",
-      isArrow: true,
-      childHeight: 80,
-      child: Column(children: recentBuyList),
-    );
   }
 
   // 商品评价
@@ -445,5 +454,78 @@ class _GoodsDetailState extends State<GoodsDetail> {
               )),
           Html(data: goodsInfo == null ? "" : goodsInfo["details"])
         ]));
+  }
+
+  // 商品规格
+  buildGoodsSku(BuildContext context) {
+    List<Widget> skuItem = [];
+    for (var i = 0; i < goodsSku.length; i++) {
+      Widget title = Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(vertical: 10),
+          height: 40,
+          child: Text(goodsSku[i]["name"], textAlign: TextAlign.left));
+      skuItem.add(title);
+      Widget content = GridView.builder(
+          shrinkWrap: true,
+          physics: new NeverScrollableScrollPhysics(), //禁用滑动事件
+          itemCount: goodsSku[i]["children"].length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //横轴元素个数
+              crossAxisCount: 4,
+              //纵轴间距
+              mainAxisSpacing: 20.0,
+              //横轴间距
+              crossAxisSpacing: 10.0,
+              //子组件宽高长度比例
+              childAspectRatio: 2.5),
+          itemBuilder: (BuildContext context, int index1) {
+            return Container(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                color: Colors.white,
+                child: Text(
+                  goodsSku[i]["children"][index1]["value"],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, height: 1),
+                ));
+          });
+      skuItem.add(content);
+    }
+    return showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return BottomSheet(
+            backgroundColor: Color(0xf5f5f5f5),
+            builder: (BuildContext context) {
+              return Column(
+                children: [
+                  Container(
+                      height: 90,
+                      child: GoodsTitleCard(
+                        cover: goodsInfo["cover"],
+                        goodsName: goodsInfo["goodsName"],
+                        goodsPrice: goodsInfo["goodsPrice"],
+                      )),
+                  Expanded(
+                      child: Container(
+                          child: ListView(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              children: skuItem))),
+                  Container(
+                      color: Colors.white,
+                      width: double.infinity,
+                      height: 50,
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      child: RaisedButton(
+                          color: Color(0xff56C0C1),
+                          textColor: Colors.white,
+                          child: Text("立即购买"),
+                          onPressed: () {})),
+                ],
+              );
+            },
+            onClosing: () {},
+          );
+        });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ozomall_flutter/api/orderApi.dart';
 import 'package:ozomall_flutter/widget/cell/index.dart';
+import 'package:ozomall_flutter/widget/goodsTitleCard/index.dart';
 
 class RecentBuy extends StatefulWidget {
   RecentBuy({Key key, @required this.goodsInfo}) : super(key: key);
@@ -79,7 +80,12 @@ class _RecentBuyState extends State<RecentBuy> {
         ),
         centerTitle: true,
         elevation: 1,
-        bottom: buildGoodsCard(widget.goodsInfo),
+        bottom: PreferredSize(
+            child: GoodsTitleCard(
+                cover: widget.goodsInfo["cover"],
+                goodsName: widget.goodsInfo["goodsName"],
+                goodsPrice: widget.goodsInfo["goodsPrice"]),
+            preferredSize: Size.fromHeight(70)),
       ),
       body: Container(
           color: Colors.white,
@@ -135,62 +141,5 @@ class _RecentBuyState extends State<RecentBuy> {
         textAlign: TextAlign.right,
       )),
     ]);
-  }
-
-  // 商品卡片
-  Widget buildGoodsCard(Map data) {
-    return PreferredSize(
-        child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Row(children: [
-              Container(
-                height: 50,
-                width: 50,
-                child: Image.network(
-                  data["cover"],
-                  scale: 1.0,
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
-              Expanded(
-                  child: Column(children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  width: double.infinity,
-                  child: Text(
-                    data["goodsName"],
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  width: double.infinity,
-                  child: Text.rich(
-                    TextSpan(text: "￥ ", children: [
-                      WidgetSpan(
-                          child: Text(data["goodsPrice"],
-                              style: TextStyle(
-                                  height: 1.0,
-                                  color: Colors.black87,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600))),
-                      WidgetSpan(
-                          child: Text(" 起",
-                              style: TextStyle(
-                                  color: Colors.black87, fontSize: 10)))
-                    ]),
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.black87, fontSize: 12),
-                  ),
-                )
-              ]))
-            ])),
-        preferredSize: Size.fromHeight(50));
   }
 }

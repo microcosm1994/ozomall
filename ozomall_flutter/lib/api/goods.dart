@@ -30,4 +30,9 @@ class GoodsApi {
   static Future getGoodsCount(params) {
     return Server.get("/mall/goods/getGoodsCount", params);
   }
+
+  // 根据品牌获取商品数量
+  static Future getGoodsAttr(params) {
+    return Server.get("/goods/getGoodsAttr", params);
+  }
 }
