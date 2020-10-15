@@ -48,20 +48,8 @@ class _GoodsTitleCardState extends State<GoodsTitleCard> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               width: double.infinity,
-              child: Text.rich(
-                TextSpan(text: "￥ ", children: [
-                  WidgetSpan(
-                      child: Text(widget.goodsPrice,
-                          style: TextStyle(
-                              height: 1.0,
-                              color: Colors.black87,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600))),
-                  WidgetSpan(
-                      child: Text(" 起",
-                          style:
-                              TextStyle(color: Colors.black87, fontSize: 10)))
-                ]),
+              child: Text(
+                widget.goodsPrice,
                 textAlign: TextAlign.left,
                 style: TextStyle(color: Colors.black87, fontSize: 12),
               ),

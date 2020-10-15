@@ -31,8 +31,13 @@ class GoodsApi {
     return Server.get("/mall/goods/getGoodsCount", params);
   }
 
-  // 根据品牌获取商品数量
+  // 获取商品属性
   static Future getGoodsAttr(params) {
     return Server.get("/goods/getGoodsAttr", params);
+  }
+
+   // 获取商品价格
+  static Future getGoodsSkuPrice(params) {
+    return Server.get("/goods/getGoodsSkuList", params);
   }
 }

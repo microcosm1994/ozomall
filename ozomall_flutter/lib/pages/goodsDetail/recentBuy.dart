@@ -21,7 +21,6 @@ class _RecentBuyState extends State<RecentBuy> {
         this.setState(() {
           buyList = res["data"]["records"];
         });
-        print(buyList);
       }
     });
   }
@@ -84,7 +83,7 @@ class _RecentBuyState extends State<RecentBuy> {
             child: GoodsTitleCard(
                 cover: widget.goodsInfo["cover"],
                 goodsName: widget.goodsInfo["goodsName"],
-                goodsPrice: widget.goodsInfo["goodsPrice"]),
+                goodsPrice: "￥" + widget.goodsInfo["goodsPrice"] + "起"),
             preferredSize: Size.fromHeight(70)),
       ),
       body: Container(

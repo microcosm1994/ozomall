@@ -21,6 +21,19 @@ class _GoodsDetailState extends State<GoodsDetail> {
   List goodsPics = [];
   List goodsParams = [];
   List goodsSku = [];
+  int spe1CurrentIndex = 0; // 属性索引
+  int spe2CurrentIndex = 0;
+  int spe3CurrentIndex = 0;
+  int spe1CurrentId = 0; // 属性id
+  int spe2CurrentId = 0;
+  int spe3CurrentId = 0;
+  String spe1CurrentName = ""; // 属性名称
+  String spe2CurrentName = "";
+  String spe3CurrentName = "";
+  String skuInfoCover; // sku商品图片
+  Map skuInfo; // sku商品规格
+  String goodsPriceStr = ""; // sku弹出框商品规格
+
   // 获取商品详情
   void getGoodsDetail() {
     GoodsApi.getGoodsDetail({"id": widget.id}).then((res) {
@@ -62,6 +75,59 @@ class _GoodsDetailState extends State<GoodsDetail> {
           goodsSku = res["data"];
         });
         print(goodsSku);
+        for (var i = 0; i < goodsSku.length; i++) {
+          int speId = goodsSku[i]["children"][0]["id"];
+          String speName = goodsSku[i]["children"][0]["value"];
+          switch (i) {
+            case 0:
+              spe1CurrentId = speId;
+              spe1CurrentName = speName;
+              break;
+            case 1:
+              spe2CurrentId = speId;
+              spe2CurrentName = speName;
+              break;
+            case 2:
+              spe3CurrentId = speId;
+              spe3CurrentName = speName;
+              break;
+            default:
+              break;
+          }
+        }
+        // 获取初始价格
+        getGoodsSkuPrice(spe1CurrentId, spe2CurrentId, spe3CurrentId, null);
+      }
+    });
+  }
+
+  // 获取商品价格
+  Future getGoodsSkuPrice(int spe1Id, int spe2Id, int spe3Id, setState) {
+    return GoodsApi.getGoodsSkuPrice(
+        {"spe1Id": spe1Id, "spe2Id": spe2Id, "spe3Id": spe3Id}).then((res) {
+      if (res["code"] == 1) {
+        print(res);
+        if (setState == null) {
+          this.setState(() {
+            skuInfo = res["data"][0];
+            skuInfoCover = skuInfo["pic"];
+            if (skuInfo["stock"] > 0) {
+              goodsPriceStr = skuInfo["price"].toString();
+            } else {
+              goodsPriceStr = "暂时无货";
+            }
+          });
+        } else {
+          setState(() {
+            skuInfo = res["data"][0];
+            skuInfoCover = skuInfo["pic"];
+            if (skuInfo["stock"] > 0) {
+              goodsPriceStr = skuInfo["price"].toString();
+            } else {
+              goodsPriceStr = "暂时无货";
+            }
+          });
+        }
       }
     });
   }
@@ -458,6 +524,59 @@ class _GoodsDetailState extends State<GoodsDetail> {
 
   // 商品规格
   buildGoodsSku(BuildContext context) {
+    print("-----asdasdasdasdaa");
+    if (skuInfo != null) {
+      if (skuInfo["stock"] > 0) {
+        goodsPriceStr = skuInfo["price"].toString();
+      } else {
+        goodsPriceStr = "暂时无货";
+      }
+    }
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) => StatefulBuilder(
+            builder: (context, setState) => BottomSheet(
+                  backgroundColor: Color(0xf5f5f5f5),
+                  builder: (BuildContext context) {
+                    return Column(
+                      children: [
+                        Container(
+                            height: 90,
+                            child: GoodsTitleCard(
+                              cover: skuInfo == null
+                                  ? goodsInfo["cover"]
+                                  : skuInfoCover,
+                              goodsName: goodsPriceStr,
+                              goodsPrice: spe1CurrentName +
+                                  spe2CurrentName +
+                                  spe3CurrentName,
+                            )),
+                        Expanded(
+                            child: Container(
+                                child: ListView(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    children: buildSkuItem(setState)))),
+                        Container(
+                            color: Colors.white,
+                            width: double.infinity,
+                            height: 50,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            child: RaisedButton(
+                                color: Color(0xff56C0C1),
+                                textColor: Colors.white,
+                                child: Text("立即购买"),
+                                onPressed: () {})),
+                      ],
+                    );
+                  },
+                  onClosing: () {},
+                )));
+  }
+
+  // 渲染商品属性
+  List<Widget> buildSkuItem(setState) {
     List<Widget> skuItem = [];
     for (var i = 0; i < goodsSku.length; i++) {
       Widget title = Container(
@@ -479,53 +598,56 @@ class _GoodsDetailState extends State<GoodsDetail> {
               crossAxisSpacing: 10.0,
               //子组件宽高长度比例
               childAspectRatio: 2.5),
-          itemBuilder: (BuildContext context, int index1) {
-            return Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
+          itemBuilder: (BuildContext context, int index) {
+            var border; // sku元素边框，选中显示
+            var BoxBorder = BoxDecoration(
+                border: new Border.all(color: Colors.black87, width: 1),
                 color: Colors.white,
-                child: Text(
-                  goodsSku[i]["children"][index1]["value"],
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, height: 1),
-                ));
+                borderRadius: new BorderRadius.circular((4.0)));
+            var speId = goodsSku[i]["children"][index]["id"]; // speId
+            String speName = goodsSku[i]["children"][index]["value"];
+            if (i == 0 && spe1CurrentIndex == index) {
+              border = BoxBorder;
+            }
+            if (i == 1 && spe2CurrentIndex == index) {
+              border = BoxBorder;
+            }
+            if (i == 2 && spe3CurrentIndex == index) {
+              border = BoxBorder;
+            }
+            return Container(
+                decoration: border,
+                child: FlatButton(
+                    onPressed: () {
+                      // 点击重新设置sku信息
+                      setState(() {
+                        if (i == 0) {
+                          spe1CurrentIndex = index;
+                          spe1CurrentId = speId;
+                          spe1CurrentName = speName;
+                        }
+                        if (i == 1) {
+                          spe2CurrentIndex = index;
+                          spe2CurrentId = speId;
+                          spe2CurrentName = speName;
+                        }
+                        if (i == 2) {
+                          spe3CurrentIndex = index;
+                          spe3CurrentId = speId;
+                          spe3CurrentName = speName;
+                        }
+                      });
+                      getGoodsSkuPrice(spe1CurrentId, spe2CurrentId,
+                          spe3CurrentId, setState);
+                    },
+                    child: Text(
+                      speName + speId.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16, height: 1),
+                    )));
           });
       skuItem.add(content);
     }
-    return showModalBottomSheet(
-        context: context,
-        builder: (_) {
-          return BottomSheet(
-            backgroundColor: Color(0xf5f5f5f5),
-            builder: (BuildContext context) {
-              return Column(
-                children: [
-                  Container(
-                      height: 90,
-                      child: GoodsTitleCard(
-                        cover: goodsInfo["cover"],
-                        goodsName: goodsInfo["goodsName"],
-                        goodsPrice: goodsInfo["goodsPrice"],
-                      )),
-                  Expanded(
-                      child: Container(
-                          child: ListView(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              children: skuItem))),
-                  Container(
-                      color: Colors.white,
-                      width: double.infinity,
-                      height: 50,
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: RaisedButton(
-                          color: Color(0xff56C0C1),
-                          textColor: Colors.white,
-                          child: Text("立即购买"),
-                          onPressed: () {})),
-                ],
-              );
-            },
-            onClosing: () {},
-          );
-        });
+    return skuItem;
   }
 }
