@@ -274,10 +274,10 @@ class _GoodsDetailState extends State<GoodsDetail> {
               width: 100,
               height: 40,
               decoration: new BoxDecoration(
-                  border: new Border.all(color: Colors.black45, width: 0.5),
-                  color: Colors.white,
+                  border: new Border.all(color: Colors.black45, width: 1),
                   borderRadius: new BorderRadius.circular((4.0))),
               child: FlatButton(
+                color: Colors.white,
                 onPressed: () {},
                 child: Text("出售"),
               )),
@@ -524,7 +524,6 @@ class _GoodsDetailState extends State<GoodsDetail> {
 
   // 商品规格
   buildGoodsSku(BuildContext context) {
-    print("-----asdasdasdasdaa");
     if (skuInfo != null) {
       if (skuInfo["stock"] > 0) {
         goodsPriceStr = skuInfo["price"].toString();
@@ -533,46 +532,49 @@ class _GoodsDetailState extends State<GoodsDetail> {
       }
     }
     return showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
-        builder: (context) => StatefulBuilder(
-            builder: (context, setState) => BottomSheet(
-                  backgroundColor: Color(0xf5f5f5f5),
-                  builder: (BuildContext context) {
-                    return Column(
-                      children: [
-                        Container(
-                            height: 90,
-                            child: GoodsTitleCard(
-                              cover: skuInfo == null
-                                  ? goodsInfo["cover"]
-                                  : skuInfoCover,
-                              goodsName: goodsPriceStr,
-                              goodsPrice: spe1CurrentName +
-                                  spe2CurrentName +
-                                  spe3CurrentName,
-                            )),
-                        Expanded(
-                            child: Container(
-                                child: ListView(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    children: buildSkuItem(setState)))),
-                        Container(
-                            color: Colors.white,
-                            width: double.infinity,
-                            height: 50,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: RaisedButton(
-                                color: Color(0xff56C0C1),
-                                textColor: Colors.white,
-                                child: Text("立即购买"),
-                                onPressed: () {})),
-                      ],
-                    );
-                  },
-                  onClosing: () {},
-                )));
+        builder: (context) => Container(
+          height: 400,
+            child: StatefulBuilder(
+                builder: (context, setState) => BottomSheet(
+                      backgroundColor: Color(0xf5f5f5f5),
+                      builder: (BuildContext context) {
+                        return Column(
+                          children: [
+                            Container(
+                                height: 90,
+                                child: GoodsTitleCard(
+                                  cover: skuInfo == null
+                                      ? goodsInfo["cover"]
+                                      : skuInfoCover,
+                                  goodsName: goodsPriceStr,
+                                  goodsPrice: spe1CurrentName +
+                                      spe2CurrentName +
+                                      spe3CurrentName,
+                                )),
+                            Expanded(
+                                child: Container(
+                                    child: ListView(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        children: buildSkuItem(setState)))),
+                            Container(
+                                color: Colors.white,
+                                width: double.infinity,
+                                height: 50,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                child: RaisedButton(
+                                    color: Color(0xff56C0C1),
+                                    textColor: Colors.white,
+                                    child: Text("立即购买"),
+                                    onPressed: () {})),
+                          ],
+                        );
+                      },
+                      onClosing: () {},
+                    ))));
   }
 
   // 渲染商品属性
@@ -618,6 +620,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
             return Container(
                 decoration: border,
                 child: FlatButton(
+                  color: Colors.white,
                     onPressed: () {
                       // 点击重新设置sku信息
                       setState(() {
@@ -641,7 +644,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
                           spe3CurrentId, setState);
                     },
                     child: Text(
-                      speName + speId.toString(),
+                      speName,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16, height: 1),
                     )));

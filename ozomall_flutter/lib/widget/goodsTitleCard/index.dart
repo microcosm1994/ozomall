@@ -18,6 +18,7 @@ class _GoodsTitleCardState extends State<GoodsTitleCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
+        color: Colors.white,
         width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Row(children: [
@@ -35,11 +36,13 @@ class _GoodsTitleCardState extends State<GoodsTitleCard> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               width: double.infinity,
+              height: 50,
               child: Text(
                 widget.goodsName,
                 style: TextStyle(
                     color: Colors.black87,
                     fontSize: 16,
+                    height: 1.5,
                     fontWeight: FontWeight.w600),
                 textAlign: TextAlign.left,
                 maxLines: 2,

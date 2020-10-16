@@ -77,7 +77,7 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
               color: Colors.black54,
             ),
             onPressed: () {
-              print(1);
+              Navigator.pushNamed(context, "/setting");
             })
       ],
     );

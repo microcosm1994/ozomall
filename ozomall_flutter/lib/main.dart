@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ozomall_flutter/pages/address/index.dart';
 import 'package:ozomall_flutter/pages/buy/index.dart';
-import 'package:ozomall_flutter/pages/goodsDetail/index.dart';
 import 'package:ozomall_flutter/pages/home/index.dart';
 import 'package:ozomall_flutter/pages/my/index.dart';
 import 'package:ozomall_flutter/pages/search/index.dart';
+import 'package:ozomall_flutter/pages/settings/index.dart';
 import 'package:provider/provider.dart';
 
 import 'model/sys.dart';
@@ -34,6 +35,8 @@ class _MyAppState extends State<MyApp> {
         "/buy": (BuildContext context) => Buy(),
         "/my": (BuildContext context) => MyPage(),
         "/search": (BuildContext context) => Search(),
+        "/setting": (BuildContext context) => Setting(),
+        "/address": (BuildContext context) => Address(),
       },
     );
   }
