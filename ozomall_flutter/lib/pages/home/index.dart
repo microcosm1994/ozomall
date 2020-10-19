@@ -3,6 +3,7 @@ import 'package:ozomall_flutter/model/sys.dart';
 import 'package:ozomall_flutter/pages/buy/index.dart';
 import 'package:ozomall_flutter/pages/indexPage/indexPage.dart';
 import 'package:ozomall_flutter/pages/my/index.dart';
+import 'package:ozomall_flutter/utils/user.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -28,9 +29,7 @@ class _HomeState extends State<Home> {
       //     ), // 页面
       body: PageView(
         controller: pageController,
-        onPageChanged: (int index) {
-          print(index);
-        },
+        onPageChanged: (int index) {},
         children: viewList,
       ), // 页面
     );
@@ -63,8 +62,16 @@ class _HomeState extends State<Home> {
       ],
       // 点击事件
       onTap: (index) {
-        pageController.jumpToPage(index);
-        sysProvider.setCurrentIndex(index);
+        User.getToken().then((res) {
+          if (index == 3 && res == null) {
+            // Navigator.pushNamed(context, '/login');
+            pageController.jumpToPage(index);
+            sysProvider.setCurrentIndex(index);
+          } else {
+            pageController.jumpToPage(index);
+            sysProvider.setCurrentIndex(index);
+          }
+        });
       },
     );
   }

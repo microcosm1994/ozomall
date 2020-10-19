@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ozomall_flutter/api/buyApi.dart';
-import 'package:ozomall_flutter/api/goods.dart';
+import 'package:ozomall_flutter/api/goodsApi.dart';
 import 'package:ozomall_flutter/widget/ensureBox/index.dart';
 import 'package:ozomall_flutter/widget/staggeredListView/index.dart';
 import 'package:ozomall_flutter/widget/swiper/index.dart';

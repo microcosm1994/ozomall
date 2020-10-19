@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ozomall_flutter/api/addressApi.dart';
 
 class Address extends StatefulWidget {
   Address({Key key}) : super(key: key);
@@ -8,6 +9,27 @@ class Address extends StatefulWidget {
 }
 
 class _AddressState extends State<Address> {
+  List addressList = [];
+
+  // 获取地址
+  void getAddress() {
+    AddressApi.getAddress({"id": 4}).then((res) {
+      if (res["code"] == 1) {
+        this.setState(() {
+          addressList = res["data"];
+        });
+        print(addressList);
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    getAddress();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,11 +61,7 @@ class _AddressState extends State<Address> {
   // 渲染列表
   List<Widget> buildList(BuildContext context) {
     List<Widget> list = [];
-    List data = [
-      {"title": "账号安全", "route": ""},
-      {"title": "支付设置", "route": ""},
-    ];
-    for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < addressList.length; i++) {
       Widget item = Container(
           padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
           decoration: BoxDecoration(
@@ -73,7 +91,7 @@ class _AddressState extends State<Address> {
                             margin: EdgeInsets.only(left: 10),
                             height: 20,
                             child: Text(
-                              "北京市通州区",
+                              addressList[i],
                               style: TextStyle(
                                   height: 1.5,
                                   color: Colors.black87,

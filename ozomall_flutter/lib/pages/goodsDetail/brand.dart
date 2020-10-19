@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ozomall_flutter/api/goods.dart';
+import 'package:ozomall_flutter/api/goodsApi.dart';
 import 'package:ozomall_flutter/widget/staggeredListView/index.dart';
 
 class BrandPage extends StatefulWidget {

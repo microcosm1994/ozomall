@@ -9,6 +9,13 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +50,11 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
               isArrow: true,
               child: Text("111111")),
           Cell(title: "钱包", isArrow: true, child: Text("111111")),
-          Cell(title: "申请成为卖家", describe: "回款快速，安全仓储", isArrow: true,),
+          Cell(
+            title: "申请成为卖家",
+            describe: "回款快速，安全仓储",
+            isArrow: true,
+          ),
         ],
       ),
     );

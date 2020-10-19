@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:ozomall_flutter/api/goods.dart';
+import 'package:ozomall_flutter/api/goodsApi.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/brand.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/recentBuy.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/wear.dart';
