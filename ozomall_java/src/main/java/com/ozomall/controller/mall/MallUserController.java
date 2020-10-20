@@ -29,6 +29,7 @@ public class MallUserController {
     @ApiOperation(value = "发送短信验证码")
     @PostMapping(value = "/sendMessage")
     public Result sendMessage(@RequestBody Map<String, String> loginInfo) throws ClientException {
+        System.out.print(loginInfo);
         return mallUserService.sendMessage(loginInfo.get("phone"));
     }
 

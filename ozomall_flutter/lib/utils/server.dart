@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:ozomall_flutter/main.dart';
 import 'package:ozomall_flutter/utils/user.dart';
@@ -24,9 +26,6 @@ class Server {
       baseUrl: "http://192.168.12.5:8090",
       connectTimeout: 5000,
       receiveTimeout: 3000,
-      headers: {"version": "1.0.0"},
-      contentType: Headers.formUrlEncodedContentType,
-      responseType: ResponseType.plain,
     );
 
     dio = Dio(options);
@@ -38,6 +37,10 @@ class Server {
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
       print("请求之前");
+      print(options.contentType);
+      print(options.headers);
+      print(options.queryParameters);
+      print(options.data);
       // Do something before request is sent
       return options; //continue
     }, onResponse: (Response response) {
@@ -61,14 +64,24 @@ class Server {
   get(path, params) async {
     String token = await User.getToken();
     Response response = await dio.get(path,
-        queryParameters: params, options: Options(headers: {"token": token}));
+        queryParameters: params,
+        options: Options(
+          headers: {"token": token},
+          contentType: Headers.formUrlEncodedContentType,
+        ));
     return response.data;
   }
 
   post(path, data) async {
     String token = await User.getToken();
     Response response = await dio.post(path,
-        data: data, options: Options(headers: {"token": token}));
+        queryParameters: data,
+        data: data,
+        options: Options(
+          headers: {
+            "token": token,
+          },
+        ));
     return response.data;
   }
 }

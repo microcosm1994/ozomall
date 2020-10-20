@@ -3,6 +3,7 @@ import 'package:ozomall_flutter/pages/address/index.dart';
 import 'package:ozomall_flutter/pages/buy/index.dart';
 import 'package:ozomall_flutter/pages/home/index.dart';
 import 'package:ozomall_flutter/pages/login/index.dart';
+import 'package:ozomall_flutter/pages/login/otherPhone.dart';
 import 'package:ozomall_flutter/pages/my/index.dart';
 import 'package:ozomall_flutter/pages/search/index.dart';
 import 'package:ozomall_flutter/pages/settings/index.dart';
@@ -41,6 +42,7 @@ class _MyAppState extends State<MyApp> {
         "/setting": (BuildContext context) => Setting(),
         "/address": (BuildContext context) => Address(),
         "/login": (BuildContext context) => Login(),
+        "/otherPhone": (BuildContext context) => OtherPhone(),
       },
     );
   }

@@ -64,9 +64,9 @@ class _HomeState extends State<Home> {
       onTap: (index) {
         User.getToken().then((res) {
           if (index == 3 && res == null) {
-            // Navigator.pushNamed(context, '/login');
-            pageController.jumpToPage(index);
-            sysProvider.setCurrentIndex(index);
+            Navigator.pushNamed(context, '/login');
+            // pageController.jumpToPage(index);
+            // sysProvider.setCurrentIndex(index);
           } else {
             pageController.jumpToPage(index);
             sysProvider.setCurrentIndex(index);
