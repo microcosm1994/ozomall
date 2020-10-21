@@ -59,7 +59,7 @@
 <script>
 import wepy from '@wepy/core';
 import jumpMixin from '../../mixins/jump.js';
-import { sendMessage, login } from '../../api/user.js';
+import { sendMessage, wxLogin } from '../../api/user.js';
 import Toast from '../../components/vant/toast/toast';
 
 wepy.page({
@@ -144,7 +144,7 @@ wepy.page({
         success(res) {
           if (res.code) {
             //发起网络请求
-            login({
+            wxLogin({
               ...self.form,
               wxCode: res.code
             }).then((res) => {

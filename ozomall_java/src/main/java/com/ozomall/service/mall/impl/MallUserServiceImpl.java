@@ -6,9 +6,11 @@ import com.aliyuncs.exceptions.ClientException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ozomall.dao.mall.MallUserMapper;
 import com.ozomall.dao.mall.MallUserSettingMapper;
+import com.ozomall.dao.mall.MallUserSocialMapper;
 import com.ozomall.entity.Result;
 import com.ozomall.entity.mall.MallUserDto;
 import com.ozomall.entity.mall.MallUserSettingDto;
+import com.ozomall.entity.mall.MallUserSocialDto;
 import com.ozomall.service.mall.MallUserService;
 import com.ozomall.utils.AuthUtils;
 import com.ozomall.utils.ResultGenerate;
@@ -32,6 +34,9 @@ public class MallUserServiceImpl implements MallUserService {
 
     @Resource
     MallUserSettingMapper mallUserSettingMapper;
+
+    @Resource
+    MallUserSocialMapper mallUserSocialMapper;
 
     @Resource
     private Sms sms;
@@ -61,12 +66,12 @@ public class MallUserServiceImpl implements MallUserService {
     }
 
     /**
-     * 登录
+     * 手机号登录
      *
      * @param user
      */
     @Override
-    public Result login(MallUserDto user) {
+    public Result phoneLogin(MallUserDto user) {
         Map<String, Object> data = new HashMap<>();
         Result result = this.getUser(user);
         Object userInfo = result.getData();
@@ -75,20 +80,17 @@ public class MallUserServiceImpl implements MallUserService {
         jedis.select(0);
         jedis.set(token, user.getPhone());
         data.put("token", token);
+        // 有账号登录
         if (userInfo != null) {
             data.put("users", userInfo);
             return ResultGenerate.genSuccessResult(data);
         } else {
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> response = restTemplate.getForEntity(code2SessionUrl + user.getWxCode(), String.class);
-            JSONObject body = JSON.parseObject(response.getBody());
-            System.out.println(body);
-            user.setOpenId((String) body.get("openid"));
+            // 无账号注册
+            user.setNickName(user.getPhone());
             int row = mallUserMapper.insert(user);
-            MallUserSettingDto sData = new MallUserSettingDto();
-            sData.setUserId(user.getId());
-            mallUserSettingMapper.insert(sData);
             if (row > 0) {
+                // 保存用户设置
+                initUserSetting(user.getId());
                 data.put("users", user);
                 return ResultGenerate.genSuccessResult(data);
             } else {
@@ -96,6 +98,77 @@ public class MallUserServiceImpl implements MallUserService {
             }
         }
     }
+
+
+    /**
+     * 微信登录
+     *
+     * @param user
+     */
+    @Override
+    public Result wxLogin(MallUserDto user) {
+        Map<String, Object> data = new HashMap<>();
+        Result result = this.getUser(user);
+        Object userInfo = result.getData();
+        String token = AuthUtils.genToken(user.getPhone());
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(0);
+        jedis.set(token, user.getPhone());
+        data.put("token", token);
+        // 有账号登录
+        if (userInfo != null) {
+            data.put("users", userInfo);
+            return ResultGenerate.genSuccessResult(data);
+        } else {
+            // 无账号注册
+            int row = mallUserMapper.insert(user);
+            if (row > 0) {
+                // 保存用户设置
+                initUserSetting(user.getId());
+                // 绑定微信号
+                this.wxBinding(user);
+                data.put("users", user);
+                return ResultGenerate.genSuccessResult(data);
+            } else {
+                return ResultGenerate.genErroResult("登陆失败");
+            }
+        }
+    }
+
+    /**
+     * 微信账号绑定
+     *
+     * @param user
+     */
+    public int wxBinding(MallUserDto user) {
+        if (user.getWxCode().isEmpty()) {
+            return 0;
+        }
+        // 获取wx openid
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity(code2SessionUrl + user.getWxCode(), String.class);
+        JSONObject body = JSON.parseObject(response.getBody());
+        // 保存用户微信openid
+        MallUserSocialDto socialData = new MallUserSocialDto();
+        socialData.setOpenid((String) body.get("openid")); // 保存openid
+        socialData.setUserId(user.getId()); // 保存用户id
+        socialData.setSocialType(0); // 设置账号类型为0：微信
+        int row = mallUserSocialMapper.insert(socialData);
+        return row;
+    }
+
+    /**
+     * 初始化用户设置
+     *
+     * @param id 新注册用户初始化账号设置数据
+     */
+    public int initUserSetting(int id) {
+        MallUserSettingDto sData = new MallUserSettingDto();
+        sData.setUserId(id);
+        int row = mallUserSettingMapper.insert(sData);
+        return row;
+    }
+
 
     /**
      * 查询用户

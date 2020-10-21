@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ozomall_flutter/api/userApi.dart';
+import 'package:ozomall_flutter/main.dart';
+import 'package:ozomall_flutter/utils/UserUtils.dart';
 import 'package:ozomall_flutter/widget/cell/index.dart';
 
 class Setting extends StatefulWidget {
@@ -9,6 +12,17 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
+  // 登出
+  void logout() {
+    UserApi.logout().then((res) {
+      if (res["code"] == 1) {
+        UserUtils.clearToken(); // 清除token
+        UserUtils.clearUserInfo(); // 清除用户信息
+        navigatorKey.currentState.pop("/"); // 跳转到购买页
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +52,7 @@ class _SettingState extends State<Setting> {
                   color: Colors.white,
                   textColor: Colors.black54,
                   child: Text("退出登录"),
-                  onPressed: () {})),
+                  onPressed: logout)),
         ]));
   }
 

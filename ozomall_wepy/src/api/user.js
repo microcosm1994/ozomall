@@ -10,9 +10,9 @@ export function sendMessage(data) {
 }
 
 // 登录
-export function login(data) {
+export function wxLogin(data) {
     return service({
-        url: '/mall/user/login',
+        url: '/mall/user/wxLogin',
         method: 'post',
         data
     })

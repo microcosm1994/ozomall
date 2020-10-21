@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:ozomall_flutter/main.dart';
-import 'package:ozomall_flutter/utils/user.dart';
+import 'package:ozomall_flutter/utils/UserUtils.dart';
+import 'package:ozomall_flutter/utils/navigatorUtils.dart';
 
 class Server {
   // 工厂模式
@@ -37,23 +39,18 @@ class Server {
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
       print("请求之前");
-      print(options.contentType);
       print(options.headers);
-      print(options.queryParameters);
-      print(options.data);
-      // Do something before request is sent
-      return options; //continue
+      return options;
     }, onResponse: (Response response) {
       print("响应之前");
-      // Do something with response data
-      return response; // continue
+      return response;
     }, onError: (DioError e) {
       print("错误之前");
-      // Do something with response error
       if (e.type == DioErrorType.RESPONSE) {
         // 没有权限
         if (e.error.contains("401")) {
           // 跳转登陆页
+          // NavigatorUtils.setRoute(val);
           navigatorKey.currentState.pushNamed("/login");
         }
       }
@@ -61,8 +58,8 @@ class Server {
     }));
   }
 
-  get(path, params) async {
-    String token = await User.getToken();
+  get(path, [params]) async {
+    String token = await UserUtils.getToken();
     Response response = await dio.get(path,
         queryParameters: params,
         options: Options(
@@ -72,10 +69,9 @@ class Server {
     return response.data;
   }
 
-  post(path, data) async {
-    String token = await User.getToken();
+  post(path, [data]) async {
+    String token = await UserUtils.getToken();
     Response response = await dio.post(path,
-        queryParameters: data,
         data: data,
         options: Options(
           headers: {

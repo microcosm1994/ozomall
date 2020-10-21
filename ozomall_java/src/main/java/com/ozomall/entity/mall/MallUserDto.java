@@ -17,9 +17,6 @@ public class MallUserDto extends PageReqDto {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    @ApiModelProperty(value = "openId")
-    private String openId;
-
     @ApiModelProperty(value = "用户昵称")
     private String nickName;
 

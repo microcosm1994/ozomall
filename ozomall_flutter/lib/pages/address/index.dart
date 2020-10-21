@@ -9,7 +9,7 @@ class Address extends StatefulWidget {
 }
 
 class _AddressState extends State<Address> {
-  List addressList = [];
+  List<dynamic> addressList = [];
 
   // 获取地址
   void getAddress() {
@@ -91,7 +91,7 @@ class _AddressState extends State<Address> {
                             margin: EdgeInsets.only(left: 10),
                             height: 20,
                             child: Text(
-                              addressList[i],
+                              "${addressList[i]['region']}${addressList[i]['address']}",
                               style: TextStyle(
                                   height: 1.5,
                                   color: Colors.black87,
@@ -107,7 +107,7 @@ class _AddressState extends State<Address> {
                             padding: EdgeInsets.symmetric(horizontal: 4),
                             height: 20,
                             child: Text(
-                              "杜波",
+                              addressList[i]["consignee"],
                               style: TextStyle(
                                   height: 1.5,
                                   color: Colors.black54,
@@ -117,7 +117,7 @@ class _AddressState extends State<Address> {
                             margin: EdgeInsets.only(left: 10),
                             height: 20,
                             child: Text(
-                              "18647327892",
+                              addressList[i]["phone"],
                               style: TextStyle(
                                   height: 1.5,
                                   color: Colors.black54,

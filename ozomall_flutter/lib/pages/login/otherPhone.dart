@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:ozomall_flutter/api/userApi.dart';
+import 'package:ozomall_flutter/main.dart';
+import 'package:ozomall_flutter/utils/UserUtils.dart';
 
 class OtherPhone extends StatefulWidget {
   OtherPhone({Key key}) : super(key: key);
@@ -16,23 +18,29 @@ class _OtherPhoneState extends State<OtherPhone> {
   final _formKey = GlobalKey<FormState>();
   // 验证码倒计时
   Timer timer;
-  int timeNum = 0;
+  int timeNum = 59;
   String timeStr = "获取验证码";
   // 手机号验证结果
   bool matched = false;
+  // 验证码验证结果
+  bool codeMatched = false;
+  bool codeMatchedShow = false;
   // 验证手机号正则表达式
   RegExp exp = RegExp(
       r'^((13[0-9])|(14[0-9])|(15[0-9])|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\d{8}$');
-  // 发送手机号
+  // 发送短信验证码
   void sendMessage() {
     Map<String, String> data = new Map();
     data["phone"] = phoneController.text;
     UserApi.sendMessage(data).then((res) {
       print(res);
       if (res["code"] == 1) {
+        var self = this;
+        print(res);
         this.setState(() {
           timer = new Timer.periodic(new Duration(seconds: 1), (timer) {
-            setState(() {
+            print(timer);
+            self.setState(() {
               if (timeNum > 0) {
                 timeStr = '${timeNum--}重新获取';
               } else {
@@ -48,17 +56,43 @@ class _OtherPhoneState extends State<OtherPhone> {
     });
   }
 
+  void login() {
+    Map<String, String> data = new Map();
+    if (!matched) {
+      return;
+    }
+    if (codeMatched) {
+      this.setState(() {
+        codeMatchedShow = true;
+      });
+      return;
+    }
+    data["phone"] = phoneController.text;
+    data["code"] = codeController.text;
+    UserApi.phoneLogin(data).then((res) {
+      if (res["code"] == 1) {
+        // 保存token
+        UserUtils.setToken(res["data"]["token"]);
+        // 保存用户信息
+        UserUtils.setUserInfo(res["data"]["users"]);
+        // 关闭登陆页
+        navigatorKey.currentState.pop();
+      }
+    });
+  }
+
   @override
   void initState() {
     phoneController.addListener(() {
       this.setState(() {
         matched = exp.hasMatch(phoneController.text);
       });
-      print('input ${phoneController.text}');
-      print(matched);
     });
     codeController.addListener(() {
-      print('input ${codeController.text}');
+      this.setState(() {
+        codeMatched = codeController.text.isEmpty;
+        codeMatchedShow = false;
+      });
     });
     // TODO: implement initState
     super.initState();
@@ -74,7 +108,7 @@ class _OtherPhoneState extends State<OtherPhone> {
           backgroundColor: Colors.white,
           leading: FlatButton(
               onPressed: () {
-                Navigator.pop(context);
+                navigatorKey.currentState.pop();
               },
               child: Icon(
                 Icons.close,
@@ -101,7 +135,7 @@ class _OtherPhoneState extends State<OtherPhone> {
                             )),
                         Container(
                             width: 300,
-                            height: 50,
+                            height: 60,
                             child: TextFormField(
                                 keyboardType: TextInputType.phone, //手机号
                                 decoration: InputDecoration(
@@ -114,14 +148,15 @@ class _OtherPhoneState extends State<OtherPhone> {
                                 controller: phoneController)),
                         Container(
                             width: 300,
-                            height: 50,
+                            height: 60,
                             child: TextFormField(
                               decoration: InputDecoration(
                                 hintText: "验证码",
+                                errorText: codeMatchedShow ? "请输入验证码" : null,
                                 suffixStyle: TextStyle(color: Colors.black87),
                                 suffix: GestureDetector(
                                     onTap: () {
-                                      if (!matched || timeNum > 0) {
+                                      if (!matched || timeNum < 59) {
                                         return false;
                                       }
                                       sendMessage();
@@ -142,9 +177,7 @@ class _OtherPhoneState extends State<OtherPhone> {
                             margin: EdgeInsets.only(top: 20),
                             child: RaisedButton(
                               color: Colors.black87,
-                              onPressed: () {
-                                print(phoneController.text);
-                              },
+                              onPressed: login, // 登录按钮点击事件
                               child: Text("登录",
                                   style: TextStyle(color: Colors.white)),
                             )),

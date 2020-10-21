@@ -3,7 +3,8 @@ import 'package:ozomall_flutter/model/sys.dart';
 import 'package:ozomall_flutter/pages/buy/index.dart';
 import 'package:ozomall_flutter/pages/indexPage/indexPage.dart';
 import 'package:ozomall_flutter/pages/my/index.dart';
-import 'package:ozomall_flutter/utils/user.dart';
+import 'package:ozomall_flutter/utils/navigatorUtils.dart';
+import 'package:ozomall_flutter/utils/userUtils.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -62,8 +63,9 @@ class _HomeState extends State<Home> {
       ],
       // 点击事件
       onTap: (index) {
-        User.getToken().then((res) {
+        UserUtils.getToken().then((res) {
           if (index == 3 && res == null) {
+            NavigatorUtils.setRoute("/");
             Navigator.pushNamed(context, '/login');
             // pageController.jumpToPage(index);
             // sysProvider.setCurrentIndex(index);

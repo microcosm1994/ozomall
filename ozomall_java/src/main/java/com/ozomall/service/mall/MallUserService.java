@@ -15,11 +15,18 @@ public interface MallUserService {
     Result sendMessage(String phone) throws ClientException;
 
     /**
-     * 登陆
+     * 手机号登陆
      *
      * @param user 用户信息
      */
-    Result login(MallUserDto user);
+    Result phoneLogin(MallUserDto user);
+
+    /**
+     * 微信登陆
+     *
+     * @param user 用户信息
+     */
+    Result wxLogin(MallUserDto user);
 
     /**
      * 查询

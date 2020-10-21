@@ -33,14 +33,27 @@ public class MallUserController {
         return mallUserService.sendMessage(loginInfo.get("phone"));
     }
 
-    @ApiOperation(value = "登陆")
-    @PostMapping(value = "/login")
-    public Result login(@RequestBody MallUserDto user) {
+    @ApiOperation(value = "手机号登陆")
+    @PostMapping(value = "/phoneLogin")
+    public Result phoneLogin(@RequestBody MallUserDto user) {
         Jedis jedis = jedisPool.getResource();
         jedis.select(0);
         String code = jedis.get(user.getPhone());
         if (user.getCode().equals(code)) {
-            return mallUserService.login(user);
+            return mallUserService.phoneLogin(user);
+        } else {
+            return ResultGenerate.genErroResult("验证码错误");
+        }
+    }
+
+    @ApiOperation(value = "微信登陆")
+    @PostMapping(value = "/wxLogin")
+    public Result wxLogin(@RequestBody MallUserDto user) {
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(0);
+        String code = jedis.get(user.getPhone());
+        if (user.getCode().equals(code)) {
+            return mallUserService.wxLogin(user);
         } else {
             return ResultGenerate.genErroResult("验证码错误");
         }
