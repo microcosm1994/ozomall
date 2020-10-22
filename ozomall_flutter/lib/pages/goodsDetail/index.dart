@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:ozomall_flutter/api/goodsApi.dart';
+import 'package:ozomall_flutter/main.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/brand.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/recentBuy.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/wear.dart';
+import 'package:ozomall_flutter/utils/userUtils.dart';
 import 'package:ozomall_flutter/widget/cell/index.dart';
 import 'package:ozomall_flutter/widget/goodsTitleCard/index.dart';
 import 'package:ozomall_flutter/widget/swiper/index.dart';
@@ -130,6 +132,16 @@ class _GoodsDetailState extends State<GoodsDetail> {
         }
       }
     });
+  }
+
+  // 点击购买
+  void buy() async {
+    var token = await UserUtils.getToken();
+    if (token == null) {
+      navigatorKey.currentState.pushNamed("/login");
+    } else {
+      // 提交订单
+    }
   }
 
   @override
@@ -535,7 +547,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
         isScrollControlled: true,
         context: context,
         builder: (context) => Container(
-          height: 400,
+            height: 400,
             child: StatefulBuilder(
                 builder: (context, setState) => BottomSheet(
                       backgroundColor: Color(0xf5f5f5f5),
@@ -569,7 +581,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
                                     color: Color(0xff56C0C1),
                                     textColor: Colors.white,
                                     child: Text("立即购买"),
-                                    onPressed: () {})),
+                                    onPressed: buy)),
                           ],
                         );
                       },
@@ -620,7 +632,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
             return Container(
                 decoration: border,
                 child: FlatButton(
-                  color: Colors.white,
+                    color: Colors.white,
                     onPressed: () {
                       // 点击重新设置sku信息
                       setState(() {

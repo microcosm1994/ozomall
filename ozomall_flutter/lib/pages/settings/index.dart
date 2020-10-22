@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ozomall_flutter/api/userApi.dart';
 import 'package:ozomall_flutter/main.dart';
+import 'package:ozomall_flutter/model/sys.dart';
 import 'package:ozomall_flutter/utils/UserUtils.dart';
 import 'package:ozomall_flutter/widget/cell/index.dart';
+import 'package:provider/provider.dart';
 
 class Setting extends StatefulWidget {
   Setting({Key key}) : super(key: key);
@@ -12,19 +14,22 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
+  SysProvider sysProvider;
   // 登出
   void logout() {
     UserApi.logout().then((res) {
       if (res["code"] == 1) {
         UserUtils.clearToken(); // 清除token
         UserUtils.clearUserInfo(); // 清除用户信息
-        navigatorKey.currentState.pop("/"); // 跳转到购买页
+        sysProvider.setCurrentIndex(1); // 设置显示购买页
+        navigatorKey.currentState.pushNamed("/"); // 跳转到home页
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    sysProvider = Provider.of<SysProvider>(context);
     return Scaffold(
         backgroundColor: Color(0xf5f5f5f5),
         appBar: AppBar(

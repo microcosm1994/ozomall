@@ -39,10 +39,10 @@ class Server {
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
       print("请求之前");
-      print(options.headers);
       return options;
     }, onResponse: (Response response) {
       print("响应之前");
+      print(response);
       return response;
     }, onError: (DioError e) {
       print("错误之前");
@@ -50,7 +50,6 @@ class Server {
         // 没有权限
         if (e.error.contains("401")) {
           // 跳转登陆页
-          // NavigatorUtils.setRoute(val);
           navigatorKey.currentState.pushNamed("/login");
         }
       }

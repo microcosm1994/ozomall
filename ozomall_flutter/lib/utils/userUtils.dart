@@ -25,6 +25,7 @@ class UserUtils {
   static getUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userInfo = prefs.getString("users");
+    if (userInfo == null) return null;
     return jsonDecode(userInfo);
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ozomall_flutter/main.dart';
 import 'package:ozomall_flutter/utils/UserUtils.dart';
 import 'package:ozomall_flutter/widget/cell/index.dart';
 
@@ -9,7 +10,8 @@ class MyPage extends StatefulWidget {
   _MyPageState createState() => _MyPageState();
 }
 
-class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
+class _MyPageState extends State<MyPage>
+    with AutomaticKeepAliveClientMixin, RouteAware {
   Map userInfo;
   // 获取用户信息
   void getUserInfo() async {
@@ -17,8 +19,6 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
     setState(() {
       userInfo = data;
     });
-    print(userInfo);
-    print(userInfo["nickname"]);
   }
 
   @override
@@ -26,6 +26,27 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
     getUserInfo();
     // TODO: implement initState
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // 订阅路由监听
+    routeObserver.subscribe(this, ModalRoute.of(context));
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didPopNext() {
+    getUserInfo();
+    // TODO: implement didPopNext
+    super.didPopNext();
+  }
+
+  @override
+  void didPushNext() {
+    // TODO: implement didPushNext
+    super.didPushNext();
   }
 
   @override
@@ -119,7 +140,9 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
             height: 70,
             padding: EdgeInsets.all(5),
             child: new ClipOval(
-              child: new Image.network(userInfo["avatarUrl"]),
+              child: new Image.network(userInfo == null
+                  ? "https://ozomall-goods-pic.oss-cn-beijing.aliyuncs.com/avator/default.jpg"
+                  : userInfo["avatarUrl"]),
             )),
         Expanded(
             child: Column(
@@ -127,7 +150,7 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
             Row(
               children: [
                 Expanded(
-                    child: Text(userInfo["nickName"],
+                    child: Text(userInfo == null ? "用户名" : userInfo["nickName"],
                         style: TextStyle(fontSize: 16))),
                 Container(
                   width: 50,
@@ -141,11 +164,13 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
             ),
             Container(
               width: double.infinity,
-              child: Text(
-                userInfo["sign"] == null ? "未设置签名" : userInfo["sign"],
-                style: TextStyle(color: Colors.black45, fontSize: 12),
-                textAlign: TextAlign.left,
-              ),
+              child: userInfo == null
+                  ? Text("")
+                  : Text(
+                      userInfo["sign"] == null ? "未设置签名" : userInfo["sign"],
+                      style: TextStyle(color: Colors.black45, fontSize: 12),
+                      textAlign: TextAlign.left,
+                    ),
             )
           ],
         ))

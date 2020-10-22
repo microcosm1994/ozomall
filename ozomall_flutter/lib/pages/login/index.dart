@@ -9,6 +9,12 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+  
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
@@ -64,7 +70,7 @@ class _LoginState extends State<Login> {
                         child: RaisedButton(
                           color: Colors.white,
                           onPressed: () {
-                            Navigator.pushNamed(context, "/otherPhone");
+                            Navigator.pushReplacementNamed(context, "/otherPhone");
                           },
                           child: Text("其他手机号码登录",
                               style: TextStyle(color: Colors.black87)),

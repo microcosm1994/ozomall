@@ -3,7 +3,6 @@ import 'package:ozomall_flutter/model/sys.dart';
 import 'package:ozomall_flutter/pages/buy/index.dart';
 import 'package:ozomall_flutter/pages/indexPage/indexPage.dart';
 import 'package:ozomall_flutter/pages/my/index.dart';
-import 'package:ozomall_flutter/utils/navigatorUtils.dart';
 import 'package:ozomall_flutter/utils/userUtils.dart';
 import 'package:provider/provider.dart';
 
@@ -17,22 +16,22 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   // 页面列表
   List<Widget> viewList = [IndexPage(), Buy(), MyPage(), MyPage()];
+  PageController pageController = PageController();
   @override
-  final pageController = PageController();
   Widget build(BuildContext context) {
     //获取CounterProvider
     SysProvider sysProvider = Provider.of<SysProvider>(context);
     return Scaffold(
       bottomNavigationBar: buildNavigationBar(context), // 底部选项卡
-      // body: IndexedStack(
-      //     index: sysProvider.currentIndex, //当前的下标
-      //     children: viewList //子页面的Widget
-      //     ), // 页面
-      body: PageView(
-        controller: pageController,
-        onPageChanged: (int index) {},
-        children: viewList,
-      ), // 页面
+      body: IndexedStack(
+          index: sysProvider.currentIndex, //当前的下标
+          children: viewList //子页面的Widget
+          ), // 页面
+      // body: PageView(
+      //   controller: pageController,
+      //   onPageChanged: (int index) {},
+      //   children: viewList,
+      // ), // 页面
     );
   }
 
@@ -65,12 +64,9 @@ class _HomeState extends State<Home> {
       onTap: (index) {
         UserUtils.getToken().then((res) {
           if (index == 3 && res == null) {
-            NavigatorUtils.setRoute("/");
             Navigator.pushNamed(context, '/login');
-            // pageController.jumpToPage(index);
-            // sysProvider.setCurrentIndex(index);
           } else {
-            pageController.jumpToPage(index);
+            // pageController.jumpToPage(index);
             sysProvider.setCurrentIndex(index);
           }
         });
