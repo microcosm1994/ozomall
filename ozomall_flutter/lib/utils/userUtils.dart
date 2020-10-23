@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ozomall_flutter/api/userApi.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserUtils {
@@ -35,9 +36,20 @@ class UserUtils {
     prefs.setString("users", jsonEncode(data));
   }
 
-   // 清除用户信息
+  // 清除用户信息
   static clearUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("users");
+  }
+
+  // 获取用户设置信息
+  static getSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var users = jsonDecode(prefs.getString("users"));
+    UserApi.getSettings({"userId": users["id"]}).then((res) {
+      if (res["code"] == 1) {
+        prefs.setString("userSetting", jsonEncode(res["data"]["data"]));
+      }
+    });
   }
 }

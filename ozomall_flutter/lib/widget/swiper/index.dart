@@ -16,8 +16,8 @@ class _SwiperCustomState extends State<SwiperCustom> {
         height: widget.height,
         width: double.infinity,
         child: Swiper(
-          itemBuilder: buildImage,
-          itemCount: widget.swiperList.length,
+          itemBuilder: widget.swiperList == null ? null : buildImage,
+          itemCount: widget.swiperList == null ? 0 : widget.swiperList.length,
           pagination: new SwiperPagination(
               builder: DotSwiperPaginationBuilder(
             color: Colors.black54,

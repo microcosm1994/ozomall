@@ -39,6 +39,7 @@ class _OtherPhoneState extends State<OtherPhone> {
     });
     UserApi.sendMessage(data).then((res) {
       if (res["code"] == 1) {
+        EasyLoading.showToast("验证码发送成功");
         var self = this;
         this.setState(() {
           timer = new Timer.periodic(new Duration(seconds: 1), (timer) {
@@ -67,7 +68,7 @@ class _OtherPhoneState extends State<OtherPhone> {
         });
       }
     }).catchError((err) {
-      print(err);
+      EasyLoading.showError("验证码发送失败，请稍后再试。");
     });
   }
 
@@ -93,9 +94,14 @@ class _OtherPhoneState extends State<OtherPhone> {
         UserUtils.setToken(res["data"]["token"]);
         // 保存用户信息
         UserUtils.setUserInfo(res["data"]["users"]);
+        // 获取用户设置
+        UserUtils.getSettings();
         // 关闭登陆页
         navigatorKey.currentState.pop();
       }
+    }).catchError((err) {
+      EasyLoading.dismiss();
+      EasyLoading.showError("登陆失败，请稍后再试。");
     });
   }
 

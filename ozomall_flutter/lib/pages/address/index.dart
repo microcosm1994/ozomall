@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:ozomall_flutter/api/addressApi.dart';
+import 'package:ozomall_flutter/utils/userUtils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Address extends StatefulWidget {
   Address({Key key}) : super(key: key);
@@ -9,11 +14,14 @@ class Address extends StatefulWidget {
 }
 
 class _AddressState extends State<Address> {
-  List<dynamic> addressList = [];
+  List<dynamic> addressList = []; // 地址列表
+  int defaultAddressId = 0;
 
   // 获取地址
-  void getAddress() {
-    AddressApi.getAddress({"id": 4}).then((res) {
+  void getAddress() async {
+    var users = await UserUtils.getUserInfo();
+    print(users);
+    AddressApi.getAddress({"id": users["id"]}).then((res) {
       if (res["code"] == 1) {
         this.setState(() {
           addressList = res["data"];
@@ -23,9 +31,30 @@ class _AddressState extends State<Address> {
     });
   }
 
+  // 获取用户设置
+  void getSetting() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userSetting = prefs.getString("userSetting");
+    print("userSetting");
+    print(userSetting);
+    if (userSetting == null) {
+      UserUtils.getSettings().then((res){
+        print("res");
+        print(res);
+      });
+    } else {
+      this.setState(() {
+        defaultAddressId = jsonDecode(userSetting)["addressId"] == null
+            ? 0
+            : jsonDecode(userSetting)["addressId"];
+      });
+    }
+  }
+
   @override
   void initState() {
     getAddress();
+    getSetting();
     // TODO: implement initState
     super.initState();
   }
@@ -76,19 +105,22 @@ class _AddressState extends State<Address> {
                     height: 30,
                     child: Row(
                       children: [
+                        // 判断是否是默认地址
+                        defaultAddressId == addressList[i]["id"]
+                            ? Container(
+                                margin: EdgeInsets.only(right: 10),
+                                padding: EdgeInsets.symmetric(horizontal: 4),
+                                color: Colors.black38,
+                                height: 20,
+                                child: Text(
+                                  "默认",
+                                  style: TextStyle(
+                                      height: 1.5,
+                                      color: Colors.white,
+                                      fontSize: 12),
+                                ))
+                            : Text(""),
                         Container(
-                            padding: EdgeInsets.symmetric(horizontal: 4),
-                            color: Colors.black38,
-                            height: 20,
-                            child: Text(
-                              "默认",
-                              style: TextStyle(
-                                  height: 1.5,
-                                  color: Colors.white,
-                                  fontSize: 12),
-                            )),
-                        Container(
-                            margin: EdgeInsets.only(left: 10),
                             height: 20,
                             child: Text(
                               "${addressList[i]['region']}${addressList[i]['address']}",

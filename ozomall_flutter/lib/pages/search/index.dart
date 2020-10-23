@@ -53,7 +53,10 @@ class _SearchState extends State<Search> {
   }
 
   // 点击搜索商品
-  void search(val) {
+  void search(String val) {
+    if (val.isEmpty) {
+      return;
+    }
     // 添加到历史搜索记录中
     setSearchHistoryList(val);
     //点击提交搜索商品

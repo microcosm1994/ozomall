@@ -52,7 +52,7 @@ class _RecentBuyState extends State<RecentBuy> {
   Widget buildList() {
     return ListView.builder(
         physics: new NeverScrollableScrollPhysics(), //禁用滑动事件
-        itemCount: 4,
+        itemCount: buyList == null ? 0 : 4,
         itemBuilder: (BuildContext context, int index) {
           return Container(height: 25, child: buildListCard(buyList[index]));
         });

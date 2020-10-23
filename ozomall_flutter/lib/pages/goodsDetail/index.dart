@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:ozomall_flutter/api/goodsApi.dart';
@@ -107,8 +108,7 @@ class _GoodsDetailState extends State<GoodsDetail> {
   Future getGoodsSkuPrice(int spe1Id, int spe2Id, int spe3Id, setState) {
     return GoodsApi.getGoodsSkuPrice(
         {"spe1Id": spe1Id, "spe2Id": spe2Id, "spe3Id": spe3Id}).then((res) {
-      if (res["code"] == 1) {
-        print(res);
+      if (res["code"] == 1 && res["data"].length > 0) {
         if (setState == null) {
           this.setState(() {
             skuInfo = res["data"][0];
@@ -136,12 +136,19 @@ class _GoodsDetailState extends State<GoodsDetail> {
 
   // 点击购买
   void buy() async {
+    // 判断是否登录
     var token = await UserUtils.getToken();
     if (token == null) {
       navigatorKey.currentState.pushNamed("/login");
-    } else {
-      // 提交订单
+      return;
     }
+    // 判断库存
+    if (skuInfo["stock"] < 1) {
+      EasyLoading.showToast("暂时无货");
+      return;
+    }
+    // 提交订单
+    print("提交订单");
   }
 
   @override
