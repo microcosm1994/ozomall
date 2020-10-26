@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ozomall_flutter/api/addressApi.dart';
@@ -16,17 +16,16 @@ class Address extends StatefulWidget {
 class _AddressState extends State<Address> {
   List<dynamic> addressList = []; // 地址列表
   int defaultAddressId = 0;
+  Future timer;
 
   // 获取地址
   void getAddress() async {
     var users = await UserUtils.getUserInfo();
-    print(users);
     AddressApi.getAddress({"id": users["id"]}).then((res) {
       if (res["code"] == 1) {
         this.setState(() {
           addressList = res["data"];
         });
-        print(addressList);
       }
     });
   }
@@ -35,12 +34,11 @@ class _AddressState extends State<Address> {
   void getSetting() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userSetting = prefs.getString("userSetting");
-    print("userSetting");
-    print(userSetting);
     if (userSetting == null) {
-      UserUtils.getSettings().then((res){
-        print("res");
-        print(res);
+      UserUtils.getSettings();
+      timer = new Future.delayed(new Duration(seconds: 2), () {
+        print(2);
+        getSetting();
       });
     } else {
       this.setState(() {
@@ -49,6 +47,7 @@ class _AddressState extends State<Address> {
             : jsonDecode(userSetting)["addressId"];
       });
     }
+    print(defaultAddressId);
   }
 
   @override

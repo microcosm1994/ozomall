@@ -1,10 +1,6 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:ozomall_flutter/main.dart';
 import 'package:ozomall_flutter/utils/UserUtils.dart';
-import 'package:ozomall_flutter/utils/navigatorUtils.dart';
 
 class Server {
   // 工厂模式
@@ -42,15 +38,18 @@ class Server {
       return options;
     }, onResponse: (Response response) {
       print("响应之前");
-      print(response);
       return response;
     }, onError: (DioError e) {
       print("错误之前");
       if (e.type == DioErrorType.RESPONSE) {
         // 没有权限
         if (e.error.contains("401")) {
+          // 清除本地过期数据
+          UserUtils.clearToken();
+          UserUtils.clearUserInfo();
+          UserUtils.clearSettings();
           // 跳转登陆页
-          navigatorKey.currentState.pushNamed("/login");
+          navigatorKey.currentState.pushReplacementNamed("/login");
         }
       }
       return e; //continue

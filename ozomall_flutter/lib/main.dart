@@ -8,6 +8,7 @@ import 'package:ozomall_flutter/pages/login/otherPhone.dart';
 import 'package:ozomall_flutter/pages/my/index.dart';
 import 'package:ozomall_flutter/pages/search/index.dart';
 import 'package:ozomall_flutter/pages/settings/index.dart';
+import 'package:ozomall_flutter/widget/store/index.dart';
 import 'package:provider/provider.dart';
 
 import 'model/sys.dart';
@@ -67,6 +68,7 @@ class _MyAppState extends State<MyApp> {
         return FlutterEasyLoading(child: child);
       },
       routes: <String, WidgetBuilder>{
+        "/store": (BuildContext context) => Store(),
         "/buy": (BuildContext context) => Buy(),
         "/my": (BuildContext context) => MyPage(),
         "/search": (BuildContext context) => Search(),

@@ -70,7 +70,7 @@ class _BuyState extends State<Buy>
         vsync: this, //固定写法
         length: titles.length //指定tab长度
         )
-        // 添加监听器
+      // 添加监听器
       ..addListener(() {
         if (_tabController.index.toDouble() == _tabController.animation.value) {
           classifyId = titles[_tabController.index]["id"];

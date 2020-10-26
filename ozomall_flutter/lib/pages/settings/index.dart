@@ -21,6 +21,7 @@ class _SettingState extends State<Setting> {
       if (res["code"] == 1) {
         UserUtils.clearToken(); // 清除token
         UserUtils.clearUserInfo(); // 清除用户信息
+        UserUtils.clearSettings(); // 清除用户信息
         sysProvider.setCurrentIndex(1); // 设置显示购买页
         navigatorKey.currentState.pushNamed("/"); // 跳转到home页
       }

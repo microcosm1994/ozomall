@@ -48,8 +48,14 @@ class UserUtils {
     var users = jsonDecode(prefs.getString("users"));
     UserApi.getSettings({"userId": users["id"]}).then((res) {
       if (res["code"] == 1) {
-        prefs.setString("userSetting", jsonEncode(res["data"]["data"]));
+        prefs.setString("userSetting", jsonEncode(res["data"]));
       }
     });
+  }
+
+  // 清除用户设置信息
+  static clearSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("userSetting");
   }
 }

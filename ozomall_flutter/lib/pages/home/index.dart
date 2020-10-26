@@ -22,6 +22,11 @@ class _HomeState extends State<Home> {
     //获取CounterProvider
     SysProvider sysProvider = Provider.of<SysProvider>(context);
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          child: Text("data"),
+          onPressed: () {
+            Navigator.pushNamed(context, "/store");
+          }),
       bottomNavigationBar: buildNavigationBar(context), // 底部选项卡
       body: IndexedStack(
           index: sysProvider.currentIndex, //当前的下标
