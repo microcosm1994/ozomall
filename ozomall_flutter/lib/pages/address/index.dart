@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ozomall_flutter/api/addressApi.dart';
+import 'package:ozomall_flutter/pages/address/edit.dart';
 import 'package:ozomall_flutter/utils/userUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -82,7 +83,11 @@ class _AddressState extends State<Address> {
                 color: Color(0xff56C0C1),
                 textColor: Colors.white,
                 child: Text("添加新地址"),
-                onPressed: () {})),
+                onPressed: () {
+                  Navigator.push(context, new MaterialPageRoute(builder: (_) {
+                    return new AddressEdit(title: "添加新地址");
+                  }));
+                })),
         body: ListView(children: buildList(context)));
   }
 
@@ -172,5 +177,12 @@ class _AddressState extends State<Address> {
       list.add(item);
     }
     return list;
+  }
+
+  @override
+  void dispose() {
+    timer = null;
+    // TODO: implement dispose
+    super.dispose();
   }
 }

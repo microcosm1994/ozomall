@@ -6,6 +6,7 @@ import 'package:ozomall_flutter/pages/home/index.dart';
 import 'package:ozomall_flutter/pages/login/index.dart';
 import 'package:ozomall_flutter/pages/login/otherPhone.dart';
 import 'package:ozomall_flutter/pages/my/index.dart';
+import 'package:ozomall_flutter/pages/order/index.dart';
 import 'package:ozomall_flutter/pages/search/index.dart';
 import 'package:ozomall_flutter/pages/settings/index.dart';
 import 'package:ozomall_flutter/widget/store/index.dart';
@@ -69,13 +70,14 @@ class _MyAppState extends State<MyApp> {
       },
       routes: <String, WidgetBuilder>{
         "/store": (BuildContext context) => Store(),
-        "/buy": (BuildContext context) => Buy(),
-        "/my": (BuildContext context) => MyPage(),
-        "/search": (BuildContext context) => Search(),
-        "/setting": (BuildContext context) => Setting(),
-        "/address": (BuildContext context) => Address(),
-        "/login": (BuildContext context) => Login(),
-        "/otherPhone": (BuildContext context) => OtherPhone(),
+        "/buy": (BuildContext context) => Buy(), // 购买页
+        "/my": (BuildContext context) => MyPage(), // 我的
+        "/search": (BuildContext context) => Search(), // 搜索页
+        "/setting": (BuildContext context) => Setting(), // 个人设置
+        "/address": (BuildContext context) => Address(), // 地址列表
+        "/login": (BuildContext context) => Login(), // 登陆页
+        "/otherPhone": (BuildContext context) => OtherPhone(), // 其他手机号登录页
+        "/orderConfirm": (BuildContext context) => OrderConfirm(), // 确认订单页
       },
     );
   }
