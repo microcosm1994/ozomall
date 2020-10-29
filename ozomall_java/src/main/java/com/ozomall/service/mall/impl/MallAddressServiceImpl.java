@@ -27,7 +27,7 @@ public class MallAddressServiceImpl implements MallAddressService {
     public Result addAddress(MallAddressDto form) {
         int row = mallAddressMapper.insert(form);
         if (row > 0) {
-            return ResultGenerate.genSuccessResult(row);
+            return ResultGenerate.genSuccessResult(form);
         } else {
             return ResultGenerate.genErroResult("失败！");
         }
@@ -41,7 +41,7 @@ public class MallAddressServiceImpl implements MallAddressService {
     public Result putAddress(MallAddressDto form) {
         int row = mallAddressMapper.updateById(form);
         if (row > 0) {
-            return ResultGenerate.genSuccessResult();
+            return ResultGenerate.genSuccessResult(form);
         } else {
             return ResultGenerate.genErroResult("失败！");
         }

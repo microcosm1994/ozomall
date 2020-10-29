@@ -63,7 +63,9 @@ class _OtherPhoneState extends State<OtherPhone> {
           timeNum = 60;
           if (timer != null) {
             timer.cancel();
-            timer = null;
+            setState(() {
+              timer = null;
+            });
           }
         });
       }
@@ -165,6 +167,14 @@ class _OtherPhoneState extends State<OtherPhone> {
                             child: TextFormField(
                                 keyboardType: TextInputType.phone, //手机号
                                 decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black26),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black54),
+                                  ),
                                   hintText: "输入手机号",
                                   errorText:
                                       matched || phoneController.text.isEmpty
@@ -177,6 +187,12 @@ class _OtherPhoneState extends State<OtherPhone> {
                             height: 60,
                             child: TextFormField(
                               decoration: InputDecoration(
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black26),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black54),
+                                ),
                                 hintText: "验证码",
                                 errorText: codeMatchedShow ? "请输入验证码" : null,
                                 suffixStyle: TextStyle(color: Colors.black87),

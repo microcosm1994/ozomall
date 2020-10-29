@@ -17,6 +17,7 @@ dependencies:
   flutter_html: ^1.0.0
   loading_indicator_view: ^1.1.0
   flutter_easyloading: ^2.0.0
+  city_pickers: ^0.0.1
 
 dev_dependencies:
   flutter_test:

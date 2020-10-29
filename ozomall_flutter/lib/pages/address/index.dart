@@ -17,12 +17,12 @@ class Address extends StatefulWidget {
 class _AddressState extends State<Address> {
   List<dynamic> addressList = []; // 地址列表
   int defaultAddressId = 0;
-  Future timer;
+  Timer timer;
 
   // 获取地址
   void getAddress() async {
     var users = await UserUtils.getUserInfo();
-    AddressApi.getAddress({"id": users["id"]}).then((res) {
+    AddressApi.getAddress({"userId": users["id"]}).then((res) {
       if (res["code"] == 1) {
         this.setState(() {
           addressList = res["data"];
@@ -33,28 +33,31 @@ class _AddressState extends State<Address> {
 
   // 获取用户设置
   void getSetting() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userSetting = prefs.getString("userSetting");
+    var userSetting = await UserUtils.getUserSettings();
     if (userSetting == null) {
       UserUtils.getSettings();
-      timer = new Future.delayed(new Duration(seconds: 2), () {
-        print(2);
+      timer = Timer(new Duration(seconds: 2), () {
         getSetting();
       });
     } else {
+      // 清除定时器
+      if (timer != null) {
+        timer.cancel();
+        setState(() {
+          timer = null;
+        });
+      }
       this.setState(() {
-        defaultAddressId = jsonDecode(userSetting)["addressId"] == null
-            ? 0
-            : jsonDecode(userSetting)["addressId"];
+        defaultAddressId =
+            userSetting["addressId"] == null ? 0 : userSetting["addressId"];
       });
     }
-    print(defaultAddressId);
   }
 
   @override
   void initState() {
-    getAddress();
     getSetting();
+    getAddress();
     // TODO: implement initState
     super.initState();
   }
@@ -171,7 +174,15 @@ class _AddressState extends State<Address> {
                     color: Colors.black54,
                     size: 20,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, new MaterialPageRoute(builder: (_) {
+                      return new AddressEdit(
+                        title: "修改地址",
+                        addressData: addressList[i],
+                        isDefault: defaultAddressId == addressList[i]["id"],
+                      );
+                    }));
+                  },
                 ))
           ]));
       list.add(item);
@@ -181,7 +192,12 @@ class _AddressState extends State<Address> {
 
   @override
   void dispose() {
-    timer = null;
+    if (timer != null) {
+      timer.cancel();
+      setState(() {
+        timer = null;
+      });
+    }
     // TODO: implement dispose
     super.dispose();
   }

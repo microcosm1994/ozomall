@@ -42,13 +42,30 @@ class UserUtils {
     prefs.remove("users");
   }
 
-  // 获取用户设置信息
+  // 从服务器获取用户设置信息(请求接口)
   static getSettings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var users = jsonDecode(prefs.getString("users"));
     UserApi.getSettings({"userId": users["id"]}).then((res) {
       if (res["code"] == 1) {
         prefs.setString("userSetting", jsonEncode(res["data"]));
+      }
+    });
+  }
+
+  // 获取本地保存的用户设置信息
+  static getUserSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userSetting = prefs.getString("userSetting");
+    if (userSetting == null) return null;
+    return jsonDecode(userSetting);
+  }
+
+  // 设置用户设置信息
+  static setSettings(Map data) async {
+    UserApi.setSettings(data).then((res) {
+      if (res["code"] == 1) {
+        getSettings();
       }
     });
   }

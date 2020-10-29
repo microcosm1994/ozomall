@@ -65,8 +65,20 @@ class _MyAppState extends State<MyApp> {
       title: "ozo",
       home: Home(),
       builder: (BuildContext context, Widget child) {
-        /// make sure that loading can be displayed in front of all other widgets
-        return FlutterEasyLoading(child: child);
+        // 全局loading
+        return FlutterEasyLoading(
+          child: GestureDetector(
+            // 点击空白处键盘消失
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus &&
+                  currentFocus.focusedChild != null) {
+                FocusManager.instance.primaryFocus.unfocus();
+              }
+            },
+            child: child,
+          ),
+        );
       },
       routes: <String, WidgetBuilder>{
         "/store": (BuildContext context) => Store(),

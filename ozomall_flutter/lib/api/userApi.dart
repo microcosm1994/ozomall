@@ -6,12 +6,12 @@ class UserApi {
     return Server().post("/mall/user/sendMessage", data);
   }
 
-   // 登录
+  // 登录
   static Future phoneLogin(data) {
     return Server().post("/mall/user/phoneLogin", data);
   }
 
-   // 登出
+  // 登出
   static Future logout() {
     return Server().post("/mall/user/logout");
   }
@@ -19,5 +19,10 @@ class UserApi {
   // 获取用户设置
   static Future getSettings(params) {
     return Server().get("/mall/user/getSettings", params);
+  }
+
+  // 设置用户设置
+  static Future setSettings(data) {
+    return Server().post("/mall/user/setSettings", data);
   }
 }
