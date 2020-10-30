@@ -6,7 +6,7 @@ import 'package:ozomall_flutter/pages/home/index.dart';
 import 'package:ozomall_flutter/pages/login/index.dart';
 import 'package:ozomall_flutter/pages/login/otherPhone.dart';
 import 'package:ozomall_flutter/pages/my/index.dart';
-import 'package:ozomall_flutter/pages/order/index.dart';
+import 'package:ozomall_flutter/pages/order/confirm.dart';
 import 'package:ozomall_flutter/pages/search/index.dart';
 import 'package:ozomall_flutter/pages/settings/index.dart';
 import 'package:ozomall_flutter/widget/store/index.dart';

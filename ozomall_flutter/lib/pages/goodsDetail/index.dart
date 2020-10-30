@@ -7,6 +7,7 @@ import 'package:ozomall_flutter/main.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/brand.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/recentBuy.dart';
 import 'package:ozomall_flutter/pages/goodsDetail/wear.dart';
+import 'package:ozomall_flutter/pages/order/confirm.dart';
 import 'package:ozomall_flutter/utils/userUtils.dart';
 import 'package:ozomall_flutter/widget/cell/index.dart';
 import 'package:ozomall_flutter/widget/goodsTitleCard/index.dart';
@@ -148,7 +149,18 @@ class _GoodsDetailState extends State<GoodsDetail> {
       return;
     }
     // 提交订单
-    print("提交订单");
+    navigatorKey.currentState.push(new MaterialPageRoute(builder: (_) {
+      return new OrderConfirm(
+        goodsId: goodsInfo["id"],
+        goodsName: goodsInfo["goodsName"],
+        goodsSkuId: skuInfo["id"],
+        pic: skuInfo["pic"],
+        price: skuInfo["price"],
+        spe1Name: spe1CurrentName,
+        spe2Name: spe2CurrentName,
+        spe3Name: spe3CurrentName,
+      );
+    }));
   }
 
   @override
@@ -564,14 +576,25 @@ class _GoodsDetailState extends State<GoodsDetail> {
                             Container(
                                 height: 90,
                                 child: GoodsTitleCard(
-                                  cover: skuInfo == null
-                                      ? goodsInfo["cover"]
-                                      : skuInfoCover,
-                                  goodsName: goodsPriceStr,
-                                  goodsPrice: spe1CurrentName +
-                                      spe2CurrentName +
-                                      spe3CurrentName,
-                                )),
+                                    cover: skuInfo == null
+                                        ? goodsInfo["cover"]
+                                        : skuInfoCover,
+                                    title: Text(goodsPriceStr,
+                                        style: TextStyle(
+                                            color: Colors.black87,
+                                            fontSize: 16,
+                                            height: 1.5,
+                                            fontWeight: FontWeight.w600)),
+                                    subTitle: Text(
+                                      spe1CurrentName +
+                                          spe2CurrentName +
+                                          spe3CurrentName,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.black87,
+                                          height: 1.5,
+                                          fontSize: 12),
+                                    ))),
                             Expanded(
                                 child: Container(
                                     child: ListView(

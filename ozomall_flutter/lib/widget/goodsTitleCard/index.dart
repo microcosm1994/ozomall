@@ -4,12 +4,14 @@ class GoodsTitleCard extends StatefulWidget {
   GoodsTitleCard(
       {Key key,
       @required this.cover,
-      @required this.goodsName,
-      @required this.goodsPrice})
+      @required this.title,
+      @required this.subTitle,
+      this.des})
       : super(key: key);
   final String cover;
-  final String goodsName;
-  final String goodsPrice;
+  final Widget title;
+  final Widget subTitle;
+  final Widget des;
   @override
   _GoodsTitleCardState createState() => _GoodsTitleCardState();
 }
@@ -20,7 +22,7 @@ class _GoodsTitleCardState extends State<GoodsTitleCard> {
     return Container(
         color: Colors.white,
         width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Row(children: [
           Container(
             height: 50,
@@ -36,27 +38,20 @@ class _GoodsTitleCardState extends State<GoodsTitleCard> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               width: double.infinity,
-              height: 50,
-              child: Text(
-                widget.goodsName,
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 16,
-                    height: 1.5,
-                    fontWeight: FontWeight.w600),
-                textAlign: TextAlign.left,
-                maxLines: 2,
-              ),
+              child: widget.title,
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               width: double.infinity,
-              child: Text(
-                widget.goodsPrice,
-                textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.black87, fontSize: 12),
-              ),
-            )
+              child: widget.subTitle,
+            ),
+            widget.des == null
+                ? Text("")
+                : Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    width: double.infinity,
+                    child: widget.des,
+                  ),
           ]))
         ]));
   }

@@ -62,7 +62,7 @@ class _RecentBuyState extends State<RecentBuy> {
   Widget buildBuyPage() {
     return Scaffold(
       backgroundColor: Color(0xf5f5f5f5),
-      appBar: AppBar(
+      appBar: PreferredSize(child: AppBar(
         backgroundColor: Colors.white,
         leading: FlatButton(
             onPressed: () {
@@ -82,10 +82,19 @@ class _RecentBuyState extends State<RecentBuy> {
         bottom: PreferredSize(
             child: GoodsTitleCard(
                 cover: widget.goodsInfo["cover"],
-                goodsName: widget.goodsInfo["goodsName"],
-                goodsPrice: "￥" + widget.goodsInfo["goodsPrice"] + "起"),
-            preferredSize: Size.fromHeight(70)),
-      ),
+                title: Text(widget.goodsInfo["goodsName"],
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        height: 1.5,
+                        fontWeight: FontWeight.w600)),
+                subTitle: Text(
+                  "￥" + widget.goodsInfo["goodsPrice"] + "起",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: Colors.black87, fontSize: 12),
+                )),
+            preferredSize: Size.fromHeight(20)),
+      ), preferredSize: Size.fromHeight(140),),
       body: Container(
           color: Colors.white,
           width: double.infinity,

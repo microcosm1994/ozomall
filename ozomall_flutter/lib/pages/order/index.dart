@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class OrderConfirm extends StatefulWidget {
-  OrderConfirm({Key key}) : super(key: key);
+class Order extends StatefulWidget {
+  Order({Key key}) : super(key: key);
 
   @override
-  _OrderConfirmState createState() => _OrderConfirmState();
+  _OrderState createState() => _OrderState();
 }
 
-class _OrderConfirmState extends State<OrderConfirm> {
+class _OrderState extends State<Order> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
