@@ -10,6 +10,13 @@ class GoodsCard extends StatefulWidget {
 
 class _GoodsCardState extends State<GoodsCard> {
   @override
+  void initState() {
+    print(widget.goodsInfo);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
@@ -20,10 +27,12 @@ class _GoodsCardState extends State<GoodsCard> {
           // 商品图片
           Container(
               width: double.infinity,
-              child: new Image.network(
-                widget.goodsInfo["cover"],
-                fit: BoxFit.fitWidth,
-              )),
+              child: widget.goodsInfo == null
+                  ? Text("")
+                  : new Image.network(
+                      widget.goodsInfo["cover"],
+                      fit: BoxFit.fitWidth,
+                    )),
           // 商品名称
           Container(
               padding: EdgeInsets.symmetric(vertical: 5),
